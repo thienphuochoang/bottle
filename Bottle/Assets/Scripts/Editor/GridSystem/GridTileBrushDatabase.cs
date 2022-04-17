@@ -30,12 +30,34 @@ namespace Bottle.Editor.GridSystem
             }
             return names.ToArray();
         }
+
     }
     public class GridTileBrushDatabase : ScriptableObject
     {
 #if UNITY_EDITOR
         [SerializeField]
         private List<GridTileData> _gridTileDatas = new List<GridTileData>();
+        public List<GridTileData> GridTileDatas
+        {
+            get
+            {
+                return _gridTileDatas;
+            }
+            set
+            {
+                if (value == null)
+                {
+                    _gridTileDatas = new List<GridTileData>();
+                }
+                else
+                    _gridTileDatas = value;
+            }
+        }
+        public static GridTileBrushDatabaseList GetAllGridTileDatabaseGUIDs()
+        {
+            string[] guids = AssetDatabase.FindAssets("t:GridTileBrushDatabase");
+            return new GridTileBrushDatabaseList(guids);
+        }
 #endif
     }
 }

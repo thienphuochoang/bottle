@@ -10,7 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 18a6427a87a7a564a94ccb077adf9577, type: 3}
-  m_Name: GridTileBrushDatabase
+  m_Name: asd
   m_EditorClassIdentifier: 
-  _gridTileDatas:
-  - {fileID: 0}
+  _gridTileDatas: []
