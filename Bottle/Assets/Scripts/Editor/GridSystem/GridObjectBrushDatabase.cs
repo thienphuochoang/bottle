@@ -79,12 +79,6 @@ namespace Bottle.Editor.GridSystem
             string[] guids = AssetDatabase.FindAssets("t:GridObjectBrushDatabase");
             return new GridObjectBrushDatabaseList(guids);
         }
-        public void Save()
-        {
-            EditorUtility.SetDirty(this);
-            AssetDatabase.SaveAssets();
-            AssetDatabase.Refresh();
-        }
 #endif
     }
 }

@@ -11,10 +11,10 @@ namespace Bottle.Editor.GridSystem
     {
         private float _brushButtonSize = 100;
         private Vector2 _scrollPosition = new Vector2();
-        public GridObjectBrushDatabase database;
+        public GridObjectBrushDatabase currentBrushDatabase;
         private GridObjectBrushDatabaseList _gridObjectDatabaseList;
         public int selectedDatabaseIndex = 0;
-        private string newDatabaseName;
+        private string _newDatabaseName;
 
         private void OnEnable()
         {
@@ -26,11 +26,11 @@ namespace Bottle.Editor.GridSystem
             EditorGUILayout.BeginHorizontal();
             {
                 EditorGUILayout.LabelField("New Grid Object Database Name: ");
-                newDatabaseName = EditorGUILayout.TextField("", newDatabaseName);
+                _newDatabaseName = EditorGUILayout.TextField("", _newDatabaseName);
                 if (GUILayout.Button(new GUIContent("+", "Add new grid object database"),
                                      GUILayout.MaxWidth(100)))
                 {
-                    CreateNewDatabase(newDatabaseName);
+                    CreateNewDatabase(_newDatabaseName);
                 }
             }
             EditorGUILayout.EndHorizontal();
@@ -40,7 +40,7 @@ namespace Bottle.Editor.GridSystem
                 if (_gridObjectDatabaseList.brushDatabases.Count > 0)
                 {
                     selectedDatabaseIndex = EditorGUILayout.Popup(selectedDatabaseIndex, _gridObjectDatabaseList.GetNameList());
-                    database = _gridObjectDatabaseList.brushDatabases[selectedDatabaseIndex];
+                    currentBrushDatabase = _gridObjectDatabaseList.brushDatabases[selectedDatabaseIndex];
                 }
                 
                 if (GUILayout.Button(new GUIContent("Refresh", "Refresh all databases to get the updated content."),
@@ -56,15 +56,15 @@ namespace Bottle.Editor.GridSystem
             GUI.backgroundColor = Color.green;
             if (GUILayout.Button(new GUIContent("Add Grid Object", "Add a Grid Object to the database.")))
             {
-                AddGridObjectBrushPopup.Initialize(database.GridBrushDatas);
+                AddGridObjectBrushPopup.Initialize(currentBrushDatabase.GridBrushDatas);
             }
             GUI.backgroundColor = Color.red;
             if (GUILayout.Button(new GUIContent("Remove Selected Grid Object", "Removes the selected grid object from the database.")) &&
-                                 RemoveSelectedBrushesDialog(database.SelectedGridBrush.gridTile.name))
+                                 RemoveSelectedBrushesDialog(currentBrushDatabase.SelectedGridBrush.gridTile.name))
             {
-                if (database.SelectedGridBrush != null)
+                if (currentBrushDatabase.SelectedGridBrush != null)
                 {
-                    database.GridBrushDatas.RemoveAt(database.selectedGridBrushIndex);
+                    currentBrushDatabase.GridBrushDatas.RemoveAt(currentBrushDatabase.selectedGridBrushIndex);
                 }
             }
             EditorGUILayout.EndHorizontal();
@@ -93,13 +93,13 @@ namespace Bottle.Editor.GridSystem
         {
             int rowLength = 1;
             int maxRowLength = Mathf.FloorToInt((Screen.width - 15) / _brushButtonSize);
-            int columns = Mathf.CeilToInt((database.GridBrushDatas.Count / maxRowLength)) * 3;
+            int columns = Mathf.CeilToInt((currentBrushDatabase.GridBrushDatas.Count / maxRowLength)) * 3;
             _scrollPosition = EditorGUILayout.BeginScrollView(_scrollPosition, false, false);
 
             if (maxRowLength < 1)
                 maxRowLength = 1;
 
-            foreach (var brushData in database.GridBrushDatas)
+            foreach (var brushData in currentBrushDatabase.GridBrushDatas)
             {
                 if (rowLength > maxRowLength)
                 {
@@ -109,9 +109,9 @@ namespace Bottle.Editor.GridSystem
                 if (rowLength == 1)
                     EditorGUILayout.BeginHorizontal();
 
-                if (database.SelectedGridBrush != null &&
-                    database.SelectedGridBrush.gridTile != null &&
-                    database.SelectedGridBrush.gridTile == brushData.gridTile)
+                if (currentBrushDatabase.SelectedGridBrush != null &&
+                    currentBrushDatabase.SelectedGridBrush.gridTile != null &&
+                    currentBrushDatabase.SelectedGridBrush.gridTile == brushData.gridTile)
                 {
                     GUI.backgroundColor = Color.green;
                 }
@@ -119,13 +119,13 @@ namespace Bottle.Editor.GridSystem
                 if (GUILayout.Button(btnContent, GUILayout.Width(_brushButtonSize), GUILayout.Height(_brushButtonSize)))
                 {
                     
-                    if (database.SelectedGridBrush != brushData)
+                    if (currentBrushDatabase.SelectedGridBrush != brushData)
                     {
-                        database.selectedGridBrushIndex = database.GridBrushDatas.IndexOf(brushData);
+                        currentBrushDatabase.selectedGridBrushIndex = currentBrushDatabase.GridBrushDatas.IndexOf(brushData);
                     }
                     else
                     {
-                        database.selectedGridBrushIndex = -1;
+                        currentBrushDatabase.selectedGridBrushIndex = -1;
                     }
                 }
                 GUI.backgroundColor = Color.grey;

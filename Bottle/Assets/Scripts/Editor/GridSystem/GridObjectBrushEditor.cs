@@ -27,13 +27,34 @@ namespace Bottle.Editor.GridSystem
             rotation = Vector3.zero;
         }
     }
+    public class BrushCell
+    {
+        public GameObject ahihi;
+    }
     [CustomGridBrush(true, false, false, "[Bottle] Grid Object Brush")]
     public class GridObjectBrushEditor : GridBrushBase
     {
-        public override void Pick(GridLayout gridLayout, GameObject brushTarget, BoundsInt position, Vector3Int pickStart)
+        public BrushCell[] BrushCells => _brushCell;
+        private BrushCell[] _brushCell;
+        private Vector3Int _pivot;
+        public Vector3Int pivot
         {
-            if (brushTarget.layer == 31) return;  // Do not allow editing palettes
-            Debug.Log(brushTarget);
+            get
+            {
+                return _pivot;
+            }
+            set
+            {
+                _pivot = value; 
+            }
+        }
+        public override void Paint(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
+        {
+            if (brushTarget == null || gridLayout == null) return;
+            foreach (var ahihi in _brushCell)
+            {
+                Debug.Log(ahihi);
+            }
         }
     }
 }
