@@ -12,9 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a6427a87a7a564a94ccb077adf9577, type: 3}
   m_Name: GridTileDatabase
   m_EditorClassIdentifier: 
-  _gridTileDatas:
-  - {fileID: 6114086996318933743, guid: fbb02372c2b7bbd43816b0f1653f4941, type: 3}
-  - {fileID: 2828485641073093768, guid: 943f8be4d15825f489a5d0a3110502d5, type: 3}
-  - {fileID: 6683968226800932351, guid: b93e031c847bff24a867a8948e2fd656, type: 3}
-  - {fileID: 1575309233773917950, guid: a74e32848e44428468cba95befdaa192, type: 3}
-  - {fileID: 4939601094492767571, guid: cc2b23994f33751468de1393482b46c3, type: 3}
+  databaseType: 0
+  _gridBrushDatas:
+  - gridTile: {fileID: 6114086996318933743, guid: fbb02372c2b7bbd43816b0f1653f4941, type: 3}
+    scale: 1
+    rotation: {x: 0, y: 0, z: 0}
+  - gridTile: {fileID: 2828485641073093768, guid: 943f8be4d15825f489a5d0a3110502d5, type: 3}
+    scale: 1
+    rotation: {x: 0, y: 0, z: 0}
+  - gridTile: {fileID: 6683968226800932351, guid: b93e031c847bff24a867a8948e2fd656, type: 3}
+    scale: 1
+    rotation: {x: 0, y: 0, z: 0}
+  - gridTile: {fileID: 1575309233773917950, guid: a74e32848e44428468cba95befdaa192, type: 3}
+    scale: 1
+    rotation: {x: 0, y: 0, z: 0}
+  - gridTile: {fileID: 4939601094492767571, guid: cc2b23994f33751468de1393482b46c3, type: 3}
+    scale: 1
+    rotation: {x: 0, y: 0, z: 0}
