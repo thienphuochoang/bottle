@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4939601094493714591}
   - component: {fileID: 4939601094494677989}
   - component: {fileID: 4939601094490478619}
-  - component: {fileID: 4939601094492767571}
+  - component: {fileID: 6157589648827275506}
   m_Layer: 0
   m_Name: Tile_Ramp1A
   m_TagString: Untagged
@@ -98,7 +98,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 8e3c79843c962264eb6fd09974962025, type: 3}
---- !u!114 &4939601094492767571
+--- !u!114 &6157589648827275506
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -107,10 +107,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4939601094492640263}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e41c50f934d3b5b4d98b3d22b6b13d36, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTileWalkable: 1
   gridPosition: {x: 0, y: 0}
   gridHeight: 0
 --- !u!1 &4939601094492643521

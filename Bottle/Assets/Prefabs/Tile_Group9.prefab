@@ -578,7 +578,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6683968226800498023}
-  - component: {fileID: 6683968226800932351}
+  - component: {fileID: 7558882594663184875}
   m_Layer: 0
   m_Name: Tile_Group9
   m_TagString: Untagged
@@ -609,7 +609,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6683968226800932351
+--- !u!114 &7558882594663184875
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -618,10 +618,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 6683968226800817937}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e41c50f934d3b5b4d98b3d22b6b13d36, type: 3}
+  m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isTileWalkable: 1
   gridPosition: {x: 0, y: 0}
   gridHeight: 0
 --- !u!1 &6683968226800837581

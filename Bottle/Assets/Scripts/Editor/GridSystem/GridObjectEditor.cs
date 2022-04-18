@@ -56,13 +56,16 @@ namespace Bottle.Editor.GridSystem
             GUI.backgroundColor = Color.green;
             if (GUILayout.Button(new GUIContent("Add Grid Object", "Add a Grid Object to the database.")))
             {
-
+                AddGridObjectBrushPopup.Initialize(database.GridBrushDatas);
             }
             GUI.backgroundColor = Color.red;
             if (GUILayout.Button(new GUIContent("Remove Selected Grid Object", "Removes the selected grid object from the database.")) &&
-                                 RemoveSelectedBrushesDialog("ahihi"))
+                                 RemoveSelectedBrushesDialog(database.SelectedGridBrush.gridTile.name))
             {
-
+                if (database.SelectedGridBrush != null)
+                {
+                    database.GridBrushDatas.RemoveAt(database.selectedGridBrushIndex);
+                }
             }
             EditorGUILayout.EndHorizontal();
             GUI.backgroundColor = Color.grey;
@@ -116,19 +119,13 @@ namespace Bottle.Editor.GridSystem
                 if (GUILayout.Button(btnContent, GUILayout.Width(_brushButtonSize), GUILayout.Height(_brushButtonSize)))
                 {
                     
-                    // Select the currently edited brush and deselect all selected brushes
                     if (database.SelectedGridBrush != brushData)
                     {
                         database.selectedGridBrushIndex = database.GridBrushDatas.IndexOf(brushData);
-                        //TargetBrush.SetTileFromEditor(Vector3Int.zero,
-                        //                              brushData.gridTile,
-                        //                              brushData.height,
-                        //                              Quaternion.Euler(brushData.rotation));
                     }
                     else
                     {
                         database.selectedGridBrushIndex = -1;
-                        //TargetBrush.ClearTileFromEditor();
                     }
                 }
                 GUI.backgroundColor = Color.grey;
@@ -143,13 +140,6 @@ namespace Bottle.Editor.GridSystem
             if (rowLength == 1)
                 EditorGUILayout.BeginHorizontal();
 
-            // Add button
-            if (GUILayout.Button(new GUIContent("+", "Add a GridTile to the current database."),
-                                 GUILayout.Width(_brushButtonSize),
-                                 GUILayout.Height(_brushButtonSize)))
-            {
-                //if (database.Sele)
-            }
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.EndScrollView();
         }
