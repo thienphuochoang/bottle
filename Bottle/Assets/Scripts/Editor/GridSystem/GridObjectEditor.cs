@@ -15,6 +15,7 @@ namespace Bottle.Editor.GridSystem
         private GridObjectBrushDatabaseList _gridObjectDatabaseList;
         public int selectedDatabaseIndex = 0;
         private string _newDatabaseName;
+        public GridObjectBrushEditor TargetBrush { get { return target as GridObjectBrushEditor; } }
 
         private void OnEnable()
         {
@@ -41,6 +42,15 @@ namespace Bottle.Editor.GridSystem
                 {
                     selectedDatabaseIndex = EditorGUILayout.Popup(selectedDatabaseIndex, _gridObjectDatabaseList.GetNameList());
                     currentBrushDatabase = _gridObjectDatabaseList.brushDatabases[selectedDatabaseIndex];
+                    var tileBrush = currentBrushDatabase.SelectedGridBrush;
+                    if (tileBrush != null)
+                    {
+                        TargetBrush.SetBrushCellData(
+                            tileBrush.gridTile,
+                            tileBrush.scale,
+                            Quaternion.Euler(tileBrush.rotation)
+                        );
+                    }
                 }
                 
                 if (GUILayout.Button(new GUIContent("Refresh", "Refresh all databases to get the updated content."),

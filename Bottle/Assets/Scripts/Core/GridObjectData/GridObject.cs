@@ -4,7 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 namespace Bottle.Core.GridObjectData
 {
-    public class GridObject : MonoBehaviour
+    public class GridObject : SerializedMonoBehaviour
     {
 
         [ReadOnly]

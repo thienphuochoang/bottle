@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: GridTileDatabase
   m_EditorClassIdentifier: 
   databaseType: 0
-  selectedGridBrushIndex: 0
+  selectedGridBrushIndex: 2
   _gridBrushDatas:
   - gridTile: {fileID: 3657902300859966119, guid: fbb02372c2b7bbd43816b0f1653f4941, type: 3}
     scale: 1
