@@ -86,6 +86,7 @@ namespace Bottle.Editor.GridSystem
     [CustomGridBrush(true, false, false, "[Bottle] Grid Object Brush")]
     public class GridObjectBrushEditor : GridBrushBase
     {
+        #region Properties
         public int sizeCount
         {
             get { return _size.x * _size.y * _size.z; }
@@ -134,7 +135,9 @@ namespace Bottle.Editor.GridSystem
                 _pivot = value; 
             }
         }
+        #endregion
 
+        #region Methods
         public GridObjectBrushEditor()
         {
             Init();
@@ -147,11 +150,34 @@ namespace Bottle.Editor.GridSystem
             SizeUpdated();
         }
 
-        public int GetCellIndexWrapAround(int x, int y, int z)
+        #region EraseCell
+        public override void Erase(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
         {
-            return (x % size.x) + size.x * (y % size.y) + size.x * size.y * (z % size.z);
-        }
+            UpdateBrushCellSelection();
 
+            if (brushTarget == null || gridLayout == null) return;
+
+            Vector3Int min = position - pivot;
+            BoundsInt bounds = new BoundsInt(min, size);
+            BoxErase(gridLayout, brushTarget, bounds);
+        }
+        public override void BoxErase(GridLayout gridLayout, GameObject brushTarget, BoundsInt position)
+        {
+            if (brushTarget == null || gridLayout == null) return;
+
+            foreach (Vector3Int location in position.allPositionsWithin)
+                EraseCell(gridLayout, location, brushTarget.transform);
+
+            UpdateBrushCellSelection();
+        }
+        private void EraseCell(GridLayout grid, Vector3Int position, Transform parent)
+        {
+            Debug.Log(position);
+            //GridManager.Instance.EraseGridTileAtPosition(position.ToVector2IntXY());
+        }
+        #endregion
+
+        #region PaintCell
         private void PaintCell(GridLayout grid, Vector3Int position, BrushCell tile)
         {
             if (tile.Tile != null)
@@ -161,6 +187,19 @@ namespace Bottle.Editor.GridSystem
             }
         }
 
+        public override void Paint(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
+        {
+            if (brushTarget == null || gridLayout == null) return;
+            if (IsCellSelected == false)
+                UpdateBrushCellSelection();
+
+            Vector3Int min = position - pivot;
+            BoundsInt bounds = new BoundsInt(min, _size);
+            BoxFill(gridLayout, brushTarget, bounds);
+        }
+        #endregion
+
+        #region PaintFilledBoxCell
         public override void BoxFill(GridLayout gridLayout, GameObject brushTarget, BoundsInt position)
         {
             if (brushTarget == null || gridLayout == null) return;
@@ -172,8 +211,14 @@ namespace Bottle.Editor.GridSystem
                     PaintCell(gridLayout, location, tile);
             }
         }
+        #endregion
 
-        public void DeselectCell()
+        public int GetCellIndexWrapAround(int x, int y, int z)
+        {
+            return (x % size.x) + size.x * (y % size.y) + size.x * size.y * (z % size.z);
+        }
+
+        public void UpdateBrushCellSelection()
         {
             //Re-init
             Init();
@@ -183,16 +228,6 @@ namespace Bottle.Editor.GridSystem
                 _cells[0] = _currentSelectedBrushCell;
         }
 
-        public override void Paint(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
-        {
-            if (brushTarget == null || gridLayout == null) return;
-            if (IsCellSelected == false)
-                DeselectCell();
-
-            Vector3Int min = position - pivot;
-            BoundsInt bounds = new BoundsInt(min, _size);
-            BoxFill(gridLayout, brushTarget, bounds);
-        }
 
         public void SetBrushCellData(GridTile gridTile, float scale, Quaternion orientation)
         {
@@ -222,6 +257,7 @@ namespace Bottle.Editor.GridSystem
                     _cells[GetCellIndex(pos)] = new BrushCell();
             }
         }
+        #endregion
     }
 }
 

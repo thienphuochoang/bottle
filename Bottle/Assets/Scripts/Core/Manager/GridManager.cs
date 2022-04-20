@@ -20,6 +20,27 @@ namespace Bottle.Core.Manager
             base.Start();
         }
 
+        //public T GetGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
+        //{
+        //    if (!Application.isPlaying)
+        //    {
+        //        return GetGridTileAtPositionInEditor(gridPosition);
+        //    }
+        //    else
+        //    {
+        //        if (!gridTiles.ContainsKey(gridPosition))
+        //            return null;
+        //        return gridTiles[gridPosition];
+        //    }
+        //}
+
+        //public virtual void EraseGridTileAtPosition(Vector2Int gridPosition, float gridHeight)
+        //{
+        //    var tileAtPosition = GetTileAtPosition(gridPosition);
+        //    if (tileAtPosition != null)
+        //        EraseGridTile(tileAtPosition);
+        //}
+
 
         public T CreateGridObject<T>(T gridObjectPrefab,
                                     Vector2Int gridPosition,
