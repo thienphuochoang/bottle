@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEditor;
 using UnityEditor.Tilemaps;
 using Bottle.Core.GridObjectData;
+using Bottle.Core.Manager;
 using System;
 namespace Bottle.Editor.GridSystem
 {
@@ -154,8 +155,10 @@ namespace Bottle.Editor.GridSystem
         private void PaintCell(GridLayout grid, Vector3Int position, BrushCell tile)
         {
             if (tile.Tile != null)
-                Debug.Log(tile.Tile);
-                //GridManager.Instance.InstantiateGridTile(tile.Tile, position.ToVector2IntXY(), tile.Height, tile.Orientation);
+            {
+                Vector2Int roundedGridPosition = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+                GridManager.Instance.CreateGridObject<GridTile>(tile.Tile, roundedGridPosition, Mathf.RoundToInt(position.z), tile.Scale, tile.Rotation);
+            }
         }
 
         public override void BoxFill(GridLayout gridLayout, GameObject brushTarget, BoundsInt position)
