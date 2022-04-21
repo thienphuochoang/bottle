@@ -8,7 +8,28 @@ namespace Bottle.Core.Manager
 {
     public class GridManager : PersistentObject<GridManager>
     {
+        private static string gridSetupPrefabPath = "Prefabs/SceneSetup/GridSetup";
         public Grid grid; // Reference to the current Grid being used
+        [SerializeField]
+        protected GameObject _tileHolder;
+        public GameObject TileHolder
+        {
+            get
+            {
+                return _tileHolder; // Only need to return _tileHolder because we alread defined this in prefab
+            }
+            set
+            {
+                _tileHolder = value;
+            }
+        }
+
+        [MenuItem("Bottle/Scene Setup/Grid Setup", false, 1)]
+        public static void GridSetup()
+        {
+            var gridSetupPrefab = Resources.Load(gridSetupPrefabPath);
+            PrefabUtility.InstantiatePrefab(gridSetupPrefab);
+        }
 
         protected override void Awake()
         {
@@ -20,27 +41,34 @@ namespace Bottle.Core.Manager
             base.Start();
         }
 
-        //public T GetGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
-        //{
-        //    if (!Application.isPlaying)
-        //    {
-        //        return GetGridTileAtPositionInEditor(gridPosition);
-        //    }
-        //    else
-        //    {
-        //        if (!gridTiles.ContainsKey(gridPosition))
-        //            return null;
-        //        return gridTiles[gridPosition];
-        //    }
-        //}
+        private T GetGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
+        {
+            System.Type gridObjectType = typeof(T);
+            if (gridObjectType.Equals(typeof(GridTile)))
+            {
+                GridTile[] allGridTiles = TileHolder.GetComponentsInChildren<GridTile>();
+                for (int i = 0; i < allGridTiles.Length; i++)
+                {
+                    if (gridPosition == allGridTiles[i].gridPosition && gridHeight == allGridTiles[i].gridHeight)
+                        return (T)(object)allGridTiles[i];
+                }
+            }
+            return default(T);
+        }
 
-        //public virtual void EraseGridTileAtPosition(Vector2Int gridPosition, float gridHeight)
-        //{
-        //    var tileAtPosition = GetTileAtPosition(gridPosition);
-        //    if (tileAtPosition != null)
-        //        EraseGridTile(tileAtPosition);
-        //}
-
+        public void EraseGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
+        {
+            System.Type gridObjectType = typeof(T);
+            if (gridObjectType.Equals(typeof(GridTile)))
+            {
+                GridTile gridTileAtPosition = GetGridObjectAtPosition<GridTile>(gridPosition, gridHeight);
+                if (gridTileAtPosition != null)
+                {
+                    Undo.DestroyObjectImmediate(gridTileAtPosition.gameObject);
+                }
+                    
+            }
+        }
 
         public T CreateGridObject<T>(T gridObjectPrefab,
                                     Vector2Int gridPosition,
@@ -48,32 +76,39 @@ namespace Bottle.Core.Manager
                                     float scale,
                                     Quaternion rotation)
         {
-#if UNITY_EDITOR
             if (gridObjectPrefab == null)
-                return gridObjectPrefab;
+                return default(T);
 
-            var worldPosition = grid.GetCellCenterWorld(new Vector3Int(gridPosition.x, gridPosition.y, 0));
+            Vector3 worldPosition = grid.GetCellCenterWorld(new Vector3Int(gridPosition.x, gridPosition.y, 0));
 
             if (gridObjectPrefab is GridTile)
             {
 
                 GridTile instantiatedGridTile = null;
-
-                instantiatedGridTile = (GridTile)PrefabUtility.InstantiatePrefab((GridTile)(object)gridObjectPrefab);
-                if (instantiatedGridTile != null)
-                    Undo.RegisterCreatedObjectUndo((Object)instantiatedGridTile.gameObject, "Paint Grid Object Prefab");
+                
+                if (!Application.isPlaying) // Instantiate prefab in editor mode 
+                {
+                    instantiatedGridTile = (GridTile)PrefabUtility.InstantiatePrefab((GridTile)(object)gridObjectPrefab);
+                    if (instantiatedGridTile != null)
+                        Undo.RegisterCreatedObjectUndo((Object)instantiatedGridTile.gameObject, "Paint Grid Object Prefab");
+                }
+                else // Instantiate prefab in game mode 
+                {
+                    instantiatedGridTile = Instantiate(instantiatedGridTile) as GridTile;
+                }
 
                 // Transform values
                 var targetWorldPosition = worldPosition + new Vector3(0f, gridHeight, 0f);
+                instantiatedGridTile.transform.SetParent(TileHolder.transform);
                 instantiatedGridTile.transform.position = targetWorldPosition;
+                instantiatedGridTile.transform.localScale = new Vector3(scale, scale, scale);
                 instantiatedGridTile.transform.rotation = rotation;
-                // Set the tile's settings
+                // Set the grid object's settings
                 instantiatedGridTile.gridPosition = gridPosition;
                 instantiatedGridTile.gridHeight = gridHeight;
+                return (T)(object)instantiatedGridTile;
             }
-
-            return gridObjectPrefab;
-#endif
+            return default(T);
         }
     }
 }

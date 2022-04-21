@@ -172,8 +172,8 @@ namespace Bottle.Editor.GridSystem
         }
         private void EraseCell(GridLayout grid, Vector3Int position, Transform parent)
         {
-            Debug.Log(position);
-            //GridManager.Instance.EraseGridTileAtPosition(position.ToVector2IntXY());
+            Vector2Int roundedGridPosition = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
+            GridManager.Instance.EraseGridObjectAtPosition<GridTile>(roundedGridPosition, Mathf.RoundToInt(position.z));
         }
         #endregion
 

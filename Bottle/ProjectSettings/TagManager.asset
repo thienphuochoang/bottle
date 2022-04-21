@@ -3,7 +3,13 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - '[Bottle]Grid'
+  - '[Bottle]Tile'
+  - '[Bottle]Entity'
+  - '[Bottle]Manager'
+  - '[Bottle]TileHolder'
+  - '[Bottle]EntityHolder'
   layers:
   - Default
   - TransparentFX
