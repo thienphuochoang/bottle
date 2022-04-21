@@ -6,10 +6,5 @@ namespace Bottle.Core.GridObjectData
 {
     public class GridTile : GridObject
     {
-        public void test()
-        {
-            Debug.Log(base.gridHeight);
-        }
     }
 }
-
