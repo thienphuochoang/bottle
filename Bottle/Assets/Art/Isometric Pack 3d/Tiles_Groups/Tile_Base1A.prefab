@@ -58,8 +58,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 180948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -0.015, y: -0.021, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 483478}
   m_RootOrder: 1
@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 480546}
   - component: {fileID: 3346416}
   - component: {fileID: 2304266}
-  - component: {fileID: 6540286}
+  - component: {fileID: 5098859198672978133}
   m_Layer: 0
   m_Name: Tile_1_A
   m_TagString: Untagged
@@ -195,7 +195,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6540286
+--- !u!65 &5098859198672978133
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -206,5 +206,5 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 6.061752, z: 2}
-  m_Center: {x: 0, y: -2.969124, z: 0}
+  m_Size: {x: 1, y: 1.0001891, z: 1}
+  m_Center: {x: 0, y: -0.48990545, z: 0}

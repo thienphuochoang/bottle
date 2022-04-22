@@ -182,8 +182,8 @@ namespace Bottle.Editor.GridSystem
         {
             if (tile.Tile != null)
             {
-                Vector2Int roundedGridPosition = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
-                GridManager.Instance.CreateGridObject<GridTile>(tile.Tile, roundedGridPosition, Mathf.RoundToInt(position.z), tile.Scale, tile.Rotation);
+                Vector2Int gridPosition = new Vector2Int(position.x, position.y);
+                GridManager.Instance.CreateGridObject<GridTile>(tile.Tile, gridPosition, position.z, tile.Scale, tile.Rotation);
             }
         }
 

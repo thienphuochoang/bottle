@@ -43,7 +43,7 @@ GameObject:
   - component: {fileID: 449454}
   - component: {fileID: 3331994}
   - component: {fileID: 2344338}
-  - component: {fileID: 6552860}
+  - component: {fileID: 3398876627717317562}
   m_Layer: 0
   m_Name: Tile_1_D
   m_TagString: Untagged
@@ -114,7 +114,7 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &6552860
+--- !u!65 &3398876627717317562
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,8 +125,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 2, y: 6.061752, z: 2}
-  m_Center: {x: 0, y: -2.969124, z: 0}
+  m_Size: {x: 1, y: 3.030876, z: 1}
+  m_Center: {x: 0, y: -1.484562, z: 0}
 --- !u!1 &197276
 GameObject:
   m_ObjectHideFlags: 0
@@ -153,8 +153,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 197276}
   m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: -0.008, z: 0}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 483478}
   m_RootOrder: 0

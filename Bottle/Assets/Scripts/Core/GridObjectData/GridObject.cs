@@ -33,11 +33,11 @@ namespace Bottle.Core.GridObjectData
             {
                 Vector3Int cellPosition = GridManager.Instance.grid.WorldToCell(this.transform.position);
                 Vector3 newPos = GridManager.Instance.grid.GetCellCenterWorld(cellPosition);
-                Debug.Log(newPos);
                 newPos.y = Mathf.Ceil(this.transform.position.y);
                 this.transform.position = newPos;
-                gridPosition = new Vector2Int(Mathf.RoundToInt(newPos.x), Mathf.RoundToInt(newPos.z));
-                gridHeight = Mathf.RoundToInt(newPos.y);
+                // Mathf.RoundToInt did not work because they always round up to even result
+                gridPosition = new Vector2Int((int)(newPos.x - 0.5f), (int)(newPos.z - 0.5f));
+                gridHeight = (int)(newPos.y);
             }
         }
     }
