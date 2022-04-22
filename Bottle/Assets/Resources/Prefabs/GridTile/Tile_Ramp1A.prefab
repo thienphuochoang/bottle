@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 6157589648827275506}
   m_Layer: 0
   m_Name: Tile_Ramp1A
-  m_TagString: Untagged
+  m_TagString: '[Bottle]Tile'
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

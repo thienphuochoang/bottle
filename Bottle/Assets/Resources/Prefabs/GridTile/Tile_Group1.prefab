@@ -759,7 +759,7 @@ GameObject:
   - component: {fileID: 3981752899357888820}
   m_Layer: 0
   m_Name: Tile_Group1
-  m_TagString: Untagged
+  m_TagString: '[Bottle]Tile'
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
