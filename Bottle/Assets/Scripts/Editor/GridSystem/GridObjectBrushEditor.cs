@@ -172,8 +172,8 @@ namespace Bottle.Editor.GridSystem
         }
         private void EraseCell(GridLayout grid, Vector3Int position, Transform parent)
         {
-            Vector2Int roundedGridPosition = new Vector2Int(Mathf.RoundToInt(position.x), Mathf.RoundToInt(position.y));
-            GridManager.Instance.EraseGridObjectAtPosition<GridTile>(roundedGridPosition, Mathf.RoundToInt(position.z));
+            Vector2Int gridPosition = new Vector2Int(position.x, position.y);
+            GridManager.Instance.EraseGridObjectAtPosition<GridTile>(gridPosition, position.z);
         }
         #endregion
 
@@ -183,7 +183,11 @@ namespace Bottle.Editor.GridSystem
             if (tile.Tile != null)
             {
                 Vector2Int gridPosition = new Vector2Int(position.x, position.y);
-                GridManager.Instance.CreateGridObject<GridTile>(tile.Tile, gridPosition, position.z, tile.Scale, tile.Rotation);
+                GridTile checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z);
+                if (checkedAlreadyPlacedGridObject == default(GridTile))
+                    GridManager.Instance.CreateGridObject<GridTile>(tile.Tile, gridPosition, position.z, tile.Scale, tile.Rotation);
+                else
+                    Debug.LogError("There is already a grid object available at this position");
             }
         }
 
@@ -209,6 +213,39 @@ namespace Bottle.Editor.GridSystem
                 BrushCell tile = cells[GetCellIndexWrapAround(local.x, local.y, local.z)];
                 if (tile != null)
                     PaintCell(gridLayout, location, tile);
+            }
+        }
+        #endregion
+
+        #region PickCell
+        public override void Pick(GridLayout gridLayout, GameObject brushTarget, BoundsInt position, Vector3Int brushPivot)
+        {
+            if (brushTarget == null || gridLayout == null) return;
+
+            // Only pick the last grid object
+            foreach (Vector3Int location in position.allPositionsWithin)
+            {
+                PickCell(gridLayout, location, brushTarget.transform);
+                Debug.Log(cells[GetCellIndex(location)]);
+            }
+            UpdateBrushCellSelection();
+        }
+        private void PickCell(GridLayout grid, Vector3Int position, Transform parent)
+        {
+            Vector2Int gridPosition = new Vector2Int(position.x, position.y);
+            GridTile pickedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z);
+            if (pickedGridObject != null)
+            {
+                UnityEngine.Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(pickedGridObject);
+                if (prefab)
+                {
+                    Debug.Log(_cells.Length);
+                    //Debug.Log(position);
+                    //Debug.Log(_cells[GetCellIndex(position)]);
+                    //_cells[GetCellIndex(position)].Tile = (GridTile)prefab;
+                    //_cells[GetCellIndex(position)].Scale = pickedGridObject.transform.localScale.x;
+                    //_cells[GetCellIndex(position)].Rotation = pickedGridObject.transform.localRotation;
+                }
             }
         }
         #endregion

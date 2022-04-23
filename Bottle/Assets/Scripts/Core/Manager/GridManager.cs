@@ -41,7 +41,7 @@ namespace Bottle.Core.Manager
             base.Start();
         }
 
-        private T GetGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
+        public T GetGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
         {
             System.Type gridObjectType = typeof(T);
             if (gridObjectType.Equals(typeof(GridTile)))
