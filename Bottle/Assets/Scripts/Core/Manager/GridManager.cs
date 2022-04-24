@@ -74,7 +74,7 @@ namespace Bottle.Core.Manager
                                     Vector2Int gridPosition,
                                     float gridHeight,
                                     float scale,
-                                    Quaternion rotation)
+                                    Quaternion rotation) where T : Component
         {
             if (gridObjectPrefab == null)
                 return default(T);
@@ -88,13 +88,15 @@ namespace Bottle.Core.Manager
                 
                 if (!Application.isPlaying) // Instantiate prefab in editor mode 
                 {
-                    instantiatedGridTile = (GridTile)PrefabUtility.InstantiatePrefab((GridTile)(object)gridObjectPrefab);
+                    string prefabPath = PrefabUtility.GetPrefabAssetPathOfNearestInstanceRoot((T)(object)gridObjectPrefab);
+                    T asset = AssetDatabase.LoadAssetAtPath(prefabPath, typeof(T)) as T;
+                    instantiatedGridTile = (GridTile)PrefabUtility.InstantiatePrefab(asset);
                     if (instantiatedGridTile != null)
-                        Undo.RegisterCreatedObjectUndo((Object)instantiatedGridTile.gameObject, "Paint Grid Object Prefab");
+                        Undo.RegisterCreatedObjectUndo(instantiatedGridTile.gameObject, "Paint Grid Object Prefab");
                 }
                 else // Instantiate prefab in game mode 
                 {
-                    instantiatedGridTile = Instantiate(instantiatedGridTile) as GridTile;
+                    instantiatedGridTile = Instantiate(instantiatedGridTile);
                 }
 
                 // Transform values

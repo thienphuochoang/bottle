@@ -42,6 +42,7 @@ namespace Bottle.Editor.GridSystem
                 {
                     selectedDatabaseIndex = EditorGUILayout.Popup(selectedDatabaseIndex, _gridObjectDatabaseList.GetNameList());
                     currentBrushDatabase = _gridObjectDatabaseList.brushDatabases[selectedDatabaseIndex];
+                    //TargetBrush.ClearBrushCellData();
                     var tileBrush = currentBrushDatabase.SelectedGridBrush;
                     if (tileBrush != null)
                     {
@@ -136,6 +137,7 @@ namespace Bottle.Editor.GridSystem
                     else
                     {
                         currentBrushDatabase.selectedGridBrushIndex = -1;
+                        //TargetBrush.ClearBrushCellData();
                     }
                 }
                 GUI.backgroundColor = Color.grey;

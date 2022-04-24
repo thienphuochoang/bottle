@@ -9,8 +9,7 @@ namespace Bottle.Core.GridObjectData
     [ExecuteInEditMode]
     public class GridObject : MonoBehaviour
     {
-        [SerializeField]
-        private Vector3 lastPos;
+        public float rotationSpeed = 5;
 
         [ReadOnly]
         [BoxGroup("Grid Object Settings")]
@@ -39,6 +38,7 @@ namespace Bottle.Core.GridObjectData
                 gridPosition = new Vector2Int((int)(newPos.x - 0.5f), (int)(newPos.z - 0.5f));
                 gridHeight = (int)(newPos.y);
             }
+            
         }
     }
 }

@@ -226,8 +226,8 @@ namespace Bottle.Editor.GridSystem
             foreach (Vector3Int location in position.allPositionsWithin)
             {
                 PickCell(gridLayout, location, brushTarget.transform);
-                Debug.Log(cells[GetCellIndex(location)]);
             }
+
             UpdateBrushCellSelection();
         }
         private void PickCell(GridLayout grid, Vector3Int position, Transform parent)
@@ -239,12 +239,7 @@ namespace Bottle.Editor.GridSystem
                 UnityEngine.Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(pickedGridObject);
                 if (prefab)
                 {
-                    Debug.Log(_cells.Length);
-                    //Debug.Log(position);
-                    //Debug.Log(_cells[GetCellIndex(position)]);
-                    //_cells[GetCellIndex(position)].Tile = (GridTile)prefab;
-                    //_cells[GetCellIndex(position)].Scale = pickedGridObject.transform.localScale.x;
-                    //_cells[GetCellIndex(position)].Rotation = pickedGridObject.transform.localRotation;
+                    SetBrushCellData(pickedGridObject, pickedGridObject.transform.localScale.x, pickedGridObject.transform.localRotation);
                 }
             }
         }
@@ -272,6 +267,12 @@ namespace Bottle.Editor.GridSystem
             _currentSelectedBrushCell.Tile = gridTile;
             _currentSelectedBrushCell.Scale = scale;
             _currentSelectedBrushCell.Rotation = orientation;
+        }
+
+        public void ClearBrushCellData()
+        {
+            UpdateBrushCellSelection();
+            _currentSelectedBrushCell = null;
         }
         public int GetCellIndex(Vector3Int brushPosition)
         {
