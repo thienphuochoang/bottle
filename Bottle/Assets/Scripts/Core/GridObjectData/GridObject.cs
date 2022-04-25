@@ -21,7 +21,7 @@ namespace Bottle.Core.GridObjectData
         [Tooltip("The height of this grid object in the Grid.")]
         public float gridHeight = 0f;
 
-        void Update()
+        public void Update()
         {
             if (this.transform.hasChanged)
             {
