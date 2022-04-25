@@ -21,11 +21,6 @@ namespace Bottle.Core.GridObjectData
         [Tooltip("The height of this grid object in the Grid.")]
         public float gridHeight = 0f;
 
-        private void Awake()
-        {
-            
-        }
-
         void Update()
         {
             if (this.transform.hasChanged)
@@ -38,7 +33,6 @@ namespace Bottle.Core.GridObjectData
                 gridPosition = new Vector2Int((int)(newPos.x - 0.5f), (int)(newPos.z - 0.5f));
                 gridHeight = (int)(newPos.y);
             }
-            
         }
     }
 }
