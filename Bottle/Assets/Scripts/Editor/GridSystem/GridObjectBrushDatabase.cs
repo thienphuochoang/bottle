@@ -36,15 +36,11 @@ namespace Bottle.Editor.GridSystem
     public class GridObjectBrushDatabase : ScriptableObject
     {
 #if UNITY_EDITOR
-        public enum GridObjectType { TILE, ENTITY };
-        [EnumToggleButtons]
-        public GridObjectType databaseType = GridObjectType.TILE;
         [ReadOnly]
-        public int selectedGridBrushIndex = 0;
+        public int selectedGridBrushIndex = -1;
         [SerializeField]
-        [ShowIf("databaseType", GridObjectType.TILE)]
-        private List<GridTileBrushData> _gridBrushDatas = new List<GridTileBrushData>();
-        public List<GridTileBrushData> GridBrushDatas
+        private List<GridObjectBrushData> _gridBrushDatas = new List<GridObjectBrushData>();
+        public List<GridObjectBrushData> GridBrushDatas
         {
             get
             {
@@ -54,14 +50,14 @@ namespace Bottle.Editor.GridSystem
             {
                 if (value == null)
                 {
-                    _gridBrushDatas = new List<GridTileBrushData>();
+                    _gridBrushDatas = new List<GridObjectBrushData>();
                 }
                 else
                     _gridBrushDatas = value;
             }
         }
 
-        public GridTileBrushData SelectedGridBrush
+        public GridObjectBrushData SelectedGridBrush
         {
             get
             {

@@ -4,23 +4,26 @@ using UnityEditor;
 using UnityEditor.Tilemaps;
 using Bottle.Core.GridObjectData;
 using Bottle.Core.Manager;
+using Sirenix.OdinInspector;
 using System;
 namespace Bottle.Editor.GridSystem
 {
     [System.Serializable]
-    public class GridTileBrushData
+    public class GridObjectBrushData
     {
         public GridTile gridTile;
+        public GridEntity gridEntity;
         public float scale = 1.0f;
         public Vector3 rotation = Vector3.zero;
 
-        public GridTileBrushData() { }
+        public GridObjectBrushData() { }
 
-        public GridTileBrushData(GridTileBrushData gridTileBrushData)
+        public GridObjectBrushData(GridObjectBrushData gridObjectBrushData)
         {
-            this.gridTile = gridTileBrushData.gridTile;
-            this.scale = gridTileBrushData.scale;
-            this.rotation = gridTileBrushData.rotation;
+            this.gridEntity = gridObjectBrushData.gridEntity;
+            this.gridTile = gridObjectBrushData.gridTile;
+            this.scale = gridObjectBrushData.scale;
+            this.rotation = gridObjectBrushData.rotation;
         }
 
         public void ResetParameters()
@@ -41,6 +44,17 @@ namespace Bottle.Editor.GridSystem
             set
             {
                 _tile = value;
+            }
+        }
+        public GridEntity Entity
+        {
+            get
+            {
+                return _entity;
+            }
+            set
+            {
+                _entity = value;
             }
         }
         public float Scale
@@ -68,6 +82,7 @@ namespace Bottle.Editor.GridSystem
 
         
         [SerializeField] private GridTile _tile;
+        [SerializeField] private GridEntity _entity;
         [SerializeField] private float _scale = 1;
         [SerializeField] Quaternion _rotation = Quaternion.identity;
 
@@ -77,6 +92,7 @@ namespace Bottle.Editor.GridSystem
             unchecked
             {
                 hash = Tile != null ? Tile.GetInstanceID() : 0;
+                hash = Entity != null ? Entity.GetInstanceID() : 0;
                 hash = hash * 33 + Scale.GetHashCode();
                 hash = hash * 33 + Rotation.GetHashCode();
             }
@@ -178,16 +194,25 @@ namespace Bottle.Editor.GridSystem
         #endregion
 
         #region PaintCell
-        private void PaintCell(GridLayout grid, Vector3Int position, BrushCell tile)
+        private void PaintCell(GridLayout grid, Vector3Int position, BrushCell cell)
         {
-            if (tile.Tile != null)
+            if (cell.Tile != null)
             {
                 Vector2Int gridPosition = new Vector2Int(position.x, position.y);
                 GridTile checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z);
                 if (checkedAlreadyPlacedGridObject == default(GridTile))
-                    GridManager.Instance.CreateGridObject<GridTile>(tile.Tile, gridPosition, position.z, tile.Scale, tile.Rotation);
+                    GridManager.Instance.CreateGridObject<GridTile>(cell.Tile, gridPosition, position.z, cell.Scale, cell.Rotation);
                 else
-                    Debug.LogError("There is already a grid object available at this position");
+                    Debug.LogError("There is already a grid tile available at this position");
+            }
+            else if (cell.Entity != null)
+            {
+                Vector2Int gridPosition = new Vector2Int(position.x, position.y);
+                GridEntity checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(gridPosition, position.z);
+                if (checkedAlreadyPlacedGridObject == default(GridEntity))
+                    GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
+                else
+                    Debug.LogError("There is already a grid entity available at this position");
             }
         }
 
@@ -201,9 +226,8 @@ namespace Bottle.Editor.GridSystem
             BoundsInt bounds = new BoundsInt(min, _size);
             BoxFill(gridLayout, brushTarget, bounds);
         }
-        #endregion
+        
 
-        #region PaintFilledBoxCell
         public override void BoxFill(GridLayout gridLayout, GameObject brushTarget, BoundsInt position)
         {
             if (brushTarget == null || gridLayout == null) return;
@@ -261,12 +285,23 @@ namespace Bottle.Editor.GridSystem
         }
 
 
-        public void SetBrushCellData(GridTile gridTile, float scale, Quaternion orientation)
+        public void SetBrushCellData<T>(T gridObject, float scale, Quaternion orientation) where T : Component
         {
-            _currentSelectedBrushCell = new BrushCell();
-            _currentSelectedBrushCell.Tile = gridTile;
-            _currentSelectedBrushCell.Scale = scale;
-            _currentSelectedBrushCell.Rotation = orientation;
+            System.Type gridObjectType = typeof(T);
+            if (gridObjectType.Equals(typeof(GridTile)))
+            {
+                _currentSelectedBrushCell = new BrushCell();
+                _currentSelectedBrushCell.Tile = (GridTile)(object)gridObject;
+                _currentSelectedBrushCell.Scale = scale;
+                _currentSelectedBrushCell.Rotation = orientation;
+            }
+            else if (gridObjectType.Equals(typeof(GridEntity)))
+            {
+                _currentSelectedBrushCell = new BrushCell();
+                _currentSelectedBrushCell.Entity = (GridEntity)(object)gridObject;
+                _currentSelectedBrushCell.Scale = scale;
+                _currentSelectedBrushCell.Rotation = orientation;
+            }
         }
 
         public void ClearBrushCellData()

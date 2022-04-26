@@ -152,6 +152,10 @@ PrefabInstance:
       propertyPath: _tileHolder
       value: 
       objectReference: {fileID: 6709109861861000284}
+    - target: {fileID: 4051904445975037114, guid: 989dbaf33b0ad4543abcdaf623b52080, type: 3}
+      propertyPath: _entityHolder
+      value: 
+      objectReference: {fileID: 6709109861715892898}
     - target: {fileID: 4693360827026330069, guid: 989dbaf33b0ad4543abcdaf623b52080, type: 3}
       propertyPath: m_RootOrder
       value: 1

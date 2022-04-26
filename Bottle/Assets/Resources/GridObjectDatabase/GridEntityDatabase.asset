@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18a6427a87a7a564a94ccb077adf9577, type: 3}
+  m_Name: GridEntityDatabase
+  m_EditorClassIdentifier: 
+  selectedGridBrushIndex: 1
+  _gridBrushDatas:
+  - gridTile: {fileID: 0}
+    gridEntity: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
+    scale: 0.25
+    rotation: {x: 0, y: 0, z: 0}
+  - gridTile: {fileID: 0}
+    gridEntity: {fileID: 4690770049057008018, guid: 4651fdbd4bf1db7429fdade8d59b586c, type: 3}
+    scale: 0.25
+    rotation: {x: 0, y: 0, z: 0}

@@ -44,10 +44,18 @@ namespace Bottle.Editor.GridSystem
                     currentBrushDatabase = _gridObjectDatabaseList.brushDatabases[selectedDatabaseIndex];
                     //TargetBrush.ClearBrushCellData();
                     var tileBrush = currentBrushDatabase.SelectedGridBrush;
-                    if (tileBrush != null)
+                    if (tileBrush.gridTile != null)
                     {
                         TargetBrush.SetBrushCellData(
                             tileBrush.gridTile,
+                            tileBrush.scale,
+                            Quaternion.Euler(tileBrush.rotation)
+                        );
+                    }
+                    else if (tileBrush.gridEntity != null)
+                    {
+                        TargetBrush.SetBrushCellData(
+                            tileBrush.gridEntity,
                             tileBrush.scale,
                             Quaternion.Euler(tileBrush.rotation)
                         );
@@ -71,7 +79,7 @@ namespace Bottle.Editor.GridSystem
             }
             GUI.backgroundColor = Color.red;
             if (GUILayout.Button(new GUIContent("Remove Selected Grid Object", "Removes the selected grid object from the database.")) &&
-                                 RemoveSelectedBrushesDialog(currentBrushDatabase.SelectedGridBrush.gridTile.name))
+                                 RemoveSelectedBrushesDialog(currentBrushDatabase.SelectedGridBrush))
             {
                 if (currentBrushDatabase.SelectedGridBrush != null)
                 {
@@ -81,13 +89,25 @@ namespace Bottle.Editor.GridSystem
             EditorGUILayout.EndHorizontal();
             GUI.backgroundColor = Color.grey;
         }
-        private bool RemoveSelectedBrushesDialog(string brushName)
+        private bool RemoveSelectedBrushesDialog(GridObjectBrushData currentSelectingBrush)
         {
-            return EditorUtility.DisplayDialog(
-                "Remove selected Grid Object?",
-                "Are you sure you want to remove selected Grid Object (" + brushName + ") from this collection?",
-                "Remove",
-                "Cancel");
+            if (currentSelectingBrush.gridTile != null)
+            {
+                return EditorUtility.DisplayDialog(
+                    "Remove selected Grid Object?",
+                    "Are you sure you want to remove selected Grid Object (" + currentSelectingBrush.gridTile.name + ") from this collection?",
+                    "Remove",
+                    "Cancel");
+            }
+            else if (currentSelectingBrush.gridEntity != null)
+            {
+                return EditorUtility.DisplayDialog(
+                    "Remove selected Grid Object?",
+                    "Are you sure you want to remove selected Grid Object (" + currentSelectingBrush.gridEntity.name + ") from this collection?",
+                    "Remove",
+                    "Cancel");
+            }
+            return false;
         }
 
         private static void CreateNewDatabase(string newDatabaseName)
@@ -126,7 +146,22 @@ namespace Bottle.Editor.GridSystem
                 {
                     GUI.backgroundColor = Color.green;
                 }
-                GUIContent btnContent = new GUIContent(AssetPreview.GetAssetPreview(brushData.gridTile.gameObject), brushData.gridTile.gameObject.name);
+
+                if (currentBrushDatabase.SelectedGridBrush != null &&
+                    currentBrushDatabase.SelectedGridBrush.gridEntity != null &&
+                    currentBrushDatabase.SelectedGridBrush.gridEntity == brushData.gridEntity)
+                {
+                    GUI.backgroundColor = Color.green;
+                }
+                GUIContent btnContent = new GUIContent("NULL");
+                try
+                {
+                    btnContent = new GUIContent(AssetPreview.GetAssetPreview(brushData.gridTile.gameObject), brushData.gridTile.gameObject.name + "\n" + "Scale: " + brushData.scale + "\n" + "Rotation: " + brushData.rotation);
+                }
+                catch
+                {
+                    btnContent = new GUIContent(AssetPreview.GetAssetPreview(brushData.gridEntity.gameObject), brushData.gridEntity.gameObject.name + "\n" + "Scale: " + brushData.scale + "\n" + "Rotation: " + brushData.rotation);
+                }
                 if (GUILayout.Button(btnContent, GUILayout.Width(_brushButtonSize), GUILayout.Height(_brushButtonSize)))
                 {
                     
