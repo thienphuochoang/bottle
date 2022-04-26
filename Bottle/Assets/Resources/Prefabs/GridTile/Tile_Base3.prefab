@@ -214,7 +214,7 @@ MonoBehaviour:
   gridPosition: {x: 0, y: 0}
   gridHeight: 0
   pivotOffset: {x: 0, y: -0.5, z: 0}
-  isWalkable: 0
+  isStandable: 0
 --- !u!1 &3391990118255458888
 GameObject:
   m_ObjectHideFlags: 0
@@ -388,7 +388,6 @@ GameObject:
   - component: {fileID: 3391990118255713178}
   - component: {fileID: 3391990118258624032}
   - component: {fileID: 3391990118257629218}
-  - component: {fileID: 8804522189701443283}
   m_Layer: 0
   m_Name: Tile_1_B
   m_TagString: Untagged
@@ -459,19 +458,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &8804522189701443283
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3391990118255480882}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1.0001891, z: 1}
-  m_Center: {x: 0, y: -0.48990545, z: 0}
 --- !u!1 &3391990118255481340
 GameObject:
   m_ObjectHideFlags: 0

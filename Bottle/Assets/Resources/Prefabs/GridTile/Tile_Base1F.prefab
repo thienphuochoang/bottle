@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 5188239624526539393}
   - component: {fileID: 5188239624529956433}
   - component: {fileID: 5188239624528898533}
-  - component: {fileID: 2494884546679965752}
   m_Layer: 0
   m_Name: Tile_1_F
   m_TagString: Untagged
@@ -82,19 +81,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &2494884546679965752
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5188239624526646245}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1.0001891, z: 1}
-  m_Center: {x: 0, y: -0.48990545, z: 0}
 --- !u!1 &5188239624526853107
 GameObject:
   m_ObjectHideFlags: 0
@@ -224,4 +210,4 @@ MonoBehaviour:
   gridPosition: {x: 0, y: 0}
   gridHeight: 0
   pivotOffset: {x: 0, y: -0.5, z: 0}
-  isWalkable: 0
+  isStandable: 0
