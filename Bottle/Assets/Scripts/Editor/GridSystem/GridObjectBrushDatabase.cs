@@ -37,7 +37,7 @@ namespace Bottle.Editor.GridSystem
     {
 #if UNITY_EDITOR
         [ReadOnly]
-        public int selectedGridBrushIndex = -1;
+        public int selectedGridBrushIndex = 0;
         [SerializeField]
         private List<GridObjectBrushData> _gridBrushDatas = new List<GridObjectBrushData>();
         public List<GridObjectBrushData> GridBrushDatas

@@ -7,7 +7,7 @@ namespace Bottle.Extensions.Singleton
     ///     scene, which can be inherited and make sure there's only one
     ///     instance in the scene.
     /// </summary>
-    public class PersistentObject<T> : MonoBehaviour where T : Component
+    public class PersistentObject<T> : SerializedMonoBehaviour where T : Component
     {
         // Variables
         // ------------------------------------------------------------------------

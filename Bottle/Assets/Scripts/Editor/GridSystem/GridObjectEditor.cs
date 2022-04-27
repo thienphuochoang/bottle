@@ -42,9 +42,9 @@ namespace Bottle.Editor.GridSystem
                 {
                     selectedDatabaseIndex = EditorGUILayout.Popup(selectedDatabaseIndex, _gridObjectDatabaseList.GetNameList());
                     currentBrushDatabase = _gridObjectDatabaseList.brushDatabases[selectedDatabaseIndex];
-                    //TargetBrush.ClearBrushCellData();
+                    TargetBrush.ClearBrushCellData();
                     var tileBrush = currentBrushDatabase.SelectedGridBrush;
-                    if (tileBrush.gridTile != null)
+                    if (tileBrush != null && tileBrush.gridTile != null)
                     {
                         TargetBrush.SetBrushCellData(
                             tileBrush.gridTile,
@@ -52,7 +52,7 @@ namespace Bottle.Editor.GridSystem
                             Quaternion.Euler(tileBrush.rotation)
                         );
                     }
-                    else if (tileBrush.gridEntity != null)
+                    else if (tileBrush != null && tileBrush.gridEntity != null)
                     {
                         TargetBrush.SetBrushCellData(
                             tileBrush.gridEntity,
@@ -172,7 +172,7 @@ namespace Bottle.Editor.GridSystem
                     else
                     {
                         currentBrushDatabase.selectedGridBrushIndex = -1;
-                        //TargetBrush.ClearBrushCellData();
+                        TargetBrush.ClearBrushCellData();
                     }
                 }
                 GUI.backgroundColor = Color.grey;
