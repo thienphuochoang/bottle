@@ -7,29 +7,9 @@ using Bottle.Core.GridObjectData;
 using Sirenix.OdinInspector;
 namespace Bottle.Core.Manager
 {
-    [System.Serializable]
-    public struct GridObjectSavedData
-    {
-        [ShowInInspector]
-        public GridTile savedGridTile;
-        [ShowInInspector]
-        public GridEntity savedGridEntity;
-        [ShowInInspector]
-        public Vector2Int savedGridPosition;
-        [ShowInInspector]
-        public float savedGridHeight;
-
-        public GridObjectSavedData(GridObjectSavedData gridObjectSavedData)
-        {
-            this.savedGridTile = gridObjectSavedData.savedGridTile;
-            this.savedGridEntity = gridObjectSavedData.savedGridEntity;
-            this.savedGridPosition = gridObjectSavedData.savedGridPosition;
-            this.savedGridHeight = gridObjectSavedData.savedGridHeight;
-        }
-    }
-
     public class GameplayManager : PersistentObject<GameplayManager>
     {
+        [Range(0, 10)]
         public int currentTurn = 0;
 
         private GridEntity[] _allGridEntities => GridManager.Instance.EntityHolder.GetComponentsInChildren<GridEntity>();
@@ -38,53 +18,21 @@ namespace Bottle.Core.Manager
         [SerializeField]
         private int _turnCount;
 
-        private List<int> _turns = new List<int>();
-        public List<int> Turns
-        {
-            get
-            {
-                return _turns;
-            }
-            set
-            {
-                _turns = value;
-            }
-        }
         [SerializeField]
         protected Dictionary<int, List<GridObjectSavedData>> gridObjectSavedDatas = new Dictionary<int, List<GridObjectSavedData>>();
 
-        T CopyComponent<T>(T original, GameObject destination) where T : Component
-        {
-            System.Type type = original.GetType();
-            var dst = destination.GetComponent(type) as T;
-            if (!dst) dst = destination.AddComponent(type) as T;
-            var fields = type.GetFields();
-            foreach (var field in fields)
-            {
-                if (field.IsStatic) continue;
-                field.SetValue(dst, field.GetValue(original));
-            }
-            var props = type.GetProperties();
-            foreach (var prop in props)
-            {
-                if (!prop.CanWrite || !prop.CanWrite || prop.Name == "name") continue;
-                prop.SetValue(dst, prop.GetValue(original, null), null);
-            }
-            return dst as T;
-        }
-
         private void SaveSceneState()
         {
-            //List<GridObjectSavedData> gridTileSaveDataList = new List<GridObjectSavedData>();
-            //foreach (GridTile gridTile in allGridTiles)
-            //{
-            //    GridObjectSavedData currentGridObjectData = new GridObjectSavedData();
-            //    currentGridObjectData.gridTile = gridTile;
-            //    currentGridObjectData.gridEntity = null;
-            //    gridTileSaveDataList.Add(currentGridObjectData);
-            //}
-            //gridObjectSavedDatas.Add(_turnCount, gridTileSaveDataList);
-            List<GridObjectSavedData> gridEntitySaveDataList = new List<GridObjectSavedData>();
+            List<GridObjectSavedData> gridObjectSaveDataList = new List<GridObjectSavedData>();
+            for (int i = 0; i < _allGridTiles.Length; i++)
+            {
+                GridObjectSavedData currentGridObjectData = new GridObjectSavedData();
+                currentGridObjectData.savedGridEntity = null;
+                currentGridObjectData.savedGridTile = _allGridTiles[i];
+                currentGridObjectData.savedGridPosition = _allGridTiles[i].gridPosition;
+                currentGridObjectData.savedGridHeight = _allGridTiles[i].gridHeight;
+                gridObjectSaveDataList.Add(currentGridObjectData);
+            }
             for (int i = 0; i < _allGridEntities.Length; i++)
             {
                 GridObjectSavedData currentGridObjectData = new GridObjectSavedData();
@@ -92,24 +40,35 @@ namespace Bottle.Core.Manager
                 currentGridObjectData.savedGridTile = null;
                 currentGridObjectData.savedGridPosition = _allGridEntities[i].gridPosition;
                 currentGridObjectData.savedGridHeight = _allGridEntities[i].gridHeight;
-                gridEntitySaveDataList.Add(currentGridObjectData);
+                gridObjectSaveDataList.Add(currentGridObjectData);
             }
             if (!gridObjectSavedDatas.ContainsKey(_turnCount))
-                gridObjectSavedDatas.Add(_turnCount, gridEntitySaveDataList);
+            {
+                gridObjectSavedDatas.Add(_turnCount, gridObjectSaveDataList);
+            } 
             else
-                gridObjectSavedDatas[_turnCount] = gridEntitySaveDataList;
+            {
+                gridObjectSavedDatas[_turnCount] = gridObjectSaveDataList;
+            }
         }
 
         private void LoadSceneState()
         {
-            List<GridObjectSavedData> chosenGridObjectSaveDataList = gridObjectSavedDatas[currentTurn];
-            foreach(var gridObjectSaveData in chosenGridObjectSaveDataList)
+            if (currentTurn >= 0)
             {
-                GridEntity newGridEntity = new GridEntity();
-                newGridEntity.gridPosition = gridObjectSaveData.savedGridPosition;
-                newGridEntity.gridHeight = gridObjectSaveData.savedGridHeight;
-                CopyComponent<GridEntity>(newGridEntity, gridObjectSaveData.savedGridEntity.gameObject);
+                List<GridObjectSavedData> chosenGridObjectSaveDataList = gridObjectSavedDatas[currentTurn];
+                foreach (var gridObjectSaveData in chosenGridObjectSaveDataList)
+                {
+                    Vector3Int savedCellPos = new Vector3Int(gridObjectSaveData.savedGridPosition.x, gridObjectSaveData.savedGridPosition.y, (int)gridObjectSaveData.savedGridHeight);
+                    Vector3 savedWorldPos = GridManager.Instance.grid.GetCellCenterWorld(savedCellPos);
+                    savedWorldPos.y = gridObjectSaveData.savedGridHeight;
+                    if (gridObjectSaveData.savedGridEntity != null)
+                        gridObjectSaveData.savedGridEntity.transform.position = savedWorldPos;
+                    else if (gridObjectSaveData.savedGridTile != null)
+                        gridObjectSaveData.savedGridTile.transform.position = savedWorldPos;
+                }
             }
+
         }
 
         protected override void Awake()
