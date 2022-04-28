@@ -9,5 +9,15 @@ namespace Bottle.Core.GridObjectData
         [BoxGroup("Grid Entity Settings", true, true)]
         [Tooltip("The specific grid entity setup.")]
         public bool isControllable;
+
+        protected override void Update()
+        {
+            base.Update();
+            if (Input.GetButtonDown("Fire1"))
+            {
+                Debug.Log("ahihi");
+                //test.Set("Da pressed");
+            }
+        }
     }
 }

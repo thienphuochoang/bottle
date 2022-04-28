@@ -7,7 +7,7 @@ using Bottle.Core.Manager;
 namespace Bottle.Core.GridObjectData
 {
     [ExecuteInEditMode]
-    public class GridObject : MonoBehaviour
+    public abstract class GridObject : MonoBehaviour
     {
         [ReadOnly]
         [BoxGroup("Grid Object General Settings", true, true)]
@@ -23,7 +23,7 @@ namespace Bottle.Core.GridObjectData
         [Tooltip("The height of this grid object in the Grid.")]
         public Vector3 pivotOffset = new Vector3(0, 0, 0);
 
-        public void Update()
+        protected virtual void Update()
         {
             if (this.transform.hasChanged)
             {
