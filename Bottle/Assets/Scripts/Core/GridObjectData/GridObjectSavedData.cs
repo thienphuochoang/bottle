@@ -7,21 +7,12 @@ using Bottle.Core.Manager;
 namespace Bottle.Core.GridObjectData
 {
     [System.Serializable]
-    public class GridObjectSavedData
+    public struct GridObjectSaveData
     {
-        public GridTile savedGridTile;
-        public GridEntity savedGridEntity;
-        public Vector2Int savedGridPosition;
-        public float savedGridHeight;
-
-        public GridObjectSavedData() { }
-
-        public GridObjectSavedData(GridObjectSavedData gridObjectSavedData)
+        public List<GridObject> gridObjectList;
+        public GridObjectSaveData(List<GridObject> gridObjectList)
         {
-            this.savedGridTile = gridObjectSavedData.savedGridTile;
-            this.savedGridEntity = gridObjectSavedData.savedGridEntity;
-            this.savedGridPosition = gridObjectSavedData.savedGridPosition;
-            this.savedGridHeight = gridObjectSavedData.savedGridHeight;
+            this.gridObjectList = gridObjectList;
         }
     }
     [System.Serializable]

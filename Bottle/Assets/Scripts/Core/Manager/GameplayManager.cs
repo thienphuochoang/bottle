@@ -19,7 +19,7 @@ namespace Bottle.Core.Manager
         [SerializeField]
         private int _turnCount;
 
-        public Dictionary<int, List<GridObject>> gridObjectSavedDatas = new Dictionary<int, List<GridObject>>();
+        public Dictionary<int, GridObjectSaveData> gridObjectSavedDatas;
 
         private void SaveSceneState()
         {
