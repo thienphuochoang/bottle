@@ -43,34 +43,35 @@ namespace Bottle.Core.Manager
                 //currentGridObjectData.savedGridHeight = _allGridEntities[i].gridHeight;
                 gridObjectSaveDataList.Add(_allGridEntities[i]);
             }
-            Debug.Log(gridObjectSavedDatas);
+            GridObjectSaveData gridObjectSaveData = new GridObjectSaveData();
+            gridObjectSaveData.gridObjectList = gridObjectSaveDataList;
             if (!gridObjectSavedDatas.ContainsKey(_turnCount))
             {
-                gridObjectSavedDatas.Add(_turnCount, gridObjectSaveDataList);
+                gridObjectSavedDatas.Add(_turnCount, gridObjectSaveData);
             } 
             else
             {
-                gridObjectSavedDatas[_turnCount] = gridObjectSaveDataList;
+                gridObjectSavedDatas[_turnCount] = gridObjectSaveData;
             }
+
             string json = JsonConvert.SerializeObject(gridObjectSavedDatas, Formatting.Indented);
             Debug.Log(json);
-
         }
 
         private void LoadSceneState()
         {
             if (currentTurn >= 0)
             {
-                List<GridObject> chosenGridObjectSaveDataList = gridObjectSavedDatas[currentTurn];
+                var chosenGridObjectSaveDataList = gridObjectSavedDatas[currentTurn];
                 foreach (var gridObjectSaveData in chosenGridObjectSaveDataList)
                 {
-                    //Vector3Int savedCellPos = new Vector3Int(gridObjectSaveData.savedGridPosition.x, gridObjectSaveData.savedGridPosition.y, (int)gridObjectSaveData.savedGridHeight);
-                    //Vector3 savedWorldPos = GridManager.Instance.grid.GetCellCenterWorld(savedCellPos);
-                    //savedWorldPos.y = gridObjectSaveData.savedGridHeight;
-                    //if (gridObjectSaveData.savedGridEntity != null)
-                    //    gridObjectSaveData.savedGridEntity.transform.position = savedWorldPos;
-                    //else if (gridObjectSaveData.savedGridTile != null)
-                    //    gridObjectSaveData.savedGridTile.transform.position = savedWorldPos;
+                    Vector3Int savedCellPos = new Vector3Int(gridObjectSaveData.savedGridPosition.x, gridObjectSaveData.savedGridPosition.y, (int)gridObjectSaveData.savedGridHeight);
+                    Vector3 savedWorldPos = GridManager.Instance.grid.GetCellCenterWorld(savedCellPos);
+                    savedWorldPos.y = gridObjectSaveData.savedGridHeight;
+                    if (gridObjectSaveData.savedGridEntity != null)
+                        gridObjectSaveData.savedGridEntity.transform.position = savedWorldPos;
+                    else if (gridObjectSaveData.savedGridTile != null)
+                        gridObjectSaveData.savedGridTile.transform.position = savedWorldPos;
                 }
             }
 
