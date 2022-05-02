@@ -6,6 +6,8 @@ using Bottle.Extensions.Singleton;
 using Bottle.Core.GridObjectData;
 using Sirenix.OdinInspector;
 using Newtonsoft.Json;
+using System.IO;
+using Bottle.Extensions.Helper;
 namespace Bottle.Core.Manager
 {
     public class GameplayManager : PersistentObject<GameplayManager>
@@ -19,7 +21,7 @@ namespace Bottle.Core.Manager
         [SerializeField]
         private int _turnCount;
 
-        public Dictionary<int, GridObjectSaveData> gridObjectSavedDatas;
+        public Dictionary<int, GridObjectSaveData> gridObjectSavedDatas = new Dictionary<int, GridObjectSaveData>();
 
         private void SaveSceneState()
         {
@@ -31,7 +33,7 @@ namespace Bottle.Core.Manager
                 //currentGridObjectData.savedGridTile = _allGridTiles[i];
                 //currentGridObjectData.savedGridPosition = _allGridTiles[i].gridPosition;
                 //currentGridObjectData.savedGridHeight = _allGridTiles[i].gridHeight;
-                gridObjectSaveDataList.Add(_allGridTiles[i]);
+                //gridObjectSaveDataList.Add(_allGridTiles[i]);
             }
             for (int i = 0; i < _allGridEntities.Length; i++)
             {
@@ -53,26 +55,52 @@ namespace Bottle.Core.Manager
             {
                 gridObjectSavedDatas[_turnCount] = gridObjectSaveData;
             }
-
-            string json = JsonConvert.SerializeObject(gridObjectSavedDatas, Formatting.Indented);
-            Debug.Log(json);
+            if (!File.Exists(DatabaseHelper.sceneStateDatabaseFileName))
+            {
+                DatabaseHelper.AddNewDatabase(DatabaseHelper.sceneStateDatabaseFileName, gridObjectSavedDatas);
+            }
+            else
+            {
+                //DatabaseHelper.UpdateDatabase(DatabaseHelper.sceneStateDatabaseFileName, gridObjectSavedDatas);
+            }
         }
 
         private void LoadSceneState()
         {
             if (currentTurn >= 0)
             {
-                var chosenGridObjectSaveDataList = gridObjectSavedDatas[currentTurn];
-                foreach (var gridObjectSaveData in chosenGridObjectSaveDataList)
+                var currentSceneStateDatabase = DatabaseHelper.GetDatabase(DatabaseHelper.sceneStateDatabaseFileName);
+                var chosenCurrentTurnSceneStateDatabase = currentSceneStateDatabase[currentTurn];
+                foreach (var ahihi in chosenCurrentTurnSceneStateDatabase.gridObjectList)
                 {
-                    Vector3Int savedCellPos = new Vector3Int(gridObjectSaveData.savedGridPosition.x, gridObjectSaveData.savedGridPosition.y, (int)gridObjectSaveData.savedGridHeight);
-                    Vector3 savedWorldPos = GridManager.Instance.grid.GetCellCenterWorld(savedCellPos);
-                    savedWorldPos.y = gridObjectSaveData.savedGridHeight;
-                    if (gridObjectSaveData.savedGridEntity != null)
-                        gridObjectSaveData.savedGridEntity.transform.position = savedWorldPos;
-                    else if (gridObjectSaveData.savedGridTile != null)
-                        gridObjectSaveData.savedGridTile.transform.position = savedWorldPos;
+                    Debug.Log(ahihi.gridPosition);
                 }
+                //foreach (var gridObjectSaveData in chosenGridObjectSaveDataList.gridObjectList)
+                //{
+                //    for (int i = 0; i < _allGridTiles.Length; i++)
+                //    {
+                //        if (_allGridTiles[i].uID == gridObjectSaveData.uID)
+                //        {
+                //            _allGridTiles[i].gridPosition = gridObjectSaveData.gridPosition;
+                //            _allGridTiles[i].gridHeight = gridObjectSaveData.gridHeight;
+                //        }
+                //    }
+                //    for (int i = 0; i < _allGridEntities.Length; i++)
+                //    {
+                //        if (_allGridEntities[i].uID == gridObjectSaveData.uID)
+                //        {
+                //            _allGridEntities[i].gridPosition = gridObjectSaveData.gridPosition;
+                //            _allGridEntities[i].gridHeight = gridObjectSaveData.gridHeight;
+                //        }
+                //    }
+                    //Vector3Int savedCellPos = new Vector3Int(gridObjectSaveData.savedGridPosition.x, gridObjectSaveData.savedGridPosition.y, (int)gridObjectSaveData.savedGridHeight);
+                    //Vector3 savedWorldPos = GridManager.Instance.grid.GetCellCenterWorld(savedCellPos);
+                    //savedWorldPos.y = gridObjectSaveData.savedGridHeight;
+                    //if (gridObjectSaveData.savedGridEntity != null)
+                    //    gridObjectSaveData.savedGridEntity.transform.position = savedWorldPos;
+                    //else if (gridObjectSaveData.savedGridTile != null)
+                    //    gridObjectSaveData.savedGridTile.transform.position = savedWorldPos;
+                //}
             }
 
         }
@@ -86,7 +114,6 @@ namespace Bottle.Core.Manager
         {
             base.Start();
             SaveSceneState();
-            //Debug.Log(gridObjectSavedDatas[0][0].gridEntity.gridPosition);
         }
         private void Update()
         {
@@ -94,13 +121,19 @@ namespace Bottle.Core.Manager
             {
                 _turnCount++;
                 SaveSceneState();
-                //Debug.Log(gridObjectSavedDatas[_turnCount][0].gridEntity.gridPosition);
                 currentTurn = _turnCount;
             }
             if (Input.GetButtonUp("Horizontal"))
             {
-                currentTurn = currentTurn - 1;
+                //currentTurn = currentTurn - 1;
                 LoadSceneState();
+            }
+        }
+        protected override void OnApplicationQuit()
+        {
+            if (File.Exists(DatabaseHelper.sceneStateDatabaseFileName))
+            {
+                File.Delete(DatabaseHelper.sceneStateDatabaseFileName);
             }
         }
     }

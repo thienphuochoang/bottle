@@ -15,7 +15,6 @@ namespace Bottle.Core.GridObjectData
             base.Update();
             if (Input.GetButtonDown("Fire1"))
             {
-                Debug.Log("ahihi");
                 //test.Set("Da pressed");
             }
         }

@@ -1,0 +1,162 @@
+{
+  "0": {
+    "gridObjectList": [
+      {
+        "$type": "Bottle.Core.GridObjectData.GridEntity, Assembly-CSharp",
+        "gridPosition": {
+          "x": -2,
+          "y": -1,
+          "magnitude": 2.236068,
+          "sqrMagnitude": 5
+        },
+        "gridHeight": 1.0,
+        "pivotOffset": {
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0
+        },
+        "_uID": "-1886"
+      }
+    ]
+  },
+  "1": {
+    "gridObjectList": [
+      {
+        "$type": "Bottle.Core.GridObjectData.GridEntity, Assembly-CSharp",
+        "gridPosition": {
+          "x": -2,
+          "y": -1,
+          "magnitude": 2.236068,
+          "sqrMagnitude": 5
+        },
+        "gridHeight": 1.0,
+        "pivotOffset": {
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0
+        },
+        "_uID": "-1886"
+      }
+    ]
+  },
+  "2": {
+    "gridObjectList": [
+      {
+        "$type": "Bottle.Core.GridObjectData.GridEntity, Assembly-CSharp",
+        "gridPosition": {
+          "x": -2,
+          "y": -1,
+          "magnitude": 2.236068,
+          "sqrMagnitude": 5
+        },
+        "gridHeight": 1.0,
+        "pivotOffset": {
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0
+        },
+        "_uID": "-1886"
+      }
+    ]
+  },
+  "3": {
+    "gridObjectList": [
+      {
+        "$type": "Bottle.Core.GridObjectData.GridEntity, Assembly-CSharp",
+        "gridPosition": {
+          "x": -2,
+          "y": -1,
+          "magnitude": 2.236068,
+          "sqrMagnitude": 5
+        },
+        "gridHeight": 1.0,
+        "pivotOffset": {
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0
+        },
+        "_uID": "-1886"
+      }
+    ]
+  },
+  "4": {
+    "gridObjectList": [
+      {
+        "$type": "Bottle.Core.GridObjectData.GridEntity, Assembly-CSharp",
+        "gridPosition": {
+          "x": -2,
+          "y": -1,
+          "magnitude": 2.236068,
+          "sqrMagnitude": 5
+        },
+        "gridHeight": 1.0,
+        "pivotOffset": {
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0
+        },
+        "_uID": "-1886"
+      }
+    ]
+  },
+  "5": {
+    "gridObjectList": [
+      {
+        "$type": "Bottle.Core.GridObjectData.GridEntity, Assembly-CSharp",
+        "gridPosition": {
+          "x": -2,
+          "y": -1,
+          "magnitude": 2.236068,
+          "sqrMagnitude": 5
+        },
+        "gridHeight": 1.0,
+        "pivotOffset": {
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0
+        },
+        "_uID": "-1886"
+      }
+    ]
+  },
+  "6": {
+    "gridObjectList": [
+      {
+        "$type": "Bottle.Core.GridObjectData.GridEntity, Assembly-CSharp",
+        "gridPosition": {
+          "x": -2,
+          "y": -1,
+          "magnitude": 2.236068,
+          "sqrMagnitude": 5
+        },
+        "gridHeight": 1.0,
+        "pivotOffset": {
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0
+        },
+        "_uID": "-1886"
+      }
+    ]
+  },
+  "7": {
+    "gridObjectList": [
+      {
+        "$type": "Bottle.Core.GridObjectData.GridEntity, Assembly-CSharp",
+        "gridPosition": {
+          "x": -2,
+          "y": -1,
+          "magnitude": 2.236068,
+          "sqrMagnitude": 5
+        },
+        "gridHeight": 1.0,
+        "pivotOffset": {
+          "x": 0.0,
+          "y": -0.5,
+          "z": 0.0
+        },
+        "_uID": "-1886"
+      }
+    ]
+  }
+}

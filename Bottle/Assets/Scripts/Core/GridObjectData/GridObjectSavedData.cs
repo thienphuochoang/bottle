@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using Sirenix.OdinInspector;
 using Bottle.Core.Manager;
+using Newtonsoft.Json;
+using Bottle.Extensions.Helper;
 namespace Bottle.Core.GridObjectData
 {
     [System.Serializable]
@@ -18,9 +20,12 @@ namespace Bottle.Core.GridObjectData
     [System.Serializable]
     public abstract class GameData
     {
-        public GridObject savedGridObject;
-        public event UnityAction Changed;
-        protected void SendChanged() => Changed?.Invoke();
+        public event UnityAction ChangedAction;
+        protected void SendChanged()
+        {
+            if (ChangedAction != null)
+                ChangedAction.Invoke();
+        }
 
         public abstract void Save();
         public abstract void Load();
@@ -35,11 +40,10 @@ namespace Bottle.Core.GridObjectData
     {
         [ShowInInspector]
         public T Value { get; protected set; }
-        public GameData(GridObject assignedGridObject, T defaultValue, UnityAction onChanged = null)
+        public GameData(T defaultValue, UnityAction onChanged = null)
         {
-            savedGridObject = assignedGridObject;
             Value = defaultValue;
-            Changed += onChanged;
+            ChangedAction += onChanged;
             //GameplayManager.Instance.RegisterData(this);
         }
         public override void Save()

@@ -67,7 +67,7 @@ namespace Bottle.Extensions.Singleton
                 Destroy(this);
         }
 
-        protected void OnApplicationQuit()
+        protected virtual void OnApplicationQuit()
         {
             DestroyImmediate(this.gameObject);
         }
