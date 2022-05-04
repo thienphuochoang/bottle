@@ -29,21 +29,10 @@ namespace Bottle.Core.Manager
             List<GridObject> gridObjectSaveDataList = new List<GridObject>();
             for (int i = 0; i < _allGridTiles.Length; i++)
             {
-                //GridObjectSavedData currentGridObjectData = new GridObjectSavedData();
-                //currentGridObjectData.savedGridEntity = null;
-                //currentGridObjectData.savedGridTile = _allGridTiles[i];
-                //currentGridObjectData.savedGridPosition = _allGridTiles[i].gridPosition;
-                //currentGridObjectData.savedGridHeight = _allGridTiles[i].gridHeight;
-                //gridObjectSaveDataList.Add(_allGridTiles[i]);
+                gridObjectSaveDataList.Add(_allGridTiles[i]);
             }
             for (int i = 0; i < _allGridEntities.Length; i++)
             {
-                //json = JsonUtility.ToJson(_allGridEntities[i]);
-                //GridObjectSavedData currentGridObjectData = new GridObjectSavedData();
-                //currentGridObjectData.savedGridEntity = _allGridEntities[i];
-                //currentGridObjectData.savedGridTile = null;
-                //currentGridObjectData.savedGridPosition = _allGridEntities[i].gridPosition;
-                //currentGridObjectData.savedGridHeight = _allGridEntities[i].gridHeight;
                 gridObjectSaveDataList.Add(_allGridEntities[i]);
             }
             GridObjectSaveData gridObjectSaveData = new GridObjectSaveData();
@@ -56,7 +45,6 @@ namespace Bottle.Core.Manager
             {
                 gridObjectSavedDatas[turn] = gridObjectSaveData;
             }
-            Debug.Log(turn);
             if (turn == 0)
             {
                 DatabaseHelper.AddNewDatabase(DatabaseHelper.sceneStateDatabaseFileName, gridObjectSavedDatas);
@@ -74,26 +62,12 @@ namespace Bottle.Core.Manager
             }
         }
 
-        private void LoadSceneState()
+        private void LoadSceneState(int turn)
         {
-            if (currentTurn >= 0)
+            if (turn >= 0)
             {
                 var currentSceneStateDatabase = DatabaseHelper.GetDatabase(DatabaseHelper.sceneStateDatabaseFileName);
-                var chosenCurrentTurnSceneStateDatabase = currentSceneStateDatabase[currentTurn];
-                foreach (var data in chosenCurrentTurnSceneStateDatabase.gridObjectList)
-                {
-                    
-                }
-                //foreach (var gridObjectSaveData in chosenGridObjectSaveDataList.gridObjectList)
-                //{
-                //    for (int i = 0; i < _allGridTiles.Length; i++)
-                //    {
-                //        if (_allGridTiles[i].uID == gridObjectSaveData.uID)
-                //        {
-                //            _allGridTiles[i].gridPosition = gridObjectSaveData.gridPosition;
-                //            _allGridTiles[i].gridHeight = gridObjectSaveData.gridHeight;
-                //        }
-                //    }
+                var chosenCurrentTurnSceneStateDatabase = currentSceneStateDatabase[turn];
                 for (int i = 0; i < _allGridEntities.Length; i++)
                 {
                     foreach (var data in chosenCurrentTurnSceneStateDatabase.gridObjectList)
@@ -102,20 +76,23 @@ namespace Bottle.Core.Manager
                         {
                             _allGridEntities[i].gridPosition = data.gridPosition;
                             _allGridEntities[i].gridHeight = data.gridHeight;
+                            //break;
                         }
                     }
-
                 }
-                //Vector3Int savedCellPos = new Vector3Int(gridObjectSaveData.savedGridPosition.x, gridObjectSaveData.savedGridPosition.y, (int)gridObjectSaveData.savedGridHeight);
-                //Vector3 savedWorldPos = GridManager.Instance.grid.GetCellCenterWorld(savedCellPos);
-                //savedWorldPos.y = gridObjectSaveData.savedGridHeight;
-                //if (gridObjectSaveData.savedGridEntity != null)
-                //    gridObjectSaveData.savedGridEntity.transform.position = savedWorldPos;
-                //else if (gridObjectSaveData.savedGridTile != null)
-                //    gridObjectSaveData.savedGridTile.transform.position = savedWorldPos;
-                //}
+                for (int i = 0; i < _allGridTiles.Length; i++)
+                {
+                    foreach (var data in chosenCurrentTurnSceneStateDatabase.gridObjectList)
+                    {
+                        if (_allGridTiles[i].uID == data.uID)
+                        {
+                            _allGridTiles[i].gridPosition = data.gridPosition;
+                            _allGridTiles[i].gridHeight = data.gridHeight;
+                            //break;
+                        }
+                    }
+                }
             }
-
         }
 
         protected override void Awake()
@@ -138,8 +115,8 @@ namespace Bottle.Core.Manager
             }
             if (Input.GetButtonUp("Horizontal"))
             {
-                //currentTurn = currentTurn - 1;
-                LoadSceneState();
+                currentTurn = currentTurn - 1;
+                LoadSceneState(currentTurn);
             }
         }
         protected override void OnApplicationQuit()

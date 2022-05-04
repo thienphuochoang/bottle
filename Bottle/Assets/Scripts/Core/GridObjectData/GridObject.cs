@@ -8,10 +8,13 @@ using Newtonsoft.Json;
 namespace Bottle.Core.GridObjectData
 {
     [JsonObject(MemberSerialization.OptIn)]
+    [ExecuteInEditMode]
     public abstract class GridObject : MonoBehaviour
     {
         [JsonProperty]
         [ReadOnly]
+        [BoxGroup("Grid Object General Settings", true, true)]
+        [Tooltip("The unique ID of this grid object in the Grid.")]
         [SerializeField]
         private string _uID;
         public string uID => _uID;
@@ -20,7 +23,8 @@ namespace Bottle.Core.GridObjectData
         [ReadOnly]
         [BoxGroup("Grid Object General Settings", true, true)]
         [Tooltip("The position of this grid object in the Grid.")]
-        private Vector2Int _gridPosition;
+        [SerializeField]
+        private Vector2Int _gridPosition = new Vector2Int(int.MaxValue, int.MaxValue);
         public Vector2Int gridPosition
         {
             get => _gridPosition;
@@ -29,7 +33,7 @@ namespace Bottle.Core.GridObjectData
                 if (_gridPosition == value) return;
                 _gridPosition = value;
                 if (OnPositionChanged != null)
-                    OnPositionChanged(_gridPosition);
+                    OnPositionChanged(_gridPosition, (int)_gridHeight);
             }
         }
 
@@ -37,38 +41,58 @@ namespace Bottle.Core.GridObjectData
         [ReadOnly]
         [BoxGroup("Grid Object General Settings", true, true)]
         [Tooltip("The height of this grid object in the Grid.")]
-        public float gridHeight = 0f;
+        [SerializeField]
+        private float _gridHeight = float.MaxValue;
+
+        public float gridHeight
+        {
+            get => _gridHeight;
+            set
+            {
+                if (_gridHeight == value) return;
+                _gridHeight = value;
+                if (OnPositionChanged != null)
+                    OnPositionChanged(_gridPosition, (int)_gridHeight);
+            }
+        }
 
         [JsonProperty]
         [BoxGroup("Grid Object General Settings", true, true)]
         [Tooltip("The height of this grid object in the Grid.")]
         public Vector3 pivotOffset;
 
-        public delegate void OnPositionChangedDelegate(Vector2Int newPosition);
+        public delegate void OnPositionChangedDelegate(Vector2Int newGridPosition, int newGridHeight);
         public event OnPositionChangedDelegate OnPositionChanged;
 
         protected virtual void Update()
         {
             if (this.transform.hasChanged)
             {
-                Vector3Int cellPosition = GridManager.Instance.grid.WorldToCell(this.transform.position);
-                Vector3 newPos = GridManager.Instance.grid.GetCellCenterWorld(cellPosition);
-                newPos.y = Mathf.Ceil(this.transform.position.y);
-                this.transform.position = newPos;
-                // Mathf.RoundToInt did not work because they always round up to even result
-                _gridPosition = new Vector2Int((int)(newPos.x - 0.5f), (int)(newPos.z - 0.5f));
-                gridHeight = (int)newPos.y + Mathf.Ceil(pivotOffset.y);
+                Vector3Int gridPosAndGridHeight = GridManager.Instance.ConvertWorldPositionToGridPosition(this);
+                gridPosition = new Vector2Int(gridPosAndGridHeight.x, gridPosAndGridHeight.z);
+                gridHeight = gridPosAndGridHeight.y;
             }
         }
+
+        private void Awake()
+        {
+            Vector3Int gridPosAndGridHeight = GridManager.Instance.ConvertWorldPositionToGridPosition(this);
+            gridPosition = new Vector2Int(gridPosAndGridHeight.x, gridPosAndGridHeight.z);
+            gridHeight = gridPosAndGridHeight.y;
+        }
+
         protected virtual void Start()
         {
             this.OnPositionChanged += PositionChangedHandler;
             _uID = this.GetInstanceID().ToString();
         }
 
-        private void PositionChangedHandler(Vector2Int newPosition)
+        private void PositionChangedHandler(Vector2Int newGridPosition, int newGridHeight)
         {
-            Debug.Log("event changed");
+            Vector3Int newCellPos = new Vector3Int(newGridPosition.x, newGridPosition.y, newGridHeight);
+            Vector3 newWorldPos = GridManager.Instance.grid.GetCellCenterWorld(newCellPos);
+            newWorldPos.y = newGridHeight;
+            this.transform.position = newWorldPos;
         }
     }
 }

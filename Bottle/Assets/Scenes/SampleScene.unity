@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -130,9 +130,37 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1891486532}
     m_Modifications:
+    - target: {fileID: 3391990118255436168, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255438538, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3391990118255456594, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
       propertyPath: m_Name
       value: Tile_Base3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255456594, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255458888, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255478744, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255480882, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255481340, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3391990118255571888, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
       propertyPath: gridPosition.x
@@ -754,9 +782,37 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1891486532}
     m_Modifications:
+    - target: {fileID: 3391990118255436168, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255438538, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3391990118255456594, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
       propertyPath: m_Name
       value: Tile_Base3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255456594, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255458888, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255478744, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255480882, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3391990118255481340, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3391990118255571888, guid: 2f369c033281afa4db6cac50d30464a7, type: 3}
       propertyPath: gridPosition.x

@@ -27,7 +27,6 @@ namespace Bottle.Extensions.Helper
             //    TypeNameHandling = Newtonsoft.Json.TypeNameHandling.Auto,
             //    NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore,
             //});
-            Debug.Log(database[0].gridObjectList[0].gridPosition);
             return database;
         }
 
