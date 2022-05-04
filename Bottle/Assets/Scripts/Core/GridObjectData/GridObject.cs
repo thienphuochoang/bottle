@@ -20,7 +20,18 @@ namespace Bottle.Core.GridObjectData
         [ReadOnly]
         [BoxGroup("Grid Object General Settings", true, true)]
         [Tooltip("The position of this grid object in the Grid.")]
-        public Vector2Int gridPosition = new Vector2Int(0, 0);
+        private Vector2Int _gridPosition;
+        public Vector2Int gridPosition
+        {
+            get => _gridPosition;
+            set
+            {
+                if (_gridPosition == value) return;
+                _gridPosition = value;
+                if (OnPositionChanged != null)
+                    OnPositionChanged(_gridPosition);
+            }
+        }
 
         [JsonProperty]
         [ReadOnly]
@@ -31,7 +42,10 @@ namespace Bottle.Core.GridObjectData
         [JsonProperty]
         [BoxGroup("Grid Object General Settings", true, true)]
         [Tooltip("The height of this grid object in the Grid.")]
-        public Vector3 pivotOffset = new Vector3(0, 0, 0);
+        public Vector3 pivotOffset;
+
+        public delegate void OnPositionChangedDelegate(Vector2Int newPosition);
+        public event OnPositionChangedDelegate OnPositionChanged;
 
         protected virtual void Update()
         {
@@ -42,13 +56,19 @@ namespace Bottle.Core.GridObjectData
                 newPos.y = Mathf.Ceil(this.transform.position.y);
                 this.transform.position = newPos;
                 // Mathf.RoundToInt did not work because they always round up to even result
-                gridPosition = new Vector2Int((int)(newPos.x - 0.5f), (int)(newPos.z - 0.5f));
+                _gridPosition = new Vector2Int((int)(newPos.x - 0.5f), (int)(newPos.z - 0.5f));
                 gridHeight = (int)newPos.y + Mathf.Ceil(pivotOffset.y);
             }
         }
         protected virtual void Start()
         {
+            this.OnPositionChanged += PositionChangedHandler;
             _uID = this.GetInstanceID().ToString();
+        }
+
+        private void PositionChangedHandler(Vector2Int newPosition)
+        {
+            Debug.Log("event changed");
         }
     }
 }

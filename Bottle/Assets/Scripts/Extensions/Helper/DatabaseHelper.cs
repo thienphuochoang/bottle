@@ -63,6 +63,30 @@ namespace Bottle.Extensions.Helper
                 strWriter.WriteLine(newDatabase);
             }
         }
+        public static void AppendDatabase(string inputFileName, Dictionary<int, GridObjectSaveData> inputNewDatabase)
+        {
+            string json = string.Empty;
+            using (StreamReader strReader = new StreamReader(Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + inputFileName))
+            {
+                json = strReader.ReadToEnd();
+            }
+            Dictionary<int, GridObjectSaveData> currentDatabase = JsonConvert.DeserializeObject<Dictionary<int, GridObjectSaveData>>(json, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
+            foreach (KeyValuePair<int, GridObjectSaveData> newData in inputNewDatabase)
+            {
+                currentDatabase.Add(newData.Key, newData.Value);
+            }
+            string newDatabase = JsonConvert.SerializeObject(currentDatabase, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
+            using (StreamWriter strWriter = new StreamWriter(Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + inputFileName))
+            {
+                strWriter.WriteLine(newDatabase);
+            }
+        }
     }
 }
 
