@@ -45,8 +45,6 @@ namespace Bottle.Extensions.Singleton
         // Methods
         // -----------------------------------------------------------------------
 
-        public virtual void Initialize() { }
-
         protected virtual void Awake()
         {
             if (!Application.isPlaying) return;

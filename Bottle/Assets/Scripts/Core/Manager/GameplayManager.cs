@@ -21,8 +21,6 @@ namespace Bottle.Core.Manager
         [SerializeField]
         private int _turnCount;
 
-        public Dictionary<int, GridObjectSaveData> gridObjectSavedDatas = new Dictionary<int, GridObjectSaveData>();
-
         private void SaveSceneState(int turn)
         {
             Dictionary<int, GridObjectSaveData> gridObjectSavedDatas = new Dictionary<int, GridObjectSaveData>();
@@ -107,17 +105,17 @@ namespace Bottle.Core.Manager
         }
         private void Update()
         {
-            if (Input.GetButtonUp("Vertical"))
-            {
-                _turnCount++;
-                currentTurn = _turnCount;
-                SaveSceneState(currentTurn);
-            }
-            if (Input.GetButtonUp("Horizontal"))
-            {
-                currentTurn = currentTurn - 1;
-                LoadSceneState(currentTurn);
-            }
+            //if (Input.GetButtonUp("Vertical"))
+            //{
+            //    _turnCount++;
+            //    currentTurn = _turnCount;
+            //    SaveSceneState(currentTurn);
+            //}
+            //if (Input.GetButtonUp("Horizontal"))
+            //{
+            //    currentTurn = currentTurn - 1;
+            //    LoadSceneState(currentTurn);
+            //}
         }
         protected override void OnApplicationQuit()
         {
