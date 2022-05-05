@@ -9,13 +9,13 @@ namespace Bottle.Extensions.Helper
 {
     public class DatabaseHelper
     {
-        public static string sceneStateDatabaseFileName = "SceneStateDatabase.json";
+        public static string sceneStateDatabaseFileName = Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + "SceneStateDatabase.json";
 
         // Methods 
         // ----------------------------------------------------------------------------------------------------------------------
         public static Dictionary<int, GridObjectSaveData> GetDatabase(string inputFileName)
         {
-            StreamReader strReader = new StreamReader(Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + inputFileName);
+            StreamReader strReader = new StreamReader(inputFileName);
             string json = strReader.ReadToEnd();
             strReader.Close();
             Dictionary<int, GridObjectSaveData> database = JsonConvert.DeserializeObject<Dictionary<int, GridObjectSaveData>>(json, new JsonSerializerSettings
@@ -34,7 +34,7 @@ namespace Bottle.Extensions.Helper
         {
             // Read file to string
             string json = string.Empty;
-            using (StreamReader strReader = new StreamReader(Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + inputFileName))
+            using (StreamReader strReader = new StreamReader(inputFileName))
             {
                 json = strReader.ReadToEnd();
             }
@@ -45,7 +45,7 @@ namespace Bottle.Extensions.Helper
                 jToken.Replace(dataAndValue.Value);
             }
             string output = JsonConvert.SerializeObject(jObject, Formatting.Indented);
-            using (StreamWriter strWriter = new StreamWriter(Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + inputFileName))
+            using (StreamWriter strWriter = new StreamWriter(inputFileName))
             {
                 strWriter.WriteLine(output);
             }
@@ -57,7 +57,7 @@ namespace Bottle.Extensions.Helper
             {
                 TypeNameHandling = TypeNameHandling.Auto
             });
-            using (StreamWriter strWriter = new StreamWriter(Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + inputFileName))
+            using (StreamWriter strWriter = new StreamWriter(inputFileName))
             {
                 strWriter.WriteLine(newDatabase);
             }
@@ -65,7 +65,7 @@ namespace Bottle.Extensions.Helper
         public static void AppendDatabase(string inputFileName, Dictionary<int, GridObjectSaveData> inputNewDatabase)
         {
             string json = string.Empty;
-            using (StreamReader strReader = new StreamReader(Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + inputFileName))
+            using (StreamReader strReader = new StreamReader(inputFileName))
             {
                 json = strReader.ReadToEnd();
             }
@@ -81,7 +81,7 @@ namespace Bottle.Extensions.Helper
             {
                 TypeNameHandling = TypeNameHandling.Auto
             });
-            using (StreamWriter strWriter = new StreamWriter(Application.dataPath + "/Resources" + "/" + "SceneState" + "/" + inputFileName))
+            using (StreamWriter strWriter = new StreamWriter(inputFileName))
             {
                 strWriter.WriteLine(newDatabase);
             }
