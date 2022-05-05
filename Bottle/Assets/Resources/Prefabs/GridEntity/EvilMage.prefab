@@ -944,6 +944,7 @@ GameObject:
   - component: {fileID: 7172510416583339854}
   - component: {fileID: 7121849960970217538}
   - component: {fileID: 4690770049057008018}
+  - component: {fileID: 6742977720004735337}
   m_Layer: 0
   m_Name: EvilMage
   m_TagString: '[Bottle]Entity'
@@ -999,10 +1000,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ae0337436b621c46964711fdad24d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridPosition: {x: -2, y: -1}
-  gridHeight: 0
+  _uID: 
+  _gridPosition: {x: 0, y: 0}
+  _gridHeight: 0
   pivotOffset: {x: 0, y: -0.5, z: 0}
   isControllable: 0
+--- !u!114 &6742977720004735337
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7170492493296745086}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79d8961918fbd243bb3bf645c88f95d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects: []
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes: []
+  isAbilityLocked: 0
 --- !u!1 &7170502489500862024
 GameObject:
   m_ObjectHideFlags: 0

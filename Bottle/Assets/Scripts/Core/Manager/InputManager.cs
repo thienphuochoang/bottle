@@ -7,16 +7,23 @@ using Bottle.Core.GridObjectData;
 using Sirenix.OdinInspector;
 namespace Bottle.Core.Manager
 {
+    [System.Serializable]
     public class InputButton
     {
-        public enum States { OFF, BUTTON_DOWN, BUTTON_PRESSED, BUTTON_UP }
-        public KeyCode currentKeyCode;
+        public enum States { BUTTON_OFF, BUTTON_BEING_HELD, BUTTON_DOWN, BUTTON_UP }
         public States currentState;
+
+        public InputButton() { }
 
         public InputButton(InputButton userInputButton)
         {
-            this.currentKeyCode = userInputButton.currentKeyCode;
             this.currentState = userInputButton.currentState;
+        }
+
+        public void ChangeState(InputButton.States newState)
+        {
+            if (currentState != newState)
+                currentState = newState;
         }
     }
 
@@ -24,34 +31,120 @@ namespace Bottle.Core.Manager
     {
 
         public enum MovementDirections { NONE, UP, DOWN, LEFT, RIGHT, FORWARD, BACK }
-        public InputButton currentPressingButton;
+        [ShowInInspector]
+        [ReadOnly]
+        private static KeyCode[] registeredButtons = {KeyCode.W, KeyCode.A, KeyCode.S, KeyCode.D, KeyCode.E };
+        public Dictionary<KeyCode, InputButton> buttonStates = new Dictionary<KeyCode, InputButton>();
         public float idleThreshold = 0.05f;
-
 
 
         private void DetermineUserInput()
         {
-            if (Input.GetAxis("Vertical") > 0 && Mathf.Abs(Input.GetAxis("Vertical")) > idleThreshold)
+            #region Button_W_KeyCode_Determination
+            if (Input.GetButton("Vertical") && Input.GetAxis("Vertical") > 0)
             {
-                Debug.Log("W is pressing");
+                buttonStates[KeyCode.W].currentState = InputButton.States.BUTTON_BEING_HELD;
+
             }
-            else if (Input.GetAxis("Vertical") < 0 && Mathf.Abs(Input.GetAxis("Vertical")) > idleThreshold)
+            if (Input.GetButtonDown("Vertical") && Input.GetAxis("Vertical") > 0)
             {
-                Debug.Log("S is pressing");
+                if (buttonStates[KeyCode.W].currentState == InputButton.States.BUTTON_BEING_HELD)
+                {
+                    buttonStates[KeyCode.W].ChangeState(InputButton.States.BUTTON_DOWN);
+                }
             }
-            if (Input.GetAxis("Horizontal") < 0 && Mathf.Abs(Input.GetAxis("Horizontal")) > idleThreshold)
+            if (Input.GetButtonUp("Vertical") && Input.GetAxis("Vertical") > 0)
             {
-                Debug.Log("A is pressing");
+                buttonStates[KeyCode.W].currentState = InputButton.States.BUTTON_UP;
+                if (buttonStates[KeyCode.W].currentState == InputButton.States.BUTTON_UP)
+                {
+                    buttonStates[KeyCode.W].ChangeState(InputButton.States.BUTTON_OFF);
+                }
             }
-            else if (Input.GetAxis("Horizontal") > 0 && Mathf.Abs(Input.GetAxis("Horizontal")) > idleThreshold)
+            #endregion
+
+            #region Button_S_KeyCode_Determination
+            if (Input.GetButton("Vertical") && Input.GetAxis("Vertical") < 0)
             {
-                Debug.Log("D is pressing");
+                buttonStates[KeyCode.S].currentState = InputButton.States.BUTTON_BEING_HELD;
+
+            }
+            if (Input.GetButtonDown("Vertical") && Input.GetAxis("Vertical") < 0)
+            {
+                if (buttonStates[KeyCode.S].currentState == InputButton.States.BUTTON_BEING_HELD)
+                {
+                    buttonStates[KeyCode.S].ChangeState(InputButton.States.BUTTON_DOWN);
+                }
+            }
+            if (Input.GetButtonUp("Vertical") && Input.GetAxis("Vertical") < 0)
+            {
+                buttonStates[KeyCode.S].currentState = InputButton.States.BUTTON_UP;
+                if (buttonStates[KeyCode.S].currentState == InputButton.States.BUTTON_UP)
+                {
+                    buttonStates[KeyCode.S].ChangeState(InputButton.States.BUTTON_OFF);
+                }
+            }
+            #endregion
+
+            #region Button_A_KeyCode_Determination
+            if (Input.GetButton("Horizontal") && Input.GetAxis("Horizontal") < 0)
+            {
+                buttonStates[KeyCode.A].currentState = InputButton.States.BUTTON_BEING_HELD;
+            }
+            if (Input.GetButtonDown("Horizontal") && Input.GetAxis("Horizontal") < 0)
+            {
+                if (buttonStates[KeyCode.A].currentState == InputButton.States.BUTTON_BEING_HELD)
+                {
+                    buttonStates[KeyCode.A].ChangeState(InputButton.States.BUTTON_DOWN);
+                }
+            }
+            if (Input.GetButtonUp("Horizontal") && Input.GetAxis("Horizontal") < 0)
+            {
+                buttonStates[KeyCode.A].currentState = InputButton.States.BUTTON_UP;
+                if (buttonStates[KeyCode.A].currentState == InputButton.States.BUTTON_UP)
+                {
+                    buttonStates[KeyCode.A].ChangeState(InputButton.States.BUTTON_OFF);
+                }
+            }
+            #endregion
+
+            #region Button_D_KeyCode_Determination
+            if (Input.GetButton("Horizontal") && Input.GetAxis("Horizontal") > 0)
+            {
+                buttonStates[KeyCode.D].currentState = InputButton.States.BUTTON_BEING_HELD;
+            }
+            if (Input.GetButtonDown("Horizontal") && Input.GetAxis("Horizontal") > 0)
+            {
+                if (buttonStates[KeyCode.D].currentState == InputButton.States.BUTTON_BEING_HELD)
+                {
+                    buttonStates[KeyCode.D].ChangeState(InputButton.States.BUTTON_DOWN);
+                }
+            }
+            if (Input.GetButtonUp("Horizontal") && Input.GetAxis("Horizontal") > 0)
+            {
+                buttonStates[KeyCode.D].currentState = InputButton.States.BUTTON_UP;
+                if (buttonStates[KeyCode.D].currentState == InputButton.States.BUTTON_UP)
+                {
+                    buttonStates[KeyCode.D].ChangeState(InputButton.States.BUTTON_OFF);
+                }
+            }
+            #endregion
+        }
+
+        private void Initialize()
+        {
+            foreach (var registeredKey in registeredButtons)
+            {
+                InputButton defaultInputButton = new InputButton();
+                defaultInputButton.currentState = InputButton.States.BUTTON_OFF;
+                buttonStates.Add(registeredKey, defaultInputButton);
             }
         }
 
         protected override void Awake()
         {
             base.Awake();
+            Initialize();
         }
 
         protected override void Start()
