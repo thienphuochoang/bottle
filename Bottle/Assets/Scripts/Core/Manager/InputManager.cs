@@ -12,18 +12,43 @@ namespace Bottle.Core.Manager
     {
         public enum States { BUTTON_OFF, BUTTON_BEING_HELD, BUTTON_DOWN, BUTTON_UP }
         public States currentState;
+        public KeyCode currentKeyCode;
+        public delegate void ButtonDownDelegate(States state, KeyCode keyCode);
+        public delegate void ButtonUpDelegate(States state);
+        public delegate void ButtonBeingHeldDelegate(States state);
+        public event ButtonDownDelegate ButtonDownHandler;
+        public event ButtonUpDelegate ButtonUpHandler;
+        public event ButtonBeingHeldDelegate ButtonBeingHeldHandler;
 
         public InputButton() { }
 
         public InputButton(InputButton userInputButton)
         {
+            this.currentKeyCode = userInputButton.currentKeyCode;
             this.currentState = userInputButton.currentState;
         }
 
-        public void ChangeState(InputButton.States newState)
+        public void ChangeState(States newState)
         {
             if (currentState != newState)
+            {
                 currentState = newState;
+                switch (currentState)
+                {
+                    case States.BUTTON_BEING_HELD:
+                        if (ButtonBeingHeldHandler != null)
+                            ButtonBeingHeldHandler(currentState);
+                        break;
+                    case States.BUTTON_DOWN:
+                        if (ButtonDownHandler != null)
+                            ButtonDownHandler(currentState, this.currentKeyCode);
+                        break;
+                    case States.BUTTON_UP:
+                        if (ButtonUpHandler != null)
+                            ButtonUpHandler(currentState);
+                        break;
+                }
+            }
         }
     }
 
@@ -137,6 +162,7 @@ namespace Bottle.Core.Manager
             {
                 InputButton defaultInputButton = new InputButton();
                 defaultInputButton.currentState = InputButton.States.BUTTON_OFF;
+                defaultInputButton.currentKeyCode = registeredKey;
                 buttonStates.Add(registeredKey, defaultInputButton);
             }
         }

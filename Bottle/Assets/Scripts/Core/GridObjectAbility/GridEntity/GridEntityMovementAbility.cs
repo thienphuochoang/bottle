@@ -9,19 +9,20 @@ namespace Bottle.Core.GridObjectAbility
     public class GridEntityMovementAbility : GridObjectAbility<GridEntity>
     {
         [ShowInInspector]
-        private Dictionary<KeyCode, InputButton> movementButtonStates => InputManager.Instance.buttonStates;
+        private Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
+        private enum MovementDirections { NONE, UP, DOWN , LEFT, RIGHT};
+        [ShowInInspector]
+        private MovementDirections _currentMovementDirection;
 
-        public delegate void ButtonDownDelegate(InputButton.States state);
-        public delegate void ButtonPressedDelegate();
-        public delegate void ButtonUpDelegate();
-
-        public event ButtonDownDelegate ButtonDownHandler;
-        public event ButtonPressedDelegate ButtonPressedHandler;
-        public event ButtonUpDelegate ButtonUpHandler;
-
-        private void DetectChange()
+        private void DetectMovementDirection(InputButton.States state, KeyCode keyCode)
         {
-            Debug.Log("Detect Changes");
+            switch (keyCode)
+            {
+                case KeyCode.W:
+                    _currentMovementDirection = MovementDirections.UP;
+                    break;
+            }
+            
         }
 
         protected override void OnEnable()
@@ -32,18 +33,16 @@ namespace Bottle.Core.GridObjectAbility
         protected override void Start()
         {
             base.Start();
-            movementButtonStates.Remove(KeyCode.E);
+            _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
             //this.ButtonDownHandler += DetectChange;
         }
 
         protected override void Update()
         {
             base.Update();
-            if (movementButtonStates[KeyCode.W].currentState == InputButton.States.BUTTON_DOWN)
+            if (_movementButtonStates[KeyCode.W].currentState == InputButton.States.BUTTON_DOWN)
             {
-                Debug.Log("ahihi");
             }
         }
     }
-
 }

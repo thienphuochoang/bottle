@@ -15,7 +15,8 @@ namespace Bottle.Core.GridObjectAbility
 
         protected virtual void OnEnable()
         {
-
+            if (isAbilityLocked)
+                this.enabled = false;
         }
 
         protected virtual void Awake()
@@ -25,7 +26,6 @@ namespace Bottle.Core.GridObjectAbility
 
         protected virtual void Start()
         {
-            isAbilityLocked = false;
         }
 
         // Update is called once per frame
