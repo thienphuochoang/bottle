@@ -459,10 +459,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridPosition: {x: 0, y: 0}
-  gridHeight: 0
+  _uID: 
+  _gridPosition: {x: 2147483647, y: 2147483647}
+  _gridHeight: 3.4028235e+38
   pivotOffset: {x: 0, y: -0.5, z: 0}
-  isStandable: 0
+  isStandable: 1
+  _currentStandingGridEntity: {fileID: 0}
 --- !u!1 &8346431039828610475
 GameObject:
   m_ObjectHideFlags: 0

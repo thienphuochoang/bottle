@@ -74,7 +74,7 @@ namespace Bottle.Core.GridObjectData
             }
         }
 
-        private void Awake()
+        protected virtual void Awake()
         {
             Vector3Int gridPosAndGridHeight = GridManager.Instance.ConvertWorldPositionToGridPosition(this);
             gridPosition = new Vector2Int(gridPosAndGridHeight.x, gridPosAndGridHeight.z);

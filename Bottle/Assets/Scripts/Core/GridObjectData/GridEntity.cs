@@ -13,10 +13,6 @@ namespace Bottle.Core.GridObjectData
         protected override void Update()
         {
             base.Update();
-            if (Input.GetButtonDown("Fire1"))
-            {
-                //test.Set("Da pressed");
-            }
         }
     }
 }

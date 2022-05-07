@@ -12,7 +12,8 @@ namespace Bottle.Core.GridObjectAbility
         private Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
         public enum MovementDirections { NONE, FORWARD, BACK , LEFT, RIGHT};
         [ShowInInspector]
-        private MovementDirections _currentMovementDirection;
+        private MovementDirections _currentMovementDirection = MovementDirections.NONE;
+        private GridTile _targetTile;
 
         private void DetectMovementDirection(InputButton.States state, KeyCode keyCode)
         {
@@ -20,7 +21,9 @@ namespace Bottle.Core.GridObjectAbility
             {
                 case KeyCode.W:
                     _currentMovementDirection = MovementDirections.FORWARD;
-                    Move();
+                    _targetTile = GetTargetTile(_currentMovementDirection);
+                    if (_targetTile != null)
+                        Move();
                     break;
             }
             
@@ -56,11 +59,33 @@ namespace Bottle.Core.GridObjectAbility
             {
             }
         }
+        private GridTile GetTargetTile(MovementDirections theDirection)
+        {
+            Vector3Int targetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection);
+            var targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
+            return targetTile;
+        }
         private void Move()
         {
-            Vector3Int targetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(_currentMovementDirection);
-            var targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
-            Debug.Log(targetTile);
+            //this.transform.position = newPosition;
+        }
+        private IEnumerator StepMoveRoutine(GridTile targetGridTile)
+        {
+            //var originalGridTile = _entity.currentTile;
+            //float t = 0;
+            //for (t = Time.deltaTime / moveAnimDuration; t < 1; t += Time.deltaTime / moveAnimDuration)
+            //{
+            //    // Lerp position based on the animation curve
+            //    transform.position = Vector3.LerpUnclamped(originalGridTile.EntityPivotPosition, targetGridTile.EntityPivotPosition, moveAnimCurve.Evaluate(t));
+
+            //    // wait for the next frame
+            //    yield return null;
+            //}
+
+            //// Set the position to the tile's worldposition
+            //transform.position = targetGridTile.EntityPivotPosition;
+            //StopStepMoveRoutine();
+            return null;
         }
     }
 }
