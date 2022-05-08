@@ -11,19 +11,61 @@ namespace Bottle.Core.GridObjectAbility
         [ShowInInspector]
         private Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
         public enum MovementDirections { NONE, FORWARD, BACK , LEFT, RIGHT};
+        [BoxGroup("Movement Settings", true, true)]
         [ShowInInspector]
         private MovementDirections _currentMovementDirection = MovementDirections.NONE;
+        [BoxGroup("Movement Settings", true, true)]
+        [ShowInInspector]
+        [ReadOnly]
         private GridTile _targetTile;
+        [ReadOnly]
+        [SerializeField]
+        private bool _isMoving = false;
+
+
+
+        [BoxGroup("Acceleration Settings", true, true)]
+        public float maximumSpeed = 4;
+        [BoxGroup("Acceleration Settings", true, true)]
+        public float acceleration = 5;
+        [BoxGroup("Acceleration Settings", true, true)]
+        public float currentSpeed;
+        [BoxGroup("Acceleration Settings", true, true)]
+        public float maximumSpeedMultiplier = 1f;
+        [BoxGroup("Acceleration Settings", true, true)]
+        public float accelerationMultiplier = 1f;
 
         private void DetectMovementDirection(InputButton.States state, KeyCode keyCode)
         {
             switch (keyCode)
             {
                 case KeyCode.W:
-                    _currentMovementDirection = MovementDirections.FORWARD;
-                    _targetTile = GetTargetTile(_currentMovementDirection);
-                    if (_targetTile != null)
-                        Move();
+                    if (_isMoving == false)
+                    {
+                        _currentMovementDirection = MovementDirections.FORWARD;
+                        _targetTile = GetTargetTile(_currentMovementDirection);
+                    }
+                    break;
+                case KeyCode.S:
+                    if (_isMoving == false)
+                    {
+                        _currentMovementDirection = MovementDirections.BACK;
+                        _targetTile = GetTargetTile(_currentMovementDirection);
+                    }
+                    break;
+                case KeyCode.A:
+                    if (_isMoving == false)
+                    {
+                        _currentMovementDirection = MovementDirections.LEFT;
+                        _targetTile = GetTargetTile(_currentMovementDirection);
+                    }
+                    break;
+                case KeyCode.D:
+                    if (_isMoving == false)
+                    {
+                        _currentMovementDirection = MovementDirections.RIGHT;
+                        _targetTile = GetTargetTile(_currentMovementDirection);
+                    }
                     break;
             }
             
@@ -49,14 +91,23 @@ namespace Bottle.Core.GridObjectAbility
         protected override void Start()
         {
             base.Start();
-            _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
+            if (_currentGridObject.isControllable)
+            {
+                _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
+                _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirection;
+                _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
+                _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
+            }
         }
 
         protected override void Update()
         {
             base.Update();
-            if (_movementButtonStates[KeyCode.W].currentState == InputButton.States.BUTTON_DOWN)
+            if (_currentGridObject.isControllable)
             {
+                ApplyAcceleration();
+                if (_targetTile != null)
+                    Move();
             }
         }
         private GridTile GetTargetTile(MovementDirections theDirection)
@@ -65,27 +116,33 @@ namespace Bottle.Core.GridObjectAbility
             var targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
             return targetTile;
         }
+        private void ApplyAcceleration()
+        {
+            if (currentSpeed < maximumSpeed * maximumSpeedMultiplier)
+            {
+                currentSpeed = currentSpeed + acceleration * accelerationMultiplier * Time.deltaTime;
+                currentSpeed = Mathf.Clamp(currentSpeed, 0f, maximumSpeed * maximumSpeedMultiplier);
+            }
+        }
         private void Move()
         {
-            //this.transform.position = newPosition;
-        }
-        private IEnumerator StepMoveRoutine(GridTile targetGridTile)
-        {
-            //var originalGridTile = _entity.currentTile;
-            //float t = 0;
-            //for (t = Time.deltaTime / moveAnimDuration; t < 1; t += Time.deltaTime / moveAnimDuration)
-            //{
-            //    // Lerp position based on the animation curve
-            //    transform.position = Vector3.LerpUnclamped(originalGridTile.EntityPivotPosition, targetGridTile.EntityPivotPosition, moveAnimCurve.Evaluate(t));
-
-            //    // wait for the next frame
-            //    yield return null;
-            //}
-
-            //// Set the position to the tile's worldposition
-            //transform.position = targetGridTile.EntityPivotPosition;
-            //StopStepMoveRoutine();
-            return null;
+            Vector3 destination = new Vector3(_targetTile.transform.position.x, _targetTile.transform.position.y + 1, _targetTile.transform.position.z);
+            Vector3 newPosition = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * currentSpeed);
+            if (this.transform.position != newPosition)
+            {
+                this.transform.position = newPosition;
+                _isMoving = true;
+            }
+            else
+            {
+                var gridPos = GridManager.Instance.ConvertWorldPositionToGridPosition(this._currentGridObject);
+                this._currentGridObject.gridPosition = new Vector2Int(gridPos.x, gridPos.z);
+                this._currentGridObject.gridHeight = gridPos.y;
+                _currentMovementDirection = MovementDirections.NONE;
+                _isMoving = false;
+                _targetTile = null;
+                currentSpeed = 0;
+            }
         }
     }
 }

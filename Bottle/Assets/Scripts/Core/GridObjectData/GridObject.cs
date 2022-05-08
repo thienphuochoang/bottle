@@ -58,7 +58,7 @@ namespace Bottle.Core.GridObjectData
 
         [JsonProperty]
         [BoxGroup("Grid Object General Settings", true, true)]
-        [Tooltip("The height of this grid object in the Grid.")]
+        [Tooltip("The pivot offset value of this grid object in the Grid.")]
         public Vector3 pivotOffset;
 
         public delegate void OnPositionChangedDelegate(Vector2Int newGridPosition, int newGridHeight);
@@ -66,12 +66,14 @@ namespace Bottle.Core.GridObjectData
 
         protected virtual void Update()
         {
+            if (EditorApplication.isPlaying) return;
             if (this.transform.hasChanged)
             {
                 Vector3Int gridPosAndGridHeight = GridManager.Instance.ConvertWorldPositionToGridPosition(this);
                 gridPosition = new Vector2Int(gridPosAndGridHeight.x, gridPosAndGridHeight.z);
                 gridHeight = gridPosAndGridHeight.y;
             }
+
         }
 
         protected virtual void Awake()
