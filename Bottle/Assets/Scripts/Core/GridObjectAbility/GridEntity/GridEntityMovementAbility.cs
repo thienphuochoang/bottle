@@ -21,6 +21,9 @@ namespace Bottle.Core.GridObjectAbility
         [ReadOnly]
         [SerializeField]
         private bool _isMoving = false;
+        [ReadOnly]
+        [SerializeField]
+        private bool _isTurning = false;
 
 
 
@@ -68,7 +71,6 @@ namespace Bottle.Core.GridObjectAbility
                     }
                     break;
             }
-            
         }
 
         public Vector3Int GetValueFromDirection(MovementDirections direction)
@@ -107,7 +109,11 @@ namespace Bottle.Core.GridObjectAbility
             {
                 ApplyAcceleration();
                 if (_targetTile != null)
+                {
+                    Turn(_currentMovementDirection);
                     Move();
+                }
+                    
             }
         }
         private GridTile GetTargetTile(MovementDirections theDirection)
@@ -142,6 +148,36 @@ namespace Bottle.Core.GridObjectAbility
                 _isMoving = false;
                 _targetTile = null;
                 currentSpeed = 0;
+            }
+        }
+        private void Turn(MovementDirections targetDirection)
+        {
+            switch (targetDirection)
+            {
+                case MovementDirections.FORWARD:
+                    for (int i = 0; i < this._currentGridObject.transform.childCount; i++)
+                    {
+                        this._currentGridObject.transform.Rotate(0, 0, 0, Space.World);
+                    }
+                    break;
+                case MovementDirections.BACK:
+                    for (int i = 0; i < this._currentGridObject.transform.childCount; i++)
+                    {
+                        this._currentGridObject.transform.Rotate(0, 180, 0, Space.World);
+                    }
+                    break;
+                case MovementDirections.LEFT:
+                    for (int i = 0; i < this._currentGridObject.transform.childCount; i++)
+                    {
+                        this._currentGridObject.transform.Rotate(0, -90, 0, Space.World);
+                    }
+                    break;
+                case MovementDirections.RIGHT:
+                    for (int i = 0; i < this._currentGridObject.transform.childCount; i++)
+                    {
+                        this._currentGridObject.transform.Rotate(0, 90, 0, Space.World);
+                    }
+                    break;
             }
         }
     }
