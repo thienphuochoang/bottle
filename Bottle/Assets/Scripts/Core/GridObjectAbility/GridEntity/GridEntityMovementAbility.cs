@@ -18,13 +18,14 @@ namespace Bottle.Core.GridObjectAbility
         [ShowInInspector]
         [ReadOnly]
         private GridTile _targetTile;
+        [BoxGroup("Movement Settings", true, true)]
         [ReadOnly]
         [SerializeField]
         private bool _isMoving = false;
+        [BoxGroup("Turning Settings", true, true)]
         [ReadOnly]
         [SerializeField]
-        private bool _isTurning = false;
-
+        private bool _alreadyTurned = false;
 
 
         [BoxGroup("Acceleration Settings", true, true)]
@@ -108,9 +109,10 @@ namespace Bottle.Core.GridObjectAbility
             if (_currentGridObject.isControllable)
             {
                 ApplyAcceleration();
-                if (_targetTile != null)
+                if (_targetTile != null && _targetTile.isStandable == true && _targetTile.currentStandingGridEntity == null)
                 {
-                    Turn(_currentMovementDirection);
+                    if (_alreadyTurned == false)
+                        Turn(_currentMovementDirection);
                     Move();
                 }
                     
@@ -146,39 +148,30 @@ namespace Bottle.Core.GridObjectAbility
                 this._currentGridObject.gridHeight = gridPos.y;
                 _currentMovementDirection = MovementDirections.NONE;
                 _isMoving = false;
+                _alreadyTurned = false;
                 _targetTile = null;
                 currentSpeed = 0;
             }
         }
         private void Turn(MovementDirections targetDirection)
         {
+            Vector3 currentChildRotationEulerAngle = this._currentGridObject.transform.rotation.eulerAngles;
             switch (targetDirection)
             {
                 case MovementDirections.FORWARD:
-                    for (int i = 0; i < this._currentGridObject.transform.childCount; i++)
-                    {
-                        this._currentGridObject.transform.Rotate(0, 0, 0, Space.World);
-                    }
+                    this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
                     break;
                 case MovementDirections.BACK:
-                    for (int i = 0; i < this._currentGridObject.transform.childCount; i++)
-                    {
-                        this._currentGridObject.transform.Rotate(0, 180, 0, Space.World);
-                    }
+                    this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
                     break;
                 case MovementDirections.LEFT:
-                    for (int i = 0; i < this._currentGridObject.transform.childCount; i++)
-                    {
-                        this._currentGridObject.transform.Rotate(0, -90, 0, Space.World);
-                    }
+                    this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
                     break;
                 case MovementDirections.RIGHT:
-                    for (int i = 0; i < this._currentGridObject.transform.childCount; i++)
-                    {
-                        this._currentGridObject.transform.Rotate(0, 90, 0, Space.World);
-                    }
+                    this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
                     break;
             }
+            _alreadyTurned = true;
         }
     }
 }
