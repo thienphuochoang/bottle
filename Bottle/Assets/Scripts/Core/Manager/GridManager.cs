@@ -161,6 +161,17 @@ namespace Bottle.Core.Manager
             float gridHeight = (int)newPos.y + Mathf.Ceil(gridObject.pivotOffset.y);
             return new Vector3Int(gridPosition.x, (int)gridHeight, gridPosition.y);
         }
+
+        public Vector3Int ConvertWorldPositionToGridPosition(Vector3 worldSpacePosition, float pivotOffsetYAxis)
+        {
+            Vector3Int cellPosition = this.grid.WorldToCell(worldSpacePosition);
+            Vector3 newPos = this.grid.GetCellCenterWorld(cellPosition);
+            newPos.y = Mathf.Ceil(worldSpacePosition.y);
+            // Mathf.RoundToInt did not work because they always round up to even result
+            Vector2Int gridPosition = new Vector2Int((int)(newPos.x - 0.5f), (int)(newPos.z - 0.5f));
+            float gridHeight = (int)newPos.y + Mathf.Ceil(pivotOffsetYAxis);
+            return new Vector3Int(gridPosition.x, (int)gridHeight, gridPosition.y);
+        }
     }
 }
 

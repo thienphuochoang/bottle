@@ -4,14 +4,34 @@ using UnityEngine;
 using Bottle.Core.GridObjectData;
 using Bottle.Core.Manager;
 using Sirenix.OdinInspector;
+using Bottle.Core.PathSystem;
 namespace Bottle.Core.GridObjectAbility
 {
     public class GridEntityMovementAbility : GridObjectAbility<GridEntity>
     {
+        [HideInInspector]
+        private bool isControllableMovement => GetComponent<GridEntity>().isControllable;
+        [BoxGroup("Uncontrollable Movement Settings", true, true)]
+        [EnableIf("@this.isControllableMovement == false")]
+        public PathCreator currentAssignedPathCreator;
+        [BoxGroup("Uncontrollable Movement Settings", true, true)]
+        [ReadOnly]
         [ShowInInspector]
+        private int _currentNode;
+        [BoxGroup("Uncontrollable Movement Settings", true, true)]
+        [ReadOnly]
+        [ShowInInspector]
+        private Vector3 _stepPos;
+        [BoxGroup("Uncontrollable Movement Settings", true, true)]
+        [ReadOnly]
+        [ShowInInspector]
+        private int _step = 1;
+
+        [HideInInspector]
         private Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
         public enum MovementDirections { NONE, FORWARD, BACK , LEFT, RIGHT};
         [BoxGroup("Movement Settings", true, true)]
+        [ReadOnly]
         [ShowInInspector]
         private MovementDirections _currentMovementDirection = MovementDirections.NONE;
         [BoxGroup("Movement Settings", true, true)]
@@ -74,6 +94,36 @@ namespace Bottle.Core.GridObjectAbility
             }
         }
 
+        private void DetectMovementDirectionFromPath(InputButton.States state, KeyCode keyCode)
+        {
+            if (_currentNode != currentAssignedPathCreator.nodes.Count - 1)
+            {
+                if (_isMoving == false)
+                {
+                    int nextNode = _currentNode + 1;
+                    Vector3 currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
+                    Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
+                    Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
+                    _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
+                    direction = GetValueFromDirection(direction);
+                    _currentMovementDirection = GetDirectionFromValue(direction);
+                    _targetTile = GetTargetTile(_currentMovementDirection);
+                    if (_targetTile != null)
+                    {
+                        if (_stepPos == nextNodeWorldSpacePos)
+                        {
+                            _step = 1;
+                            _currentNode = _currentNode + 1;
+                        }
+                        else
+                        {
+                            _step = _step + 1;
+                        }
+                    }
+                }
+            }
+        }
+
         public Vector3Int GetValueFromDirection(MovementDirections direction)
         {
             switch (direction)
@@ -84,6 +134,48 @@ namespace Bottle.Core.GridObjectAbility
                 case MovementDirections.RIGHT: return Vector3Int.right;
             }
             return Vector3Int.zero;
+        }
+
+        public Vector3Int GetValueFromDirection(Vector3 direction)
+        {
+            if (direction.normalized == Vector3Int.forward)
+            {
+                return Vector3Int.forward;
+            }
+            else if (direction.normalized == Vector3Int.back)
+            {
+                return Vector3Int.back;
+            }
+            else if (direction.normalized == Vector3Int.right)
+            {
+                return Vector3Int.right;
+            }
+            else if (direction.normalized == Vector3Int.left)
+            {
+                return Vector3Int.left;
+            }
+            return Vector3Int.zero;
+        }
+
+        public MovementDirections GetDirectionFromValue(Vector3 direction)
+        {
+            if (direction.normalized == Vector3Int.forward)
+            {
+                return MovementDirections.FORWARD;
+            }
+            else if (direction.normalized == Vector3Int.back)
+            {
+                return MovementDirections.BACK;
+            }
+            else if (direction.normalized == Vector3Int.right)
+            {
+                return MovementDirections.RIGHT;
+            }
+            else if (direction.normalized == Vector3Int.left)
+            {
+                return MovementDirections.LEFT;
+            }
+            return MovementDirections.NONE;
         }
 
         protected override void OnEnable()
@@ -101,21 +193,24 @@ namespace Bottle.Core.GridObjectAbility
                 _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
                 _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
             }
+            else
+            {
+                _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirectionFromPath;
+            }
         }
 
         protected override void Update()
         {
             base.Update();
-            if (_currentGridObject.isControllable)
+            ApplyAcceleration();
+            if (_targetTile != null && _targetTile.isStandable == true && _targetTile.currentStandingGridEntity == null)
             {
-                ApplyAcceleration();
-                if (_targetTile != null && _targetTile.isStandable == true && _targetTile.currentStandingGridEntity == null)
-                {
-                    if (_alreadyTurned == false)
-                        Turn(_currentMovementDirection);
-                    Move();
-                }
-                    
+                if (_alreadyTurned == false)
+                    Turn(_currentMovementDirection);
+                Move();
             }
         }
         private GridTile GetTargetTile(MovementDirections theDirection)
@@ -152,6 +247,12 @@ namespace Bottle.Core.GridObjectAbility
                 _targetTile = null;
                 currentSpeed = 0;
             }
+        }
+        private Vector3 CalculateStepPosition(Vector3 currentNodeWorldSpacePos, Vector3 nextNodeWorldSpacePos, int distance)
+        {
+            Vector3 direction = (nextNodeWorldSpacePos - currentNodeWorldSpacePos).normalized;
+            Vector3 stepPos = currentNodeWorldSpacePos + direction * distance;
+            return stepPos;
         }
         private void Turn(MovementDirections targetDirection)
         {

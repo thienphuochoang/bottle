@@ -14,8 +14,8 @@ namespace Bottle.Core.Manager
         public States currentState;
         public KeyCode currentKeyCode;
         public delegate void ButtonDownDelegate(States state, KeyCode keyCode);
-        public delegate void ButtonUpDelegate(States state);
-        public delegate void ButtonBeingHeldDelegate(States state);
+        public delegate void ButtonUpDelegate(States state, KeyCode keyCode);
+        public delegate void ButtonBeingHeldDelegate(States state, KeyCode keyCode);
         public event ButtonDownDelegate ButtonDownHandler;
         public event ButtonUpDelegate ButtonUpHandler;
         public event ButtonBeingHeldDelegate ButtonBeingHeldHandler;
@@ -37,7 +37,7 @@ namespace Bottle.Core.Manager
                 {
                     case States.BUTTON_BEING_HELD:
                         if (ButtonBeingHeldHandler != null)
-                            ButtonBeingHeldHandler(currentState);
+                            ButtonBeingHeldHandler(currentState, this.currentKeyCode);
                         break;
                     case States.BUTTON_DOWN:
                         if (ButtonDownHandler != null)
@@ -45,7 +45,7 @@ namespace Bottle.Core.Manager
                         break;
                     case States.BUTTON_UP:
                         if (ButtonUpHandler != null)
-                            ButtonUpHandler(currentState);
+                            ButtonUpHandler(currentState, this.currentKeyCode);
                         break;
                 }
             }

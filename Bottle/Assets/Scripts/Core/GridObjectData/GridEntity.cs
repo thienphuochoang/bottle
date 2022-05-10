@@ -9,7 +9,7 @@ namespace Bottle.Core.GridObjectData
     {
         [BoxGroup("Grid Entity Settings", true, true)]
         [Tooltip("The specific grid entity setup.")]
-        public bool isControllable;
+        public bool isControllable = true;
 
         [BoxGroup("Grid Entity Settings", true, true)]
         [Tooltip("The current Grid Tile used to be stand on")]
@@ -33,13 +33,14 @@ namespace Bottle.Core.GridObjectData
         protected override void Start()
         {
             base.Start();
+            _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1);
             OnPositionChanged += OnCurrentStandingGridTileChangedHandler;
         }
 
         protected override void Awake()
         {
             base.Awake();
-            _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1);
+            
         }
         private void OnCurrentStandingGridTileChangedHandler(Vector2Int newGridPosition, int newGridHeight)
         {

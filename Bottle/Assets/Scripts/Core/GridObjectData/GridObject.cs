@@ -75,6 +75,10 @@ namespace Bottle.Core.GridObjectData
             }
 
         }
+        protected virtual void OnEnable()
+        {
+            
+        }
 
         protected virtual void Awake()
         {

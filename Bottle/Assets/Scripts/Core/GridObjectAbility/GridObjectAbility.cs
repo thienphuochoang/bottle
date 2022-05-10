@@ -21,11 +21,12 @@ namespace Bottle.Core.GridObjectAbility
 
         protected virtual void Awake()
         {
-            _currentGridObject = this.gameObject.GetComponentInParent<T>();
+            
         }
 
         protected virtual void Start()
         {
+            _currentGridObject = this.gameObject.GetComponentInParent<T>();
         }
 
         // Update is called once per frame
