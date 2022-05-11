@@ -47,8 +47,7 @@ namespace Bottle.Core.GridObjectData
 
         public void SetStandingGridEntity(GridEntity newStandingGridEntity)
         {
-            if (_currentStandingGridEntity != null)
-                _currentStandingGridEntity = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(this.gridPosition, this.gridHeight + 1);
+            _currentStandingGridEntity = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(this.gridPosition, this.gridHeight + 1);
         }
     }
 }

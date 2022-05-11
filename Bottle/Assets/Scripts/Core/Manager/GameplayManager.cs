@@ -105,17 +105,6 @@ namespace Bottle.Core.Manager
         }
         private void Update()
         {
-            //if (Input.GetButtonUp("Vertical"))
-            //{
-            //    _turnCount++;
-            //    currentTurn = _turnCount;
-            //    SaveSceneState(currentTurn);
-            //}
-            //if (Input.GetButtonUp("Horizontal"))
-            //{
-            //    currentTurn = currentTurn - 1;
-            //    LoadSceneState(currentTurn);
-            //}
         }
         protected override void OnApplicationQuit()
         {

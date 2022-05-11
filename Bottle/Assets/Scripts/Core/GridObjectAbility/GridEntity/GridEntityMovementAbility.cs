@@ -105,10 +105,9 @@ namespace Bottle.Core.GridObjectAbility
                     Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
                     Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
                     _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
-                    direction = GetValueFromDirection(direction);
                     _currentMovementDirection = GetDirectionFromValue(direction);
                     _targetTile = GetTargetTile(_currentMovementDirection);
-                    if (_targetTile != null)
+                    if (_targetTile != null && _targetTile.isStandable == true && _targetTile.currentStandingGridEntity == null)
                     {
                         if (_stepPos == nextNodeWorldSpacePos)
                         {
@@ -132,27 +131,6 @@ namespace Bottle.Core.GridObjectAbility
                 case MovementDirections.BACK: return Vector3Int.back;
                 case MovementDirections.LEFT: return Vector3Int.left;
                 case MovementDirections.RIGHT: return Vector3Int.right;
-            }
-            return Vector3Int.zero;
-        }
-
-        public Vector3Int GetValueFromDirection(Vector3 direction)
-        {
-            if (direction.normalized == Vector3Int.forward)
-            {
-                return Vector3Int.forward;
-            }
-            else if (direction.normalized == Vector3Int.back)
-            {
-                return Vector3Int.back;
-            }
-            else if (direction.normalized == Vector3Int.right)
-            {
-                return Vector3Int.right;
-            }
-            else if (direction.normalized == Vector3Int.left)
-            {
-                return Vector3Int.left;
             }
             return Vector3Int.zero;
         }
@@ -188,6 +166,11 @@ namespace Bottle.Core.GridObjectAbility
             base.Start();
             if (_currentGridObject.isControllable)
             {
+                _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.D].ButtonDownHandler -= DetectMovementDirectionFromPath;
+
                 _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
                 _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirection;
                 _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
@@ -195,6 +178,11 @@ namespace Bottle.Core.GridObjectAbility
             }
             else
             {
+                _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirection;
+                _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirection;
+                _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirection;
+                _movementButtonStates[KeyCode.D].ButtonDownHandler -= DetectMovementDirection;
+
                 _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirectionFromPath;
                 _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirectionFromPath;
                 _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirectionFromPath;
