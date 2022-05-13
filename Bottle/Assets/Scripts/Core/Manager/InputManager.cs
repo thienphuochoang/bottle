@@ -154,6 +154,9 @@ namespace Bottle.Core.Manager
                 }
             }
             #endregion
+            #region Button_E_KeyCode_Determination
+            DetermineKeyCodeStateInput("Interact", KeyCode.E);
+            #endregion
         }
 
         private void Initialize()
@@ -181,6 +184,28 @@ namespace Bottle.Core.Manager
         private void Update()
         {
             DetermineUserInput();
+        }
+        private void DetermineKeyCodeStateInput(string inputName, KeyCode inputKeyCode)
+        {
+            if (Input.GetButton(inputName))
+            {
+                buttonStates[inputKeyCode].currentState = InputButton.States.BUTTON_BEING_HELD;
+            }
+            if (Input.GetButtonDown(inputName))
+            {
+                if (buttonStates[inputKeyCode].currentState == InputButton.States.BUTTON_BEING_HELD)
+                {
+                    buttonStates[inputKeyCode].ChangeState(InputButton.States.BUTTON_DOWN);
+                }
+            }
+            if (Input.GetButtonUp(inputName))
+            {
+                buttonStates[inputKeyCode].currentState = InputButton.States.BUTTON_UP;
+                if (buttonStates[inputKeyCode].currentState == InputButton.States.BUTTON_UP)
+                {
+                    buttonStates[inputKeyCode].ChangeState(InputButton.States.BUTTON_OFF);
+                }
+            }
         }
     }
 }

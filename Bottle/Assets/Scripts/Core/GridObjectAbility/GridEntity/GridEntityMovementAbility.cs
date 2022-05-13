@@ -28,7 +28,7 @@ namespace Bottle.Core.GridObjectAbility
         private int _step = 1;
 
         [HideInInspector]
-        private Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
+        private static Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
         public enum MovementDirections { NONE, FORWARD, BACK , LEFT, RIGHT};
         [BoxGroup("Movement Settings", true, true)]
         [ReadOnly]
