@@ -199,7 +199,7 @@ namespace Bottle.Editor.GridSystem
             if (cell.Tile != null)
             {
                 Vector2Int gridPosition = new Vector2Int(position.x, position.y);
-                GridTile checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z);
+                GridTile checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z)[0];
                 if (checkedAlreadyPlacedGridObject == default(GridTile))
                     GridManager.Instance.CreateGridObject<GridTile>(cell.Tile, gridPosition, position.z, cell.Scale, cell.Rotation);
                 else
@@ -208,7 +208,7 @@ namespace Bottle.Editor.GridSystem
             else if (cell.Entity != null)
             {
                 Vector2Int gridPosition = new Vector2Int(position.x, position.y);
-                GridEntity checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(gridPosition, position.z);
+                GridEntity checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(gridPosition, position.z)[0];
                 if (checkedAlreadyPlacedGridObject == default(GridEntity))
                     GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
                 else
@@ -257,7 +257,7 @@ namespace Bottle.Editor.GridSystem
         private void PickCell(GridLayout grid, Vector3Int position, Transform parent)
         {
             Vector2Int gridPosition = new Vector2Int(position.x, position.y);
-            GridTile pickedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z);
+            GridTile pickedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z)[0];
             if (pickedGridObject != null)
             {
                 UnityEngine.Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(pickedGridObject);

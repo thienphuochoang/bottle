@@ -54,16 +54,20 @@ namespace Bottle.Core.Manager
             base.Start();
         }
 
-        public T GetGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
+        public List<T> GetGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
         {
             System.Type gridObjectType = typeof(T);
+            List<T> gridObjectList = new List<T>();
             if (gridObjectType.Equals(typeof(GridTile)))
             {
+                
                 GridTile[] allGridTiles = TileHolder.GetComponentsInChildren<GridTile>();
                 for (int i = 0; i < allGridTiles.Length; i++)
                 {
                     if (gridPosition == allGridTiles[i].gridPosition && gridHeight == allGridTiles[i].gridHeight)
-                        return (T)(object)allGridTiles[i];
+                    {
+                        gridObjectList.Add((T)(object)allGridTiles[i]);
+                    }
                 }
             }
             else if (gridObjectType.Equals(typeof(GridEntity)))
@@ -72,10 +76,12 @@ namespace Bottle.Core.Manager
                 for (int i = 0; i < allGridEntities.Length; i++)
                 {
                     if (gridPosition == allGridEntities[i].gridPosition && gridHeight == allGridEntities[i].gridHeight)
-                        return (T)(object)allGridEntities[i];
+                    {
+                        gridObjectList.Add((T)(object)allGridEntities[i]);
+                    }
                 }
             }
-            return default(T);
+            return gridObjectList;
         }
 
         public void EraseGridObjectAtPosition<T>(Vector2Int gridPosition, float gridHeight)
@@ -83,7 +89,7 @@ namespace Bottle.Core.Manager
             System.Type gridObjectType = typeof(T);
             if (gridObjectType.Equals(typeof(GridTile)))
             {
-                GridTile gridTileAtPosition = GetGridObjectAtPosition<GridTile>(gridPosition, gridHeight);
+                GridTile gridTileAtPosition = GetGridObjectAtPosition<GridTile>(gridPosition, gridHeight)[0];
                 if (gridTileAtPosition != null)
                 {
                     Undo.DestroyObjectImmediate(gridTileAtPosition.gameObject);
@@ -91,7 +97,7 @@ namespace Bottle.Core.Manager
             }
             else if (gridObjectType.Equals(typeof(GridEntity)))
             {
-                GridEntity gridEntityAtPosition = GetGridObjectAtPosition<GridEntity>(gridPosition, gridHeight);
+                GridEntity gridEntityAtPosition = GetGridObjectAtPosition<GridEntity>(gridPosition, gridHeight)[0];
                 if (gridEntityAtPosition != null)
                 {
                     Undo.DestroyObjectImmediate(gridEntityAtPosition.gameObject);

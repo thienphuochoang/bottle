@@ -107,7 +107,7 @@ namespace Bottle.Core.GridObjectAbility
                     _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
                     _currentMovementDirection = GetDirectionFromValue(direction);
                     _targetTile = GetTargetTile(_currentMovementDirection);
-                    if (_targetTile != null && _targetTile.isStandable == true && _targetTile.currentStandingGridEntity == null)
+                    if (_targetTile != null && _targetTile.isStandable == true)
                     {
                         if (_stepPos == nextNodeWorldSpacePos)
                         {
@@ -194,7 +194,7 @@ namespace Bottle.Core.GridObjectAbility
         {
             base.Update();
             ApplyAcceleration();
-            if (_targetTile != null && _targetTile.isStandable == true && _targetTile.currentStandingGridEntity == null)
+            if (_targetTile != null && _targetTile.isStandable == true)
             {
                 if (_alreadyTurned == false)
                     Turn(_currentMovementDirection);
@@ -205,7 +205,9 @@ namespace Bottle.Core.GridObjectAbility
         {
             Vector3Int targetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection);
             var targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
-            return targetTile;
+            if (targetTile.Count > 0)
+                return targetTile[0];
+            return null;
         }
         private void ApplyAcceleration()
         {

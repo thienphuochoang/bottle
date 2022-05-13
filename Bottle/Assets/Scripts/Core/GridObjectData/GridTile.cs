@@ -15,8 +15,8 @@ namespace Bottle.Core.GridObjectData
         [BoxGroup("Grid Tile Settings", true, true)]
         [Tooltip("The current Grid Entity standing on it")]
         [ShowInInspector]
-        private GridEntity _currentStandingGridEntity;
-        public GridEntity currentStandingGridEntity
+        private List<GridEntity> _currentStandingGridEntity;
+        public List<GridEntity> currentStandingGridEntity
         {
             get => _currentStandingGridEntity;
             set
@@ -30,7 +30,7 @@ namespace Bottle.Core.GridObjectData
             }
         }
 
-        public delegate void OnStandingGridEntityDelegate(GridEntity newStandingGridEntity);
+        public delegate void OnStandingGridEntityDelegate(List<GridEntity> newStandingGridEntity);
         public event OnStandingGridEntityDelegate OnStandingGridEntityChanged;
 
         protected override void Awake()
@@ -45,7 +45,7 @@ namespace Bottle.Core.GridObjectData
             //OnStandingGridEntityChanged += SetStandingGridEntity;
         }
 
-        public void SetStandingGridEntity(GridEntity newStandingGridEntity)
+        public void SetStandingGridEntity(List<GridEntity> newStandingGridEntity)
         {
             _currentStandingGridEntity = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(this.gridPosition, this.gridHeight + 1);
         }

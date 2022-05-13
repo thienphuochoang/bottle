@@ -33,9 +33,9 @@ namespace Bottle.Core.GridObjectData
         protected override void Start()
         {
             base.Start();
-            _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1);
+            _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
             _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
-            _currentStandingGridTile.currentStandingGridEntity = this;
+            _currentStandingGridTile.currentStandingGridEntity.Add(this);
             OnPositionChanged += OnCurrentStandingGridTileChangedHandler;
         }
 
@@ -51,9 +51,9 @@ namespace Bottle.Core.GridObjectData
                 _currentStandingGridTile.currentStandingGridEntity = null;
                 _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
             }
-            _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(newGridPosition, newGridHeight - 1);
+            _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(newGridPosition, newGridHeight - 1)[0];
             _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
-            _currentStandingGridTile.currentStandingGridEntity = this;
+            _currentStandingGridTile.currentStandingGridEntity.Add(this);
         }
     }
 }
