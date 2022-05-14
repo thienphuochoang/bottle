@@ -21,6 +21,8 @@ namespace Bottle.Core.Manager
         [SerializeField]
         private int _turnCount;
 
+        [ShowInInspector]
+        private GridEntity _controllableMainGridEntity;
         private void SaveSceneState(int turn)
         {
             Dictionary<int, GridObjectSaveData> gridObjectSavedDatas = new Dictionary<int, GridObjectSaveData>();
@@ -60,6 +62,12 @@ namespace Bottle.Core.Manager
             }
         }
 
+        public void UpdateGameTurn()
+        {
+            currentTurn += 1;
+            _turnCount += 1;
+        }
+
         private void LoadSceneState(int turn)
         {
             if (turn >= 0)
@@ -93,6 +101,18 @@ namespace Bottle.Core.Manager
             }
         }
 
+        private void GetControllableMainGridEntity(Dictionary<string, object> message)
+        {
+            foreach (var entity in _allGridEntities)
+            {
+                if (entity.isControllable == true)
+                {
+                    _controllableMainGridEntity = entity;
+                    break;
+                }
+            }    
+        }
+
         protected override void Awake()
         {
             base.Awake();
@@ -101,6 +121,8 @@ namespace Bottle.Core.Manager
         protected override void Start()
         {
             base.Start();
+            GetControllableMainGridEntity(null);
+            EventManager.Instance.StartListening("ChangeMainControllableGridEntity", GetControllableMainGridEntity);
             SaveSceneState(0);
         }
         private void Update()

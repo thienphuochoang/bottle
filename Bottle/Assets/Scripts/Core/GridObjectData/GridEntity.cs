@@ -9,7 +9,22 @@ namespace Bottle.Core.GridObjectData
     {
         [BoxGroup("Grid Entity Settings", true, true)]
         [Tooltip("The specific grid entity setup.")]
-        public bool isControllable = true;
+        [SerializeField]
+        private bool _isControllable = true;
+        public bool isControllable
+        {
+            get { return _isControllable; }
+            set
+            {
+                if (_isControllable == value) return;
+                _isControllable = value;
+                //if (OnControllableObjectChanged != null)
+                //{
+                EventManager.Instance.TriggerEvent("ChangeMainControllableGridEntity", null);
+                //    OnControllableObjectChanged(_isControllable);
+                //}
+            }
+        }
 
         [BoxGroup("Grid Entity Settings", true, true)]
         [Tooltip("The current Grid Tile used to be stand on")]
@@ -33,10 +48,11 @@ namespace Bottle.Core.GridObjectData
         protected override void Start()
         {
             base.Start();
-            _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
-            _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
-            _currentStandingGridTile.currentStandingGridEntity.Add(this);
-            OnPositionChanged += OnCurrentStandingGridTileChangedHandler;
+            //_currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
+            //_currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
+            //_currentStandingGridTile.currentStandingGridEntity.Add(this);
+            //OnPositionChanged += OnCurrentStandingGridTileChangedHandler;
+            //OnControllableObjectChanged += ChangeControllableSetting;
         }
 
         protected override void Awake()

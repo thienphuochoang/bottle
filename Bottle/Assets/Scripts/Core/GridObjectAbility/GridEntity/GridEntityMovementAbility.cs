@@ -10,7 +10,16 @@ namespace Bottle.Core.GridObjectAbility
     public class GridEntityMovementAbility : GridObjectAbility<GridEntity>
     {
         [HideInInspector]
-        private bool isControllableMovement => GetComponent<GridEntity>().isControllable;
+        private bool _isControllableMovement
+        {
+            get { return GetComponent<GridEntity>().isControllable; }
+            set
+            {
+                if (_isControllableMovement == value) return;
+                _isControllableMovement = value;
+                EventManager.Instance.TriggerEvent("MovementDirectionDetectionEventsChanged", new Dictionary<string, object> { });
+            }
+        }
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
         [EnableIf("@this.isControllableMovement == false")]
         public PathCreator currentAssignedPathCreator;
@@ -164,7 +173,36 @@ namespace Bottle.Core.GridObjectAbility
         protected override void Start()
         {
             base.Start();
-            if (_currentGridObject.isControllable)
+            EventManager.Instance.StartListening("MovementDirectionDetectionEventsChanged", AssignMovementDirectionDetectionEvents);
+            //if (_currentGridObject.isControllable)
+            //{
+            //    _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
+            //    _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirectionFromPath;
+            //    _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirectionFromPath;
+            //    _movementButtonStates[KeyCode.D].ButtonDownHandler -= DetectMovementDirectionFromPath;
+
+            //    _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
+            //    _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirection;
+            //    _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
+            //    _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
+            //}
+            //else
+            //{
+            //    _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirection;
+            //    _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirection;
+            //    _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirection;
+            //    _movementButtonStates[KeyCode.D].ButtonDownHandler -= DetectMovementDirection;
+
+            //    _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirectionFromPath;
+            //    _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirectionFromPath;
+            //    _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirectionFromPath;
+            //    _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirectionFromPath;
+            //}
+        }
+
+        public void AssignMovementDirectionDetectionEvents(Dictionary<string, object> message)
+        {
+            if ((bool)message["IsControllable"])
             {
                 _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
                 _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirectionFromPath;
