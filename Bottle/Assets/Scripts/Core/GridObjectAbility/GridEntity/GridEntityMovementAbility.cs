@@ -9,19 +9,8 @@ namespace Bottle.Core.GridObjectAbility
 {
     public class GridEntityMovementAbility : GridObjectAbility<GridEntity>
     {
-        [HideInInspector]
-        private bool _isControllableMovement
-        {
-            get { return GetComponent<GridEntity>().isControllable; }
-            set
-            {
-                if (_isControllableMovement == value) return;
-                _isControllableMovement = value;
-                EventManager.Instance.TriggerEvent("MovementDirectionDetectionEventsChanged", new Dictionary<string, object> { });
-            }
-        }
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        [EnableIf("@this.isControllableMovement == false")]
+        [EnableIf("@GetComponent<GridEntity>().isControllable == false")]
         public PathCreator currentAssignedPathCreator;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
         [ReadOnly]
@@ -105,27 +94,30 @@ namespace Bottle.Core.GridObjectAbility
 
         private void DetectMovementDirectionFromPath(InputButton.States state, KeyCode keyCode)
         {
-            if (_currentNode != currentAssignedPathCreator.nodes.Count - 1)
+            if (currentAssignedPathCreator != null)
             {
-                if (_isMoving == false)
+                if (_currentNode != currentAssignedPathCreator.nodes.Count - 1)
                 {
-                    int nextNode = _currentNode + 1;
-                    Vector3 currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
-                    Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
-                    Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
-                    _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
-                    _currentMovementDirection = GetDirectionFromValue(direction);
-                    _targetTile = GetTargetTile(_currentMovementDirection);
-                    if (_targetTile != null && _targetTile.isStandable == true)
+                    if (_isMoving == false)
                     {
-                        if (_stepPos == nextNodeWorldSpacePos)
+                        int nextNode = _currentNode + 1;
+                        Vector3 currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
+                        Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
+                        Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
+                        _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
+                        _currentMovementDirection = GetDirectionFromValue(direction);
+                        _targetTile = GetTargetTile(_currentMovementDirection);
+                        if (_targetTile != null && _targetTile.isStandable == true)
                         {
-                            _step = 1;
-                            _currentNode = _currentNode + 1;
-                        }
-                        else
-                        {
-                            _step = _step + 1;
+                            if (_stepPos == nextNodeWorldSpacePos)
+                            {
+                                _step = 1;
+                                _currentNode = _currentNode + 1;
+                            }
+                            else
+                            {
+                                _step = _step + 1;
+                            }
                         }
                     }
                 }
@@ -174,36 +166,39 @@ namespace Bottle.Core.GridObjectAbility
         {
             base.Start();
             EventManager.Instance.StartListening("MovementDirectionDetectionEventsChanged", AssignMovementDirectionDetectionEvents);
-            //if (_currentGridObject.isControllable)
-            //{
-            //    _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
-            //    _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirectionFromPath;
-            //    _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirectionFromPath;
-            //    _movementButtonStates[KeyCode.D].ButtonDownHandler -= DetectMovementDirectionFromPath;
+            if (_currentGridObject.isControllable)
+            {
+                _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.D].ButtonDownHandler -= DetectMovementDirectionFromPath;
 
-            //    _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
-            //    _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirection;
-            //    _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
-            //    _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
-            //}
-            //else
-            //{
-            //    _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirection;
-            //    _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirection;
-            //    _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirection;
-            //    _movementButtonStates[KeyCode.D].ButtonDownHandler -= DetectMovementDirection;
+                _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
+                _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirection;
+                _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
+                _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
+            }
+            else
+            {
+                _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirection;
+                _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirection;
+                _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirection;
+                _movementButtonStates[KeyCode.D].ButtonDownHandler -= DetectMovementDirection;
 
-            //    _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirectionFromPath;
-            //    _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirectionFromPath;
-            //    _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirectionFromPath;
-            //    _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirectionFromPath;
-            //}
+                _movementButtonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirectionFromPath;
+                _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirectionFromPath;
+            }
         }
 
         public void AssignMovementDirectionDetectionEvents(Dictionary<string, object> message)
         {
+            Debug.Log(this.gameObject);
+            Debug.Log((bool)message["IsControllable"]);
             if ((bool)message["IsControllable"])
             {
+                currentAssignedPathCreator = null;
                 _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
                 _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirectionFromPath;
                 _movementButtonStates[KeyCode.A].ButtonDownHandler -= DetectMovementDirectionFromPath;
@@ -237,6 +232,15 @@ namespace Bottle.Core.GridObjectAbility
                 if (_alreadyTurned == false)
                     Turn(_currentMovementDirection);
                 Move();
+            }
+            if (Input.GetKeyUp(KeyCode.T))
+            {
+                if (_currentGridObject.isControllable)
+                {
+                    _currentGridObject.isControllable = false;
+                }
+                else
+                    _currentGridObject.isControllable = true;
             }
         }
         private GridTile GetTargetTile(MovementDirections theDirection)

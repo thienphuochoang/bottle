@@ -51,6 +51,11 @@ namespace Bottle.Core.Manager
         protected override void Start()
         {
             base.Start();
+            
+        }
+        protected override void Awake()
+        {
+            base.Awake();
             Init();
         }
     }
