@@ -21,7 +21,7 @@ namespace Bottle.Core.GridObjectData
                 //if (OnControllableObjectChanged != null)
                 //{
                 EventManager.Instance.TriggerEvent("ChangeMainControllableGridEntity", null);
-                EventManager.Instance.TriggerEvent("MovementDirectionDetectionEventsChanged", new Dictionary<string, object> { { "IsControllable", _isControllable } });
+                EventManager.Instance.TriggerEvent("MovementDirectionDetectionEventsChanged", new Dictionary<string, object> { { "GridEntity", this }, { "IsControllable", this._isControllable } });
                 //    OnControllableObjectChanged(_isControllable);
                 //}
             }

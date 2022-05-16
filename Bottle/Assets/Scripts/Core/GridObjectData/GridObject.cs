@@ -61,6 +61,11 @@ namespace Bottle.Core.GridObjectData
         [Tooltip("The pivot offset value of this grid object in the Grid.")]
         public Vector3 pivotOffset;
 
+        [JsonProperty]
+        [BoxGroup("Grid Object General Settings", true, true)]
+        [Tooltip("The blockable ability of this grid object in the Grid.")]
+        public bool isBlockable = true;
+
         public delegate void OnPositionChangedDelegate(Vector2Int newGridPosition, int newGridHeight);
         public event OnPositionChangedDelegate OnPositionChanged;
 

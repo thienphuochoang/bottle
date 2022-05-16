@@ -8,9 +8,10 @@ using Bottle.Core.Manager;
 namespace Bottle.Editor.GridObjectData
 {
     [CustomEditor(typeof(GridTile))]
-    class GridTileCustomEditor : OdinEditor
+    [CanEditMultipleObjects]
+    public class GridTileCustomEditor : OdinEditor
     {
-        GridTile currentGridTile;
+        Object[] currentSelectedGridTiles;
         private void OnSceneGUI()
         {
             // [-----------------------------------------------------------------]
@@ -20,12 +21,26 @@ namespace Bottle.Editor.GridObjectData
                 // Scroll up
                 if ((Event.current.delta).normalized.y == -1)
                 {
-                    currentGridTile.transform.Rotate(0, 90.0f, 0, Space.World);
+                    foreach (var selectedGridTile in currentSelectedGridTiles)
+                    {
+                        if (selectedGridTile.GetType() == typeof(GridTile))
+                        {
+                            GridTile currentGridTile = selectedGridTile as GridTile;
+                            currentGridTile.transform.Rotate(0, 90.0f, 0, Space.World);
+                        }
+                    }
                 }
                 // Scroll down
                 else if ((Event.current.delta).normalized.y == 1)
                 {
-                    currentGridTile.transform.Rotate(0, -90.0f, 0, Space.World);
+                    foreach (var selectedGridTile in currentSelectedGridTiles)
+                    {
+                        if (selectedGridTile.GetType() == typeof(GridTile))
+                        {
+                            GridTile currentGridTile = selectedGridTile as GridTile;
+                            currentGridTile.transform.Rotate(0, -90.0f, 0, Space.World);
+                        }
+                    }
                 }
                 Event.current.Use();
             }
@@ -33,11 +48,12 @@ namespace Bottle.Editor.GridObjectData
         public override void OnInspectorGUI()
         {
             base.OnInspectorGUI();
+            serializedObject.Update();
         }
         protected override void OnEnable()
         {
             base.OnEnable();
-            currentGridTile = (GridTile)target;
+            currentSelectedGridTiles = serializedObject.targetObjects;
         }
     }
 }

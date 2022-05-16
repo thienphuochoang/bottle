@@ -1000,11 +1000,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ae0337436b621c46964711fdad24d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uID: 33798
-  _gridPosition: {x: -2, y: -3}
-  _gridHeight: 1
+  _uID: 94858
+  _gridPosition: {x: -1, y: -1}
+  _gridHeight: 0
   pivotOffset: {x: 0, y: -0.5, z: 0}
-  isControllable: 1
+  isBlockable: 0
+  _isControllable: 1
 --- !u!114 &6742977720004735337
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1027,9 +1028,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   isAbilityLocked: 0
+  currentAssignedPathCreator: {fileID: 0}
   _isMoving: 0
   _alreadyTurned: 0
-  _originalMovementDirection: 0
   maximumSpeed: 4
   acceleration: 5
   currentSpeed: 0

@@ -199,20 +199,32 @@ namespace Bottle.Editor.GridSystem
             if (cell.Tile != null)
             {
                 Vector2Int gridPosition = new Vector2Int(position.x, position.y);
-                GridTile checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z)[0];
-                if (checkedAlreadyPlacedGridObject == default(GridTile))
-                    GridManager.Instance.CreateGridObject<GridTile>(cell.Tile, gridPosition, position.z, cell.Scale, cell.Rotation);
-                else
+                List<GridTile> checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z);
+                if (checkedAlreadyPlacedGridObject.Count > 0)
+                {
                     Debug.LogError("There is already a grid tile available at this position");
+                }
+                else
+                {
+                    GridManager.Instance.CreateGridObject<GridTile>(cell.Tile, gridPosition, position.z, cell.Scale, cell.Rotation);
+                }
             }
             else if (cell.Entity != null)
             {
                 Vector2Int gridPosition = new Vector2Int(position.x, position.y);
-                GridEntity checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(gridPosition, position.z)[0];
-                if (checkedAlreadyPlacedGridObject == default(GridEntity))
-                    GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
-                else
+                List<GridEntity> checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(gridPosition, position.z);
+                if (checkedAlreadyPlacedGridObject.Count > 0)
+                {
                     Debug.LogError("There is already a grid entity available at this position");
+                }
+                else
+                {
+                    GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
+                }
+                //if (checkedAlreadyPlacedGridObject == default(GridEntity))
+                //    GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
+                //else
+                //    Debug.LogError("There is already a grid entity available at this position");
             }
         }
 
@@ -257,13 +269,13 @@ namespace Bottle.Editor.GridSystem
         private void PickCell(GridLayout grid, Vector3Int position, Transform parent)
         {
             Vector2Int gridPosition = new Vector2Int(position.x, position.y);
-            GridTile pickedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z)[0];
-            if (pickedGridObject != null)
+            List<GridTile> pickedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z);
+            if (pickedGridObject.Count > 0)
             {
-                UnityEngine.Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(pickedGridObject);
+                UnityEngine.Object prefab = PrefabUtility.GetCorrespondingObjectFromSource(pickedGridObject[0]);
                 if (prefab)
                 {
-                    SetBrushCellData(pickedGridObject, pickedGridObject.transform.localScale.x, pickedGridObject.transform.localRotation);
+                    SetBrushCellData(pickedGridObject[0], pickedGridObject[0].transform.localScale.x, pickedGridObject[0].transform.localRotation);
                 }
             }
         }

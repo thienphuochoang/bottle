@@ -23,6 +23,7 @@ namespace Bottle.Core.Manager
 
         [ShowInInspector]
         private GridEntity _controllableMainGridEntity;
+
         private void SaveSceneState(int turn)
         {
             Dictionary<int, GridObjectSaveData> gridObjectSavedDatas = new Dictionary<int, GridObjectSaveData>();
@@ -62,8 +63,9 @@ namespace Bottle.Core.Manager
             }
         }
 
-        public void UpdateGameTurn()
+        public void UpdateGameTurn(Dictionary<string, object> message)
         {
+            Debug.Log("Ahihi");
             currentTurn += 1;
             _turnCount += 1;
         }
@@ -116,6 +118,7 @@ namespace Bottle.Core.Manager
         protected override void Awake()
         {
             base.Awake();
+            
         }
 
         protected override void Start()
@@ -123,6 +126,7 @@ namespace Bottle.Core.Manager
             base.Start();
             GetControllableMainGridEntity(null);
             EventManager.Instance.StartListening("ChangeMainControllableGridEntity", GetControllableMainGridEntity);
+            EventManager.Instance.StartListening("ChangeMainControllableGridEntityPosition", UpdateGameTurn);
             SaveSceneState(0);
         }
         private void Update()

@@ -194,9 +194,7 @@ namespace Bottle.Core.GridObjectAbility
 
         public void AssignMovementDirectionDetectionEvents(Dictionary<string, object> message)
         {
-            Debug.Log(this.gameObject);
-            Debug.Log((bool)message["IsControllable"]);
-            if ((bool)message["IsControllable"])
+            if ((bool)message["IsControllable"] && (GridEntity)message["GridEntity"] == _currentGridObject)
             {
                 currentAssignedPathCreator = null;
                 _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
@@ -209,7 +207,7 @@ namespace Bottle.Core.GridObjectAbility
                 _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
                 _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
             }
-            else
+            else if ((bool)message["IsControllable"] == false && (GridEntity)message["GridEntity"] == _currentGridObject)
             {
                 _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirection;
                 _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirection;
@@ -246,9 +244,16 @@ namespace Bottle.Core.GridObjectAbility
         private GridTile GetTargetTile(MovementDirections theDirection)
         {
             Vector3Int targetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection);
+            Vector3Int blockableGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection);
             var targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
+            var blockableGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
             if (targetTile.Count > 0)
-                return targetTile[0];
+            {
+                if (blockableGridObject.Count == 0)
+                    return targetTile[0];
+                else if (blockableGridObject.Count > 0 && blockableGridObject[0].isBlockable == false)
+                    return targetTile[0];
+            }
             return null;
         }
         private void ApplyAcceleration()
