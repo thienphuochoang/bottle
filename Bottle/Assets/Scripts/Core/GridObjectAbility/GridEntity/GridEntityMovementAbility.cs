@@ -26,7 +26,7 @@ namespace Bottle.Core.GridObjectAbility
         private int _step = 1;
 
         [HideInInspector]
-        private static Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
+        protected static Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
         public enum MovementDirections { NONE, FORWARD, BACK , LEFT, RIGHT};
         [BoxGroup("Movement Settings", true, true)]
         [ReadOnly]
@@ -40,10 +40,6 @@ namespace Bottle.Core.GridObjectAbility
         [ReadOnly]
         [SerializeField]
         private bool _isMoving = false;
-        [BoxGroup("Turning Settings", true, true)]
-        [ReadOnly]
-        [SerializeField]
-        private bool _alreadyTurned = false;
 
 
         [BoxGroup("Acceleration Settings", true, true)]
@@ -66,6 +62,7 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         _currentMovementDirection = MovementDirections.FORWARD;
                         _targetTile = GetTargetTile(_currentMovementDirection);
+                        Turn(_currentMovementDirection);
                     }
                     break;
                 case KeyCode.S:
@@ -73,6 +70,7 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         _currentMovementDirection = MovementDirections.BACK;
                         _targetTile = GetTargetTile(_currentMovementDirection);
+                        Turn(_currentMovementDirection);
                     }
                     break;
                 case KeyCode.A:
@@ -80,6 +78,7 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         _currentMovementDirection = MovementDirections.LEFT;
                         _targetTile = GetTargetTile(_currentMovementDirection);
+                        Turn(_currentMovementDirection);
                     }
                     break;
                 case KeyCode.D:
@@ -87,6 +86,7 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         _currentMovementDirection = MovementDirections.RIGHT;
                         _targetTile = GetTargetTile(_currentMovementDirection);
+                        Turn(_currentMovementDirection);
                     }
                     break;
             }
@@ -109,6 +109,7 @@ namespace Bottle.Core.GridObjectAbility
                         _targetTile = GetTargetTile(_currentMovementDirection);
                         if (_targetTile != null && _targetTile.isStandable == true)
                         {
+                            Turn(_currentMovementDirection);
                             if (_stepPos == nextNodeWorldSpacePos)
                             {
                                 _step = 1;
@@ -227,31 +228,32 @@ namespace Bottle.Core.GridObjectAbility
             ApplyAcceleration();
             if (_targetTile != null && _targetTile.isStandable == true)
             {
-                if (_alreadyTurned == false)
-                    Turn(_currentMovementDirection);
                 Move();
             }
-            if (Input.GetKeyUp(KeyCode.T))
-            {
-                if (_currentGridObject.isControllable)
-                {
-                    _currentGridObject.isControllable = false;
-                }
-                else
-                    _currentGridObject.isControllable = true;
-            }
+            //if (Input.GetKeyUp(KeyCode.T))
+            //{
+            //    if (_currentGridObject.isControllable)
+            //    {
+            //        _currentGridObject.isControllable = false;
+            //    }
+            //    else
+            //        _currentGridObject.isControllable = true;
+            //}
         }
         private GridTile GetTargetTile(MovementDirections theDirection)
         {
             Vector3Int targetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection);
             Vector3Int blockableGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection);
             var targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
-            var blockableGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
+            var blockableGridTiles = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
+            var blockableGridEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
             if (targetTile.Count > 0)
             {
-                if (blockableGridObject.Count == 0)
+                if (blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
                     return targetTile[0];
-                else if (blockableGridObject.Count > 0 && blockableGridObject[0].isBlockable == false)
+                else if (blockableGridTiles.Count > 0 && blockableGridTiles[0].isBlockable == false)
+                    return targetTile[0];
+                else if (blockableGridEntities.Count > 0 && blockableGridEntities[0].isBlockable == false)
                     return targetTile[0];
             }
             return null;
@@ -280,7 +282,6 @@ namespace Bottle.Core.GridObjectAbility
                 this._currentGridObject.gridHeight = gridPos.y;
                 _currentMovementDirection = MovementDirections.NONE;
                 _isMoving = false;
-                _alreadyTurned = false;
                 _targetTile = null;
                 currentSpeed = 0;
             }
@@ -309,7 +310,6 @@ namespace Bottle.Core.GridObjectAbility
                     this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
                     break;
             }
-            _alreadyTurned = true;
         }
     }
 }

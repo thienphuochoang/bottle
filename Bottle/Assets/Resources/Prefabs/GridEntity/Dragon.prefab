@@ -189,12 +189,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ae0337436b621c46964711fdad24d7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uID: 94662
-  _gridPosition: {x: -1, y: -1}
-  _gridHeight: 0
+  _uID: 34102
+  _gridPosition: {x: -3, y: -2}
+  _gridHeight: 1
   pivotOffset: {x: 0, y: -0.5, z: 0}
   isBlockable: 0
   _isControllable: 1
+  currentFacingDirection: 3
 --- !u!1 &2024483932312814431
 GameObject:
   m_ObjectHideFlags: 0
