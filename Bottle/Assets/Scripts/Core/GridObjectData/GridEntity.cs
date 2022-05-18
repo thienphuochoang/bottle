@@ -47,6 +47,21 @@ namespace Bottle.Core.GridObjectData
         [ShowInInspector]
         public FacingDirections currentFacingDirection = FacingDirections.NONE;
 
+        public Vector3 currentRotation
+        {
+            get => this.transform.localEulerAngles;
+            set
+            {
+                if (this.transform.localEulerAngles == value) return;
+                this.transform.localEulerAngles = value;
+                if (OnRotationChanged != null)
+                    OnRotationChanged(currentFacingDirection, this.transform.localEulerAngles);
+            }
+        }
+
+        public delegate Vector3 OnRotationChangedDelegate(FacingDirections currentFacingDirection, Vector3 newRotationEulerAngles);
+        public event OnRotationChangedDelegate OnRotationChanged;
+
         protected override void Update()
         {
             base.Update();
@@ -55,6 +70,7 @@ namespace Bottle.Core.GridObjectData
         protected override void Start()
         {
             base.Start();
+            OnRotationChanged += ConvertFacingDirectionToValue;
             //_currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
             //_currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
             //_currentStandingGridTile.currentStandingGridEntity.Add(this);
@@ -78,18 +94,18 @@ namespace Bottle.Core.GridObjectData
             _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
             _currentStandingGridTile.currentStandingGridEntity.Add(this);
         }
-        public Vector3Int ConvertFacingDirectionToValue(FacingDirections facingDirection)
+        public Vector3 ConvertFacingDirectionToValue(FacingDirections facingDirection, Vector3 newRotationEulerAngles)
         {
             switch (facingDirection)
             {
                 case FacingDirections.PositiveX:
-                    return Vector3Int.forward;
+                    return this.transform.localEulerAngles + Vector3Int.forward;
                 case FacingDirections.NegativeX:
-                    return Vector3Int.back;
+                    return this.transform.localEulerAngles + Vector3Int.back;
                 case FacingDirections.PositiveZ:
-                    return Vector3Int.right;
+                    return this.transform.localEulerAngles + Vector3Int.right;
                 case FacingDirections.NegativeZ:
-                    return Vector3Int.left;
+                    return this.transform.localEulerAngles + Vector3Int.left;
             }
             return Vector3Int.zero;
         }

@@ -2643,7 +2643,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1808205198}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd4a46294e0069f4eae144a203ae1d68, type: 3}
+  m_Script: {fileID: 11500000, guid: 1d8b8eea4f208654384471d5bc2900c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -2656,7 +2656,6 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   isAbilityLocked: 0
-  _interactiveGridObject: {fileID: 0}
 --- !u!1001 &1857319766
 PrefabInstance:
   m_ObjectHideFlags: 0
