@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Bottle.Core.GridObjectData;
+using Bottle.Core.Manager;
 namespace Bottle.Core.GridObjectAbility
 {
     public class GridEntityPushAndDragAbility : GridEntityInteractAbility
@@ -9,22 +10,11 @@ namespace Bottle.Core.GridObjectAbility
         protected override void Update()
         {
             base.Update();
-            if (currentInteractingGridObject != null)
-            {
-                var ahihi = GetTheOppositeMovementDirection(_currentGridObject.currentFacingDirection);
-            }
         }
-        private GridEntity.FacingDirections GetTheOppositeMovementDirection(GridEntity.FacingDirections currentFacingDirection)
+        protected override void Start()
         {
-            GridEntity.FacingDirections oppositeFacingDirection = GridEntity.FacingDirections.NONE;
-            switch (currentFacingDirection)
-            {
-                case GridEntity.FacingDirections.PositiveZ:
-                    oppositeFacingDirection = GridEntity.FacingDirections.NegativeZ;
-                    break;
-                //case GridEntity.FacingDirections.NegativeZ:
-            }
-            return oppositeFacingDirection;
+            base.Start();
+            interactButtonStates[KeyCode.E].ButtonDownHandler += Interact;
         }
     }
 

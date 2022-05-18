@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8248193937089174610}
   m_Layer: 0
   m_Name: Goldbag
-  m_TagString: Untagged
+  m_TagString: '[Bottle]Entity'
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -50,7 +50,6 @@ MonoBehaviour:
   pivotOffset: {x: 0, y: 0, z: 0}
   isBlockable: 1
   _isControllable: 0
-  currentFacingDirection: 3
 --- !u!1001 &6343636986543268840
 PrefabInstance:
   m_ObjectHideFlags: 0

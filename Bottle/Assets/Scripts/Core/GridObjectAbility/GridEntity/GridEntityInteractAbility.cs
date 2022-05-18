@@ -24,7 +24,6 @@ namespace Bottle.Core.GridObjectAbility
         }
         protected override void Start()
         {
-            interactButtonStates[KeyCode.E].ButtonDownHandler += Interact;
         }
 
         protected override void Update()
@@ -33,9 +32,9 @@ namespace Bottle.Core.GridObjectAbility
 
         private GridEntity GetOppositeGridObject()
         {
-            Vector3Int oppositeGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + Vector3Int.FloorToInt(_currentGridObject.ConvertFacingDirectionToValue(_currentGridObject.currentFacingDirection));
+            Vector3Int convertedForwardVector = new Vector3Int((int)this.transform.forward.x, (int)this.transform.forward.y, (int)this.transform.forward.z);
+            Vector3Int oppositeGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + convertedForwardVector;
             var targetEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(oppositeGridObjectPosition.x, oppositeGridObjectPosition.z), oppositeGridObjectPosition.y);
-            Debug.Log(oppositeGridObjectPosition);
             if (targetEntities.Count > 0)
             {
                 return targetEntities[0];
@@ -47,6 +46,7 @@ namespace Bottle.Core.GridObjectAbility
         {
             currentInteractingGridObject = GetOppositeGridObject();
         }
+
     }
 
 }
