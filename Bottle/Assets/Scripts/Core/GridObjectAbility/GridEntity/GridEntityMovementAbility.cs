@@ -53,7 +53,7 @@ namespace Bottle.Core.GridObjectAbility
         [BoxGroup("Acceleration Settings", true, true)]
         public float accelerationMultiplier = 1f;
 
-        private void DetectMovementDirection(InputButton.States state, KeyCode keyCode)
+        public void DetectMovementDirection(InputButton.States state, KeyCode keyCode)
         {
             switch (keyCode)
             {

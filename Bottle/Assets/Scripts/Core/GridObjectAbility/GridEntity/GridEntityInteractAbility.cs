@@ -22,12 +22,19 @@ namespace Bottle.Core.GridObjectAbility
                 _currentInteractingGridObject = value;
             }
         }
+
         protected override void Start()
         {
+            InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
         }
 
         protected override void Update()
         {
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
         }
 
         private GridEntity GetOppositeGridObject()
@@ -44,9 +51,11 @@ namespace Bottle.Core.GridObjectAbility
 
         private void Interact(InputButton.States state, KeyCode keyCode)
         {
-            currentInteractingGridObject = GetOppositeGridObject();
+            if (currentInteractingGridObject == null)
+                currentInteractingGridObject = GetOppositeGridObject();
+            else
+                currentInteractingGridObject = null;
         }
-
     }
 
 }
