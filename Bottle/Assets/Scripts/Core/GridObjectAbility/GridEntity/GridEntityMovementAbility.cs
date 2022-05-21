@@ -137,7 +137,7 @@ namespace Bottle.Core.GridObjectAbility
             return Vector3Int.zero;
         }
 
-        public MovementDirections GetDirectionFromValue(Vector3 direction)
+        public static MovementDirections GetDirectionFromValue(Vector3 direction)
         {
             if (direction.normalized == Vector3Int.forward)
             {
