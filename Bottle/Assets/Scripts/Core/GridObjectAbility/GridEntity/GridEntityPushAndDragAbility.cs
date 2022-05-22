@@ -18,7 +18,7 @@ namespace Bottle.Core.GridObjectAbility
             {
                 if (_availableMovementDirection == null) return;
                 _availableMovementDirection = value;
-                LimitMovementDirection(_availableMovementDirection);
+                EventManager.Instance.TriggerEvent("PushAndDragEvent", new Dictionary<string, object> { { "availableMovementDirectionList", _availableMovementDirection } });
             }
         }
 
@@ -43,11 +43,12 @@ namespace Bottle.Core.GridObjectAbility
         protected override void Start()
         {
             base.Start();
-            availableMovementDirection = new List<Vector3Int>();
+            EventManager.Instance.StartListening("PushAndDragEvent", LimitMovementDirection);
         }
 
-        private void LimitMovementDirection(List<Vector3Int> availableMovementDirectionList)
+        private void LimitMovementDirection(Dictionary<string,object> message)
         {
+            List<Vector3Int> availableMovementDirectionList = (List<Vector3Int>)message["availableMovementDirectionList"];
             foreach (Vector3Int movementDirection in availableMovementDirectionList)
             {
                 var direction = GridEntityMovementAbility.GetDirectionFromValue(movementDirection);
