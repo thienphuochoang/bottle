@@ -38,7 +38,6 @@ namespace Bottle.Core.GridObjectData
             {
                 if (_currentStandingGridTile == value) return;
                 _currentStandingGridTile = value;
-                _currentStandingGridTile.currentStandingGridEntity.Add(this);
             }
         }
 
@@ -65,12 +64,12 @@ namespace Bottle.Core.GridObjectData
         }
         private void OnCurrentStandingGridTileChangedHandler(Vector2Int newGridPosition, int newGridHeight)
         {
-            //if (_currentStandingGridTile != null)
-            //{
-            //    _currentStandingGridTile.currentStandingGridEntity = null;
-            //    _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
-            //}
+            if (_currentStandingGridTile != null)
+            {
+                _currentStandingGridTile.currentStandingGridEntity = null;
+            }
             _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(newGridPosition, newGridHeight - 1)[0];
+            _currentStandingGridTile.currentStandingGridEntity = new List<GridEntity> { this };
             //_currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
             //_currentStandingGridTile.currentStandingGridEntity.Add(this);
         }

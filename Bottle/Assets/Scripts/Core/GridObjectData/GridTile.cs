@@ -23,10 +23,10 @@ namespace Bottle.Core.GridObjectData
             {
                 if (_currentStandingGridEntity == value) return;
                 _currentStandingGridEntity = value;
-                //if (OnStandingGridEntityChanged != null)
-                //{
-                //    OnStandingGridEntityChanged(_currentStandingGridEntity);
-                //}
+                if (OnStandingGridEntityChanged != null)
+                {
+                    OnStandingGridEntityChanged(_currentStandingGridEntity);
+                }
             }
         }
 
@@ -42,7 +42,7 @@ namespace Bottle.Core.GridObjectData
         protected override void Start()
         {
             base.Start();
-            //OnStandingGridEntityChanged += SetStandingGridEntity;
+            OnStandingGridEntityChanged += SetStandingGridEntity;
         }
 
         public void SetStandingGridEntity(List<GridEntity> newStandingGridEntity)
