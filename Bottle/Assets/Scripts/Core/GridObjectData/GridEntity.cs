@@ -38,6 +38,7 @@ namespace Bottle.Core.GridObjectData
             {
                 if (_currentStandingGridTile == value) return;
                 _currentStandingGridTile = value;
+                _currentStandingGridTile.currentStandingGridEntity.Add(this);
             }
         }
 
@@ -50,10 +51,10 @@ namespace Bottle.Core.GridObjectData
         protected override void Start()
         {
             base.Start();
-            //_currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
+            _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
             //_currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
             //_currentStandingGridTile.currentStandingGridEntity.Add(this);
-            //OnPositionChanged += OnCurrentStandingGridTileChangedHandler;
+            OnPositionChanged += OnCurrentStandingGridTileChangedHandler;
             //OnControllableObjectChanged += ChangeControllableSetting;
         }
 
@@ -64,14 +65,14 @@ namespace Bottle.Core.GridObjectData
         }
         private void OnCurrentStandingGridTileChangedHandler(Vector2Int newGridPosition, int newGridHeight)
         {
-            if (_currentStandingGridTile != null)
-            {
-                _currentStandingGridTile.currentStandingGridEntity = null;
-                _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
-            }
+            //if (_currentStandingGridTile != null)
+            //{
+            //    _currentStandingGridTile.currentStandingGridEntity = null;
+            //    _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
+            //}
             _currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(newGridPosition, newGridHeight - 1)[0];
-            _currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
-            _currentStandingGridTile.currentStandingGridEntity.Add(this);
+            //_currentStandingGridTile.OnStandingGridEntityChanged += _currentStandingGridTile.SetStandingGridEntity;
+            //_currentStandingGridTile.currentStandingGridEntity.Add(this);
         }
     }
 }

@@ -23,10 +23,10 @@ namespace Bottle.Core.GridObjectData
             {
                 if (_currentStandingGridEntity == value) return;
                 _currentStandingGridEntity = value;
-                if (OnStandingGridEntityChanged != null)
-                {
-                    OnStandingGridEntityChanged(_currentStandingGridEntity);
-                }
+                //if (OnStandingGridEntityChanged != null)
+                //{
+                //    OnStandingGridEntityChanged(_currentStandingGridEntity);
+                //}
             }
         }
 

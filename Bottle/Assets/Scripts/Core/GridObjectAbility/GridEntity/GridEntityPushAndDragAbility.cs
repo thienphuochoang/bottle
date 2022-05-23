@@ -19,6 +19,7 @@ namespace Bottle.Core.GridObjectAbility
                 if (_availableMovementDirection == null) return;
                 _availableMovementDirection = value;
                 EventManager.Instance.TriggerEvent("PushAndDragEvent", new Dictionary<string, object> { { "availableMovementDirectionList", _availableMovementDirection } });
+                EventManager.Instance.TriggerEvent("PushAndDragPassiveEvent", new Dictionary<string, object> { { "interactingGridObject", currentInteractingGridObject }, {"isTriggered", true }, { "controllableMainGridEntity", _currentGridObject } });
             }
         }
 
@@ -32,8 +33,8 @@ namespace Bottle.Core.GridObjectAbility
                 Vector3Int currentGridObjectDirection = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y);
                 Vector3Int direction = interactingGridObjectDirection - currentGridObjectDirection;
                 Vector3Int oppositeDirection = direction * -1;
-                List<Vector3Int> tempList = new List<Vector3Int> { direction, oppositeDirection };
-                availableMovementDirection = tempList;
+                List<Vector3Int> directionList = new List<Vector3Int> { direction, oppositeDirection };
+                availableMovementDirection = directionList;
             }
             else if (currentInteractingGridObject == null && availableMovementDirection.Count > 0)
             {
