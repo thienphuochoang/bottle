@@ -51,6 +51,7 @@ namespace Bottle.Core.GridObjectAbility
 
         private void Interact(InputButton.States state, KeyCode keyCode)
         {
+            if (GameplayManager.Instance.isTurnInProgress == true) return;
             if (currentInteractingGridObject == null)
                 currentInteractingGridObject = GetOppositeGridObject();
             else

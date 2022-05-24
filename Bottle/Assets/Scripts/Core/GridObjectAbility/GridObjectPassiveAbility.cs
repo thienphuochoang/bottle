@@ -16,10 +16,6 @@ namespace Bottle.Core.GridObjectAbility
         [Tooltip("Trigger passive ability")]
         public bool isPassiveAbilityTriggered = false;
 
-        [BoxGroup("Passive Ability Settings")]
-        [Tooltip("Is this passive ability ")]
-        public bool isContinuous = false;
-
         protected virtual void OnEnable()
         {
             if (isAbilityLocked)

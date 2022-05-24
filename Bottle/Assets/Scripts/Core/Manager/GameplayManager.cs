@@ -8,6 +8,7 @@ using Sirenix.OdinInspector;
 using Newtonsoft.Json;
 using System.IO;
 using Bottle.Extensions.Helper;
+using Bottle.Core.GridObjectAbility;
 namespace Bottle.Core.Manager
 {
     public class GameplayManager : PersistentObject<GameplayManager>
@@ -23,6 +24,8 @@ namespace Bottle.Core.Manager
 
         [ShowInInspector]
         private GridEntity _controllableMainGridEntity;
+
+        public bool isTurnInProgress = false;
 
         private void SaveSceneState(int turn)
         {

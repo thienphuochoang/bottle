@@ -274,6 +274,7 @@ namespace Bottle.Core.GridObjectAbility
             {
                 this.transform.position = newPosition;
                 _isMoving = true;
+                GameplayManager.Instance.isTurnInProgress = true;
             }
             else
             {
@@ -282,6 +283,7 @@ namespace Bottle.Core.GridObjectAbility
                 this._currentGridObject.gridHeight = gridPos.y;
                 _currentMovementDirection = MovementDirections.NONE;
                 _isMoving = false;
+                GameplayManager.Instance.isTurnInProgress = false;
                 _targetTile = null;
                 currentSpeed = 0;
             }
