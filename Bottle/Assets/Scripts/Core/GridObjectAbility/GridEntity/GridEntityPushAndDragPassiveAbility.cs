@@ -12,6 +12,7 @@ namespace Bottle.Core.GridObjectAbility
         [ShowInInspector]
         [ReadOnly]
         private GridTile _nextTargetTile;
+        private bool _isBeingPushedOrDragged = false;
         [ShowInInspector]
         [ReadOnly]
         [BoxGroup("Acceleration Settings", true, true)]
@@ -48,12 +49,12 @@ namespace Bottle.Core.GridObjectAbility
             ApplyAcceleration();
             if (isPassiveAbilityTriggered)
             {
-                isInProgress = true;
-                GameplayManager.Instance.isTurnInProgress = true;
+                //GameplayManager.Instance.isTurnInProgress = true;
                 isPassiveAbilityTriggered = false;
+                _isBeingPushedOrDragged = true;
                 _nextTargetTile = _mainGridEntity.currentStandingGridTile;
             }
-            if (isInProgress == true && isPassiveAbilityTriggered == false && _mainGridEntity != null)
+            if ( isPassiveAbilityTriggered == false && _mainGridEntity != null && _isBeingPushedOrDragged == true)
             {
                 if (_mainGridEntity.currentStandingGridTile.gridPosition != _nextTargetTile.gridPosition || _mainGridEntity.currentStandingGridTile.gridHeight != _nextTargetTile.gridHeight)
                 {
@@ -71,7 +72,7 @@ namespace Bottle.Core.GridObjectAbility
             if (this.transform.position != newPosition)
             {
                 this.transform.position = newPosition;
-                isInProgress = true;
+                _isBeingPushedOrDragged = true;
                 GameplayManager.Instance.isTurnInProgress = true;
             }
             else
@@ -79,7 +80,7 @@ namespace Bottle.Core.GridObjectAbility
                 var gridPos = GridManager.Instance.ConvertWorldPositionToGridPosition(this._currentGridObject);
                 this._currentGridObject.gridPosition = new Vector2Int(gridPos.x, gridPos.z);
                 this._currentGridObject.gridHeight = gridPos.y;
-                //isInProgress = false;
+                //_isBeingPushedOrDragged = false;
                 GameplayManager.Instance.isTurnInProgress = false;
                 _nextTargetTile = _mainGridEntity.currentStandingGridTile;
                 currentSpeed = 0;
