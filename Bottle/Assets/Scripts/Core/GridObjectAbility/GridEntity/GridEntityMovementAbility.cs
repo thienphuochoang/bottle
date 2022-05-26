@@ -250,7 +250,16 @@ namespace Bottle.Core.GridObjectAbility
             if (targetTile.Count > 0)
             {
                 if (blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
+                {
+                    if (targetTile[0].isARamp)
+                    {
+                        Vector3Int nextTargetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection) * 2;
+                        var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
+                        Debug.Log(nextTargetTile[0]);
+                        return targetTile[0];
+                    }
                     return targetTile[0];
+                }
                 else if (blockableGridTiles.Count > 0 && blockableGridTiles[0].isBlockable == false)
                     return targetTile[0];
                 else if (blockableGridEntities.Count > 0 && blockableGridEntities[0].isBlockable == false)
