@@ -29,6 +29,10 @@ namespace Bottle.Core.GridObjectData
                 }
             }
         }
+        [HideIf("isStandable", true)]
+        [BoxGroup("Grid Tile Settings", true, true)]
+        [Tooltip("Is this Grid Tile a ramp?")]
+        public bool isARamp = false;
 
         public delegate void OnStandingGridEntityDelegate(List<GridEntity> newStandingGridEntity);
         public event OnStandingGridEntityDelegate OnStandingGridEntityChanged;
