@@ -8,10 +8,12 @@ namespace Bottle.Core.GridObjectAbility
 {
     public class GridEntityPushAndDragPassiveAbility : GridObjectPassiveAbility<GridEntity>
     {
-        private GridEntity _mainGridEntity;
+        private GridEntityPushAndDragAbility _mainGridEntity;
         [ShowInInspector]
         [ReadOnly]
-        private GridTile _nextTargetTile;
+        private GridTile _targetTile;
+        [ShowInInspector]
+        private List<Vector3Int> _availableMovementDirection = new List<Vector3Int>();
         private bool _isBeingPushedOrDragged = false;
         [ShowInInspector]
         [ReadOnly]
@@ -33,18 +35,18 @@ namespace Bottle.Core.GridObjectAbility
         protected override void Start()
         {
             base.Start();
-            EventManager.Instance.StartListening("PushAndDragPassiveEvent", BeingPushedOrDragged);
+            EventManager.Instance.StartListening("PushAndDragPassiveEvent", BeginBeingPushedOrDragged);
             //InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirectionFromPath;
             //InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirectionFromPath;
             //InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirectionFromPath;
             //InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirectionFromPath;
         }
 
-        private void BeingPushedOrDragged(Dictionary<string, object> message)
+        private void BeginBeingPushedOrDragged(Dictionary<string, object> message)
         {
             bool isTriggeredValue = (bool)message["isTriggered"];
             GridEntity currentInteractingObject = (GridEntity)message["interactingGridObject"];
-            _mainGridEntity = (GridEntity)message["controllableMainGridEntity"];
+            _mainGridEntity = (GridEntityPushAndDragAbility)message["controllableMainGridEntity"];
             if (currentInteractingObject == _currentGridObject)
             {
                 isPassiveAbilityTriggered = isTriggeredValue;
@@ -59,8 +61,10 @@ namespace Bottle.Core.GridObjectAbility
             {
                 //GameplayManager.Instance.isTurnInProgress = true;
                 isPassiveAbilityTriggered = false;
+                _availableMovementDirection = _mainGridEntity.availableMovementDirection;
                 _isBeingPushedOrDragged = true;
-                _currentGridObject.isBlockable = false;
+                //_currentGridObject.isBlockable = false;
+                LimitMovementDirection();
                 //_nextTargetTile = _mainGridEntity.currentStandingGridTile;
             }
             if ( isPassiveAbilityTriggered == false && _mainGridEntity != null && _isBeingPushedOrDragged == true)
@@ -68,15 +72,16 @@ namespace Bottle.Core.GridObjectAbility
                 //if (_mainGridEntity.currentStandingGridTile.gridPosition != _nextTargetTile.gridPosition || _mainGridEntity.currentStandingGridTile.gridHeight != _nextTargetTile.gridHeight)
                 //{
                 if (_mainGridEntity.GetComponent<GridEntityPushAndDragAbility>().currentInteractingGridObject != null)
-                    PushOrDrag();
+                    if (_targetTile != null)
+                        BeingPushOrDrag();
                 //}
                 
             }
         }
 
-        private void PushOrDrag()
+        private void BeingPushOrDrag()
         {
-            Vector3 destination = new Vector3(_nextTargetTile.transform.position.x, _nextTargetTile.transform.position.y + 1, _nextTargetTile.transform.position.z);
+            Vector3 destination = new Vector3(_targetTile.transform.position.x, _targetTile.transform.position.y + 1, _targetTile.transform.position.z);
             Vector3 newPosition = Vector3.MoveTowards(transform.position, destination, Time.deltaTime * currentSpeed);
             if (this.transform.position != newPosition)
             {
@@ -91,7 +96,7 @@ namespace Bottle.Core.GridObjectAbility
                 this._currentGridObject.gridHeight = gridPos.y;
                 //_isBeingPushedOrDragged = false;
                 GameplayManager.Instance.isTurnInProgress = false;
-                _nextTargetTile = _mainGridEntity.currentStandingGridTile;
+                //_nextTargetTile = _mainGridEntity.currentStandingGridTile;
                 currentSpeed = 0;
             }
         }
@@ -132,12 +137,38 @@ namespace Bottle.Core.GridObjectAbility
             }
             return null;
         }
+        private void LimitMovementDirection()
+        {
+            foreach (Vector3Int movementDirection in _availableMovementDirection)
+            {
+                var direction = GridEntityMovementAbility.GetDirectionFromValue(movementDirection);
+                switch (direction)
+                {
+                    case GridEntityMovementAbility.MovementDirections.FORWARD:
+                        InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
+                        InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirection;
+                        break;
+                    case GridEntityMovementAbility.MovementDirections.BACK:
+                        InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler += DetectMovementDirection;
+                        InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler += DetectMovementDirection;
+                        break;
+                    case GridEntityMovementAbility.MovementDirections.LEFT:
+                        InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
+                        InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
+                        break;
+                    case GridEntityMovementAbility.MovementDirections.RIGHT:
+                        InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
+                        InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
+                        break;
+                }
+            }
+        }
         public void DetectMovementDirection(InputButton.States state, KeyCode keyCode)
         {
             switch (keyCode)
             {
                 case KeyCode.W:
-                    if (_isBeingPushedOrDragged == false)
+                    if (_isBeingPushedOrDragged == true)
                     {
                         _currentMovementDirection = GridEntityMovementAbility.MovementDirections.FORWARD;
                         _targetTile = GetTargetTile(_currentMovementDirection);
@@ -145,7 +176,7 @@ namespace Bottle.Core.GridObjectAbility
                     }
                     break;
                 case KeyCode.S:
-                    if (_isBeingPushedOrDragged == false)
+                    if (_isBeingPushedOrDragged == true)
                     {
                         _currentMovementDirection = GridEntityMovementAbility.MovementDirections.BACK;
                         _targetTile = GetTargetTile(_currentMovementDirection);
@@ -153,7 +184,7 @@ namespace Bottle.Core.GridObjectAbility
                     }
                     break;
                 case KeyCode.A:
-                    if (_isBeingPushedOrDragged == false)
+                    if (_isBeingPushedOrDragged == true)
                     {
                         _currentMovementDirection = GridEntityMovementAbility.MovementDirections.LEFT;
                         _targetTile = GetTargetTile(_currentMovementDirection);
@@ -161,7 +192,7 @@ namespace Bottle.Core.GridObjectAbility
                     }
                     break;
                 case KeyCode.D:
-                    if (_isBeingPushedOrDragged == false)
+                    if (_isBeingPushedOrDragged == true)
                     {
                         _currentMovementDirection = GridEntityMovementAbility.MovementDirections.RIGHT;
                         _targetTile = GetTargetTile(_currentMovementDirection);

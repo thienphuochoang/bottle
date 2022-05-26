@@ -19,7 +19,7 @@ namespace Bottle.Core.GridObjectAbility
                 if (_availableMovementDirection == null) return;
                 _availableMovementDirection = value;
                 EventManager.Instance.TriggerEvent("PushAndDragEvent", new Dictionary<string, object> { { "availableMovementDirectionList", _availableMovementDirection } });
-                EventManager.Instance.TriggerEvent("PushAndDragPassiveEvent", new Dictionary<string, object> { { "interactingGridObject", currentInteractingGridObject }, {"isTriggered", true }, { "controllableMainGridEntity", _currentGridObject } });
+                EventManager.Instance.TriggerEvent("PushAndDragPassiveEvent", new Dictionary<string, object> { { "interactingGridObject", currentInteractingGridObject }, {"isTriggered", true }, { "controllableMainGridEntity", this } });
             }
         }
 
