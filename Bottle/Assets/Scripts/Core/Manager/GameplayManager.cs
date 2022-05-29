@@ -15,7 +15,8 @@ namespace Bottle.Core.Manager
     {
         [Range(0, 10)]
         public int currentTurn = 0;
-
+        public enum GlobalDirection { NONE, POSITIVE_X, NEGATIVE_X, POSITIVE_Z, NEGATIVE_Z };
+        public GlobalDirection globalFrontDirection = GlobalDirection.NONE;
         private GridEntity[] _allGridEntities => GridManager.Instance.EntityHolder.GetComponentsInChildren<GridEntity>();
         private GridTile[] _allGridTiles => GridManager.Instance.TileHolder.GetComponentsInChildren<GridTile>();
 

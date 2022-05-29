@@ -10,17 +10,20 @@ namespace Bottle.Core.GridObjectAbility
     public class GridEntityMovementAbility : GridObjectAbility<GridEntity>
     {
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        [EnableIf("@GetComponent<GridEntity>().isControllable == false")]
+        [HideIf("@GetComponent<GridEntity>().isControllable", false)]
         public PathCreator currentAssignedPathCreator;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
+        [HideIf("@GetComponent<GridEntity>().isControllable", false)]
         [ReadOnly]
         [ShowInInspector]
         private int _currentNode;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
+        [HideIf("@GetComponent<GridEntity>().isControllable", false)]
         [ReadOnly]
         [ShowInInspector]
         private Vector3 _stepPos;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
+        [HideIf("@GetComponent<GridEntity>().isControllable", false)]
         [ReadOnly]
         [ShowInInspector]
         private int _step = 1;
@@ -125,14 +128,50 @@ namespace Bottle.Core.GridObjectAbility
             }
         }
 
-        public Vector3Int GetValueFromDirection(MovementDirections direction)
+        public Vector3Int GetValueFromDirection(MovementDirections direction, GameplayManager.GlobalDirection globalDirection)
         {
-            switch (direction)
+            switch (globalDirection)
             {
-                case MovementDirections.FORWARD: return Vector3Int.forward;
-                case MovementDirections.BACK: return Vector3Int.back;
-                case MovementDirections.LEFT: return Vector3Int.left;
-                case MovementDirections.RIGHT: return Vector3Int.right;
+                case GameplayManager.GlobalDirection.POSITIVE_Z:
+                    if (direction == MovementDirections.FORWARD)
+                        return Vector3Int.forward;
+                    else if (direction == MovementDirections.BACK)
+                        return Vector3Int.back;
+                    else if (direction == MovementDirections.LEFT)
+                        return Vector3Int.left;
+                    else if (direction == MovementDirections.RIGHT)
+                        return Vector3Int.right;
+                    break;
+                case GameplayManager.GlobalDirection.NEGATIVE_Z:
+                    if (direction == MovementDirections.FORWARD)
+                        return Vector3Int.back;
+                    else if (direction == MovementDirections.BACK)
+                        return Vector3Int.forward;
+                    else if (direction == MovementDirections.LEFT)
+                        return Vector3Int.right;
+                    else if (direction == MovementDirections.RIGHT)
+                        return Vector3Int.left;
+                    break;
+                case GameplayManager.GlobalDirection.POSITIVE_X:
+                    if (direction == MovementDirections.FORWARD)
+                        return Vector3Int.right;
+                    else if (direction == MovementDirections.BACK)
+                        return Vector3Int.left;
+                    else if (direction == MovementDirections.LEFT)
+                        return Vector3Int.forward;
+                    else if (direction == MovementDirections.RIGHT)
+                        return Vector3Int.back;
+                    break;
+                case GameplayManager.GlobalDirection.NEGATIVE_X:
+                    if (direction == MovementDirections.FORWARD)
+                        return Vector3Int.left;
+                    else if (direction == MovementDirections.BACK)
+                        return Vector3Int.right;
+                    else if (direction == MovementDirections.LEFT)
+                        return Vector3Int.back;
+                    else if (direction == MovementDirections.RIGHT)
+                        return Vector3Int.forward;
+                    break;
             }
             return Vector3Int.zero;
         }
@@ -242,8 +281,8 @@ namespace Bottle.Core.GridObjectAbility
         }
         private GridTile GetTargetTile(MovementDirections theDirection)
         {
-            Vector3Int targetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection);
-            Vector3Int blockableGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection);
+            Vector3Int targetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
+            Vector3Int blockableGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
             var targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
             var blockableGridTiles = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
             var blockableGridEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
@@ -251,13 +290,13 @@ namespace Bottle.Core.GridObjectAbility
             {
                 if (blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
                 {
-                    if (targetTile[0].isARamp)
-                    {
-                        Vector3Int nextTargetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection) * 2;
-                        var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
-                        Debug.Log(nextTargetTile[0]);
-                        return targetTile[0];
-                    }
+                    //if (targetTile[0].isARamp)
+                    //{
+                    //    Vector3Int nextTargetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
+                    //    var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
+                    //    Debug.Log(nextTargetTile[0]);
+                    //    return targetTile[0];
+                    //}
                     return targetTile[0];
                 }
                 else if (blockableGridTiles.Count > 0 && blockableGridTiles[0].isBlockable == false)
