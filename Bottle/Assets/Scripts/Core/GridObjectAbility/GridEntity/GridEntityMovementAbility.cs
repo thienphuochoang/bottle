@@ -65,7 +65,7 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         _currentMovementDirection = MovementDirections.FORWARD;
                         _targetTile = GetTargetTile(_currentMovementDirection);
-                        Turn(_currentMovementDirection);
+                        Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
                     }
                     break;
                 case KeyCode.S:
@@ -73,7 +73,7 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         _currentMovementDirection = MovementDirections.BACK;
                         _targetTile = GetTargetTile(_currentMovementDirection);
-                        Turn(_currentMovementDirection);
+                        Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
                     }
                     break;
                 case KeyCode.A:
@@ -81,7 +81,7 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         _currentMovementDirection = MovementDirections.LEFT;
                         _targetTile = GetTargetTile(_currentMovementDirection);
-                        Turn(_currentMovementDirection);
+                        Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
                     }
                     break;
                 case KeyCode.D:
@@ -89,7 +89,7 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         _currentMovementDirection = MovementDirections.RIGHT;
                         _targetTile = GetTargetTile(_currentMovementDirection);
-                        Turn(_currentMovementDirection);
+                        Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
                     }
                     break;
             }
@@ -112,7 +112,7 @@ namespace Bottle.Core.GridObjectAbility
                         _targetTile = GetTargetTile(_currentMovementDirection);
                         if (_targetTile != null && _targetTile.isStandable == true)
                         {
-                            Turn(_currentMovementDirection);
+                            Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
                             if (_stepPos == nextNodeWorldSpacePos)
                             {
                                 _step = 1;
@@ -342,22 +342,82 @@ namespace Bottle.Core.GridObjectAbility
             Vector3 stepPos = currentNodeWorldSpacePos + direction * distance;
             return stepPos;
         }
-        private void Turn(MovementDirections targetDirection)
+        private void Turn(MovementDirections targetDirection, GameplayManager.GlobalDirection globalDirection)
         {
             Vector3 currentChildRotationEulerAngle = this._currentGridObject.transform.rotation.eulerAngles;
-            switch (targetDirection)
+            switch (globalDirection)
             {
-                case MovementDirections.FORWARD:
-                    this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                case GameplayManager.GlobalDirection.POSITIVE_Z:
+                    if (targetDirection == MovementDirections.FORWARD)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.BACK)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.LEFT)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.RIGHT)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                    }
                     break;
-                case MovementDirections.BACK:
-                    this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                case GameplayManager.GlobalDirection.NEGATIVE_Z:
+                    if (targetDirection == MovementDirections.FORWARD)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.BACK)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.LEFT)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.RIGHT)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                    }
                     break;
-                case MovementDirections.LEFT:
-                    this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                case GameplayManager.GlobalDirection.POSITIVE_X:
+                    if (targetDirection == MovementDirections.FORWARD)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.BACK)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.LEFT)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.RIGHT)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                    }
                     break;
-                case MovementDirections.RIGHT:
-                    this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                case GameplayManager.GlobalDirection.NEGATIVE_X:
+                    if (targetDirection == MovementDirections.FORWARD)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.BACK)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.LEFT)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                    }
+                    else if (targetDirection == MovementDirections.RIGHT)
+                    {
+                        this._currentGridObject.transform.RotateAround(this._currentGridObject.transform.position, this._currentGridObject.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                    }
                     break;
             }
         }

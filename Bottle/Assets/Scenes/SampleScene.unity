@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -948,7 +948,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 4690770049057008018, guid: 4651fdbd4bf1db7429fdade8d59b586c, type: 3}
       propertyPath: _uID
-      value: -109452
+      value: -1500
       objectReference: {fileID: 0}
     - target: {fileID: 4690770049057008018, guid: 4651fdbd4bf1db7429fdade8d59b586c, type: 3}
       propertyPath: _gridHeight
@@ -966,6 +966,10 @@ PrefabInstance:
       propertyPath: _isControllable
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4690770049057008018, guid: 4651fdbd4bf1db7429fdade8d59b586c, type: 3}
+      propertyPath: currentStandingGridTile
+      value: 
+      objectReference: {fileID: 1980341732}
     - target: {fileID: 6742977720004735337, guid: 4651fdbd4bf1db7429fdade8d59b586c, type: 3}
       propertyPath: serializationData.Prefab
       value: 
@@ -1742,13 +1746,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 755598799}
-  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
   m_LocalPosition: {x: -4.3, y: 5.69, z: -1.72}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: -90}
 --- !u!1001 &842128179
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3527,6 +3531,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b099a0bef8f08a479d1ae5d54b35bb3, type: 3}
+--- !u!114 &1980341732 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5188239624526885832, guid: 1b099a0bef8f08a479d1ae5d54b35bb3, type: 3}
+  m_PrefabInstance: {fileID: 1980341731}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2030464849
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3897,6 +3912,14 @@ PrefabInstance:
     - target: {fileID: 8358505835632888176, guid: 37577c6384aa4324997b7acf15af663b, type: 3}
       propertyPath: m_Name
       value: GameplayManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 8358505835632888178, guid: 37577c6384aa4324997b7acf15af663b, type: 3}
+      propertyPath: frontDirection
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 8358505835632888178, guid: 37577c6384aa4324997b7acf15af663b, type: 3}
+      propertyPath: globalFrontDirection
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8358505835632888178, guid: 37577c6384aa4324997b7acf15af663b, type: 3}
       propertyPath: serializationData.Prefab
