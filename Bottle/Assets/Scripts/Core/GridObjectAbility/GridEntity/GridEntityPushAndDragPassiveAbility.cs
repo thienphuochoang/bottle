@@ -141,7 +141,7 @@ namespace Bottle.Core.GridObjectAbility
         {
             foreach (Vector3Int movementDirection in _availableMovementDirection)
             {
-                var direction = GridEntityMovementAbility.GetDirectionFromValue(movementDirection);
+                var direction = GridEntityMovementAbility.GetDirectionFromValue(movementDirection, GameplayManager.Instance.globalFrontDirection);
                 switch (direction)
                 {
                     case GridEntityMovementAbility.MovementDirections.FORWARD:

@@ -52,7 +52,7 @@ namespace Bottle.Core.GridObjectAbility
             List<Vector3Int> availableMovementDirectionList = (List<Vector3Int>)message["availableMovementDirectionList"];
             foreach (Vector3Int movementDirection in availableMovementDirectionList)
             {
-                var direction = GridEntityMovementAbility.GetDirectionFromValue(movementDirection);
+                var direction = GridEntityMovementAbility.GetDirectionFromValue(movementDirection, GameplayManager.Instance.globalFrontDirection);
                 switch (direction)
                 {
                     case GridEntityMovementAbility.MovementDirections.FORWARD:
@@ -78,7 +78,7 @@ namespace Bottle.Core.GridObjectAbility
         {
             foreach (Vector3Int movementDirection in availableMovementDirectionList)
             {
-                var direction = GridEntityMovementAbility.GetDirectionFromValue(movementDirection);
+                var direction = GridEntityMovementAbility.GetDirectionFromValue(movementDirection, GameplayManager.Instance.globalFrontDirection);
                 switch (direction)
                 {
                     case GridEntityMovementAbility.MovementDirections.FORWARD:

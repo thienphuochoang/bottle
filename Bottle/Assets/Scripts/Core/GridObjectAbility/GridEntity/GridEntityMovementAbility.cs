@@ -108,7 +108,7 @@ namespace Bottle.Core.GridObjectAbility
                         Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
                         Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
                         _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
-                        _currentMovementDirection = GetDirectionFromValue(direction);
+                        _currentMovementDirection = GetDirectionFromValue(direction, GameplayManager.Instance.globalFrontDirection);
                         _targetTile = GetTargetTile(_currentMovementDirection);
                         if (_targetTile != null && _targetTile.isStandable == true)
                         {
@@ -128,7 +128,7 @@ namespace Bottle.Core.GridObjectAbility
             }
         }
 
-        public Vector3Int GetValueFromDirection(MovementDirections direction, GameplayManager.GlobalDirection globalDirection)
+        public static Vector3Int GetValueFromDirection(MovementDirections direction, GameplayManager.GlobalDirection globalDirection)
         {
             switch (globalDirection)
             {
@@ -176,23 +176,50 @@ namespace Bottle.Core.GridObjectAbility
             return Vector3Int.zero;
         }
 
-        public static MovementDirections GetDirectionFromValue(Vector3 direction)
+        public static MovementDirections GetDirectionFromValue(Vector3 direction, GameplayManager.GlobalDirection globalDirection)
         {
-            if (direction.normalized == Vector3Int.forward)
+            switch (globalDirection)
             {
-                return MovementDirections.FORWARD;
-            }
-            else if (direction.normalized == Vector3Int.back)
-            {
-                return MovementDirections.BACK;
-            }
-            else if (direction.normalized == Vector3Int.right)
-            {
-                return MovementDirections.RIGHT;
-            }
-            else if (direction.normalized == Vector3Int.left)
-            {
-                return MovementDirections.LEFT;
+                case GameplayManager.GlobalDirection.POSITIVE_Z:
+                    if (direction.normalized == Vector3Int.forward)
+                        return MovementDirections.FORWARD;
+                    else if (direction.normalized == Vector3Int.back)
+                        return MovementDirections.BACK;
+                    else if (direction.normalized == Vector3Int.left)
+                        return MovementDirections.LEFT;
+                    else if (direction.normalized == Vector3Int.right)
+                        return MovementDirections.RIGHT;
+                    break;
+                case GameplayManager.GlobalDirection.NEGATIVE_Z:
+                    if (direction.normalized == Vector3Int.forward)
+                        return MovementDirections.BACK;
+                    else if (direction.normalized == Vector3Int.back)
+                        return MovementDirections.FORWARD;
+                    else if (direction.normalized == Vector3Int.left)
+                        return MovementDirections.RIGHT;
+                    else if (direction.normalized == Vector3Int.right)
+                        return MovementDirections.LEFT;
+                    break;
+                case GameplayManager.GlobalDirection.POSITIVE_X:
+                    if (direction.normalized == Vector3Int.forward)
+                        return MovementDirections.LEFT;
+                    else if (direction.normalized == Vector3Int.back)
+                        return MovementDirections.RIGHT;
+                    else if (direction.normalized == Vector3Int.left)
+                        return MovementDirections.BACK;
+                    else if (direction.normalized == Vector3Int.right)
+                        return MovementDirections.FORWARD;
+                    break;
+                case GameplayManager.GlobalDirection.NEGATIVE_X:
+                    if (direction.normalized == Vector3Int.forward)
+                        return MovementDirections.RIGHT;
+                    else if (direction.normalized == Vector3Int.back)
+                        return MovementDirections.LEFT;
+                    else if (direction.normalized == Vector3Int.left)
+                        return MovementDirections.FORWARD;
+                    else if (direction.normalized == Vector3Int.right)
+                        return MovementDirections.BACK;
+                    break;
             }
             return MovementDirections.NONE;
         }
@@ -290,13 +317,13 @@ namespace Bottle.Core.GridObjectAbility
             {
                 if (blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
                 {
-                    //if (targetTile[0].isARamp)
-                    //{
-                    //    Vector3Int nextTargetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
-                    //    var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
-                    //    Debug.Log(nextTargetTile[0]);
-                    //    return targetTile[0];
-                    //}
+                    if (targetTile[0].isARamp && targetTile[0].stepOnDirection == GameplayManager.GlobalDirection.POSITIVE_Z)
+                    {
+                        Vector3Int nextTargetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
+                        var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
+                        Debug.Log(nextTargetTile[0]);
+                        return targetTile[0];
+                    }
                     return targetTile[0];
                 }
                 else if (blockableGridTiles.Count > 0 && blockableGridTiles[0].isBlockable == false)
