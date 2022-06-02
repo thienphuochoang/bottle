@@ -57,8 +57,9 @@ namespace Bottle.Core.GridObjectData
             {
                 currentStandingGridTile.currentStandingGridEntity = null;
             }
-            currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(newGridPosition, newGridHeight - 1)[0];
-            currentStandingGridTile.currentStandingGridEntity = new List<GridEntity> { this };
+            var currentStandingGridTileList = GridManager.Instance.GetGridObjectAtPosition<GridTile>(newGridPosition, newGridHeight - 1);
+            if (currentStandingGridTileList.Count > 0)
+                currentStandingGridTile.currentStandingGridEntity = new List<GridEntity> { this };
         }
     }
 }

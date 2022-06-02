@@ -43,6 +43,8 @@ namespace Bottle.Core.GridObjectAbility
         [ReadOnly]
         [SerializeField]
         private bool _isMoving = false;
+        //[BoxGroup("Movement Settings", true, true)]
+        //public AnimationCurve movementAnimCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 
 
         [BoxGroup("Acceleration Settings", true, true)]
@@ -110,6 +112,7 @@ namespace Bottle.Core.GridObjectAbility
                         _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
                         _currentMovementDirection = GetDirectionFromValue(direction, GameplayManager.Instance.globalFrontDirection);
                         _targetTile = GetTargetTile(_currentMovementDirection);
+                        Debug.Log(_targetTile);
                         if (_targetTile != null && _targetTile.isStandable == true)
                         {
                             Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
@@ -317,12 +320,12 @@ namespace Bottle.Core.GridObjectAbility
             {
                 if (blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
                 {
-                    if (targetTile[0].isARamp && targetTile[0].stepOnDirection == GameplayManager.GlobalDirection.POSITIVE_Z)
+                    if (targetTile[0].isARamp)
                     {
                         Vector3Int nextTargetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 1, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
                         var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
-                        Debug.Log(nextTargetTile[0]);
-                        return targetTile[0];
+                        if (nextTargetTile.Count > 0)
+                            return nextTargetTile[0];
                     }
                     return targetTile[0];
                 }
@@ -330,6 +333,21 @@ namespace Bottle.Core.GridObjectAbility
                     return targetTile[0];
                 else if (blockableGridEntities.Count > 0 && blockableGridEntities[0].isBlockable == false)
                     return targetTile[0];
+            }
+            else
+            {
+                Vector3Int targetRampPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 2, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
+                var targetRampTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetRampPosition.x, targetRampPosition.z), targetRampPosition.y);
+                if (targetRampTile.Count > 0)
+                {
+                    if (targetRampTile[0].isARamp)
+                    {
+                        Vector3Int nextTargetGridPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight - 2, _currentGridObject.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
+                        var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y);
+                        if (nextTargetTile.Count > 0)
+                            return nextTargetTile[0];
+                    }
+                }
             }
             return null;
         }
