@@ -109,14 +109,39 @@ namespace Bottle.Core.GridObjectAbility
                         Vector3 currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
                         Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
                         Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
+                        Debug.Log(direction);
                         _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
+                        Vector3Int stepPosGridPosition = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, _currentGridObject.pivotOffset.y);
+                        Vector3Int rampGridPosition = new Vector3Int(stepPosGridPosition.x, stepPosGridPosition.y - 2, stepPosGridPosition.z);
+                        List<GridTile> checkedRampTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(rampGridPosition.x, rampGridPosition.z), rampGridPosition.y);
+                        if (checkedRampTile.Count > 0)
+                        {
+                            if (direction.x > 1)
+                                direction.x = 1;
+                            else if (direction.x == 1)
+                                direction.x = 0;
+                            if (direction.y > 1)
+                                direction.y = 1;
+                            else if (direction.y == 1)
+                                direction.y = 0;
+                            if (direction.z > 1)
+                                direction.z = 1;
+                            else if (direction.z == 1)
+                                direction.z = 0;
+                            _step = 1;
+                            _currentNode = _currentNode + 1;
+                        }
+                        Debug.Log(_stepPos);
                         _currentMovementDirection = GetDirectionFromValue(direction, GameplayManager.Instance.globalFrontDirection);
+                        Debug.Log(_currentMovementDirection);
                         _targetTile = GetTargetTile(_currentMovementDirection);
                         Debug.Log(_targetTile);
                         if (_targetTile != null && _targetTile.isStandable == true)
                         {
                             Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
-                            if (_stepPos == nextNodeWorldSpacePos)
+                            Vector3Int stepPosGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, _currentGridObject.pivotOffset.y);
+                            Vector3Int nextNodeGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(nextNodeWorldSpacePos, _currentGridObject.pivotOffset.y);
+                            if (stepPosGridData == nextNodeGridData)
                             {
                                 _step = 1;
                                 _currentNode = _currentNode + 1;
