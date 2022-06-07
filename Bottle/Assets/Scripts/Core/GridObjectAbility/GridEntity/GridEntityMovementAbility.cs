@@ -127,18 +127,15 @@ namespace Bottle.Core.GridObjectAbility
                                 direction.z = 1;
                             else if (direction.z == 1)
                                 direction.z = 0;
-                            _step = 0;
-                            _currentNode = _currentNode + 1;
                         }
                         _currentMovementDirection = GetDirectionFromValue(direction, GameplayManager.Instance.globalFrontDirection);
                         _targetTile = GetTargetTile(_currentMovementDirection);
                         if (_targetTile != null && _targetTile.isStandable == true)
                         {
-                            Debug.Log(_targetTile);
                             Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
                             Vector3Int stepPosGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, _currentGridObject.pivotOffset.y);
                             Vector3Int nextNodeGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(nextNodeWorldSpacePos, _currentGridObject.pivotOffset.y);
-                            if (stepPosGridData == nextNodeGridData)
+                            if (stepPosGridData == nextNodeGridData || checkedRampTile.Count > 0)
                             {
                                 _step = 1;
                                 _currentNode = _currentNode + 1;
@@ -350,8 +347,8 @@ namespace Bottle.Core.GridObjectAbility
                         if (nextTargetTile.Count > 0)
                             return nextTargetTile[0];
                     }
+                    return targetTile[0];
                 }
-                return targetTile[0];
             }
             else
             {
@@ -398,7 +395,6 @@ namespace Bottle.Core.GridObjectAbility
                     }
                 }
             }
-
             return (blockedGridTiles, blockedGridEntities);
         }
         private void ApplyAcceleration()
