@@ -6,7 +6,7 @@ using Bottle.Core.Manager;
 using Sirenix.OdinInspector;
 namespace Bottle.Core.GridObjectAbility
 {
-    public class GridEntityInteractAbility : GridObjectAbility<GridEntity>
+    public class GridEntityInteractAbility : GridEntityAbility
     {
         protected static Dictionary<KeyCode, InputButton> interactButtonStates => InputManager.Instance.buttonStates;
         [BoxGroup("Interact ability Settings")]

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1059,6 +1059,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   isAbilityLocked: 0
+  abilityIcon: {fileID: 0}
+  abilityDescription: 
+  abilities: []
 --- !u!1001 &349441927
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1814,7 +1817,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: _uID
-      value: -109236
+      value: -1926
       objectReference: {fileID: 0}
     - target: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: _gridPosition.x
@@ -1824,6 +1827,10 @@ PrefabInstance:
       propertyPath: _gridPosition.y
       value: -1
       objectReference: {fileID: 0}
+    - target: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
+      propertyPath: currentStandingGridTile
+      value: 
+      objectReference: {fileID: 1048177143}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0871dae6a8643244bda0174631552cb, type: 3}
 --- !u!1 &842128180 stripped
@@ -1869,7 +1876,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 842128180}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1d8b8eea4f208654384471d5bc2900c6, type: 3}
+  m_Script: {fileID: 11500000, guid: dd4a46294e0069f4eae144a203ae1d68, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   serializationData:
@@ -1882,6 +1889,9 @@ MonoBehaviour:
     PrefabModifications: []
     SerializationNodes: []
   isAbilityLocked: 0
+  abilityIcon: {fileID: 2800000, guid: 7ab680095416fb840bd74016d6ad90ec, type: 3}
+  abilityDescription: 
+  abilities: []
 --- !u!1001 &919054523
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2089,6 +2099,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 830955856e7007a40a3a12e41ca3702d, type: 3}
+--- !u!114 &1048177143 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3980794118029237015, guid: 830955856e7007a40a3a12e41ca3702d, type: 3}
+  m_PrefabInstance: {fileID: 242442428}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1059438012
 PrefabInstance:
   m_ObjectHideFlags: 0
