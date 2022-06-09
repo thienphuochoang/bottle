@@ -8,6 +8,7 @@ namespace Bottle.Core.GridObjectAbility
 {
     public class GridEntityInteractAbility : GridEntityAbility
     {
+        private GridEntityAbilitySetting gridEntityAbilitySetting;
         protected static Dictionary<KeyCode, InputButton> interactButtonStates => InputManager.Instance.buttonStates;
         [BoxGroup("Interact ability Settings")]
         [Tooltip("The current Grid Entity that this grid object is interacting")]
@@ -23,6 +24,11 @@ namespace Bottle.Core.GridObjectAbility
             }
         }
 
+        protected override void Awake()
+        {
+            gridEntityAbilitySetting = new GridEntityAbilitySetting();
+        }
+
         protected override void Start()
         {
             InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
@@ -34,7 +40,7 @@ namespace Bottle.Core.GridObjectAbility
 
         protected override void OnEnable()
         {
-            base.OnEnable();
+
         }
 
         private GridEntity GetOppositeGridObject()
