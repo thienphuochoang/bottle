@@ -6,9 +6,9 @@ using Bottle.Core.Manager;
 using Sirenix.OdinInspector;
 namespace Bottle.Core.GridObjectAbility
 {
-    public class GridEntityInteractAbility : GridEntityAbility
+    [CreateAssetMenu(fileName = "GridEntityInteractAbility", menuName = "Bottle/Ability", order = 1)]
+    public class GridEntityInteractAbility : ScriptableObject
     {
-        private GridEntityAbilitySetting gridEntityAbilitySetting;
         protected static Dictionary<KeyCode, InputButton> interactButtonStates => InputManager.Instance.buttonStates;
         [BoxGroup("Interact ability Settings")]
         [Tooltip("The current Grid Entity that this grid object is interacting")]
@@ -24,45 +24,45 @@ namespace Bottle.Core.GridObjectAbility
             }
         }
 
-        protected override void Awake()
-        {
-            gridEntityAbilitySetting = new GridEntityAbilitySetting();
-        }
-
-        protected override void Start()
-        {
-            InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
-        }
-
-        protected override void Update()
-        {
-        }
-
-        protected override void OnEnable()
+        private void Awake()
         {
 
         }
 
-        private GridEntity GetOppositeGridObject()
+        private void Start()
         {
-            Vector3Int convertedForwardVector = new Vector3Int((int)this.transform.forward.x, (int)this.transform.forward.y, (int)this.transform.forward.z);
-            Vector3Int oppositeGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + convertedForwardVector;
-            var targetEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(oppositeGridObjectPosition.x, oppositeGridObjectPosition.z), oppositeGridObjectPosition.y);
-            if (targetEntities.Count > 0)
-            {
-                return targetEntities[0];
-            }
-            return null;
+            //InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
         }
 
-        private void Interact(InputButton.States state, KeyCode keyCode)
+        private void Update()
         {
-            if (GameplayManager.Instance.isTurnInProgress == true) return;
-            if (currentInteractingGridObject == null)
-                currentInteractingGridObject = GetOppositeGridObject();
-            else
-                currentInteractingGridObject = null;
         }
+
+        private void OnEnable()
+        {
+
+        }
+
+        //private GridEntity GetOppositeGridObject()
+        //{
+        //    Vector3Int convertedForwardVector = new Vector3Int((int)this.transform.forward.x, (int)this.transform.forward.y, (int)this.transform.forward.z);
+        //    Vector3Int oppositeGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + convertedForwardVector;
+        //    var targetEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(oppositeGridObjectPosition.x, oppositeGridObjectPosition.z), oppositeGridObjectPosition.y);
+        //    if (targetEntities.Count > 0)
+        //    {
+        //        return targetEntities[0];
+        //    }
+        //    return null;
+        //}
+
+        //private void Interact(InputButton.States state, KeyCode keyCode)
+        //{
+        //    if (GameplayManager.Instance.isTurnInProgress == true) return;
+        //    if (currentInteractingGridObject == null)
+        //        currentInteractingGridObject = GetOppositeGridObject();
+        //    else
+        //        currentInteractingGridObject = null;
+        //}
     }
 
 }

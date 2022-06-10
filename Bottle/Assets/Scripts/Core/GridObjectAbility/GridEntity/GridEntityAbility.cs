@@ -8,41 +8,35 @@ using System.Reflection;
 namespace Bottle.Core.GridObjectAbility
 {
     [ExecuteInEditMode]
-    public class GridEntityAbility : GridObjectAbility<GridEntity>
+    public class GridEntityAbility : GridObjectAbility<GridEntity>, GridObjectAbilityGeneralDescription
     {
+        public string abilityDescription { get; set; }
+        [PreviewField]
+        public Texture abilityIcon { get; set; }
         [DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
-        public Dictionary<System.Type, GridEntityAbility> abilities = new Dictionary<System.Type, GridEntityAbility>();
+        public Dictionary<System.Type, GridEntityInteractAbility> abilities = new Dictionary<System.Type, GridEntityInteractAbility>();
 
         protected override void Awake()
         {
             base.Awake();
+            abilities = new Dictionary<System.Type, GridEntityInteractAbility>();
             foreach (var assemb in System.AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var tp in assemb.GetTypes())
-                    if (tp.BaseType == typeof(GridEntityAbility))
+                    if (tp.BaseType == typeof(GridEntityInteractAbility))
                     {
                         if (abilities.ContainsKey(tp))
                         {
                         }
                         else
                         {
-                            ConstructorInfo constructor = tp.GetConstructor(System.Type.EmptyTypes);
+                            var instance = System.Activator.CreateInstance(tp);
                             //Component new_weapon = (tp)(object)constructor.Invoke(null);
-                            //abilities.Add(tp, (GridEntityAbility)new_weapon);
+                            abilities.Add(tp, (GridEntityInteractAbility)instance);
                         }
                     }
             }
         }
-    }
-    public class GridEntityAbilitySetting
-    {
-        public bool isEnabled;
-
-        [PreviewField]
-        public Texture abilityIcon;
-
-        [TextArea(2, 10)]
-        public string abilityDescription;
     }
 }
 

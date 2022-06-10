@@ -35,5 +35,11 @@ namespace Bottle.Core.GridObjectAbility
 
         }
     }
+    public interface GridObjectAbilityGeneralDescription
+    {
+        Texture abilityIcon { get; set; }
+
+        string abilityDescription { get; set; }
+    }
 }
 
