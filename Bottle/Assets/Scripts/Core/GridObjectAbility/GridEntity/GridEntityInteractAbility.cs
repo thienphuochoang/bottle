@@ -4,11 +4,14 @@ using UnityEngine;
 using Bottle.Core.GridObjectData;
 using Bottle.Core.Manager;
 using Sirenix.OdinInspector;
+using System;
 namespace Bottle.Core.GridObjectAbility
 {
-    [CreateAssetMenu(fileName = "GridEntityInteractAbility", menuName = "Bottle/Ability", order = 1)]
+    [CreateAssetMenu(fileName = "GridEntityInteractAbility", menuName = "Bottle/Ability/GridEntityInteractAbility", order = 1)]
+    [InlineEditor]
     public class GridEntityInteractAbility : ScriptableObject
     {
+        public GridObjectAbilityGeneralDescription gridObjectAbilityGeneralDescription;
         protected static Dictionary<KeyCode, InputButton> interactButtonStates => InputManager.Instance.buttonStates;
         [BoxGroup("Interact ability Settings")]
         [Tooltip("The current Grid Entity that this grid object is interacting")]

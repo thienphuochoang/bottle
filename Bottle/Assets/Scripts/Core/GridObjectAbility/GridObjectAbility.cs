@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Bottle.Core.GridObjectData;
+using System;
 namespace Bottle.Core.GridObjectAbility
 {
     public class GridObjectAbility<T> : SerializedMonoBehaviour where T : Component
@@ -35,10 +36,14 @@ namespace Bottle.Core.GridObjectAbility
 
         }
     }
-    public interface GridObjectAbilityGeneralDescription
+    [Serializable]
+    public struct GridObjectAbilityGeneralDescription
     {
+        [ShowInInspector]
+        [PreviewField]
         Texture abilityIcon { get; set; }
 
+        [ShowInInspector]
         string abilityDescription { get; set; }
     }
 }

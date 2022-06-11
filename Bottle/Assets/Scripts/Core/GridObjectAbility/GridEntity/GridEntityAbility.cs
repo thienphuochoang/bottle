@@ -8,11 +8,8 @@ using System.Reflection;
 namespace Bottle.Core.GridObjectAbility
 {
     [ExecuteInEditMode]
-    public class GridEntityAbility : GridObjectAbility<GridEntity>, GridObjectAbilityGeneralDescription
+    public class GridEntityAbility : GridObjectAbility<GridEntity>
     {
-        public string abilityDescription { get; set; }
-        [PreviewField]
-        public Texture abilityIcon { get; set; }
         [DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
         public Dictionary<System.Type, GridEntityInteractAbility> abilities = new Dictionary<System.Type, GridEntityInteractAbility>();
 
