@@ -8,16 +8,16 @@ namespace Bottle.Core.GridObjectAbility
 {
     public class GridObjectAbility<T> : SerializedMonoBehaviour where T : Component
     {
-        [BoxGroup("Ability Settings")]
-        [Tooltip("If true, this ability can perform as usual, if not, it'll be ignored. We can use this to unlock abilities over time for example")]
-        public bool isAbilityLocked = false;
+        //[BoxGroup("Ability Settings")]
+        //[Tooltip("If true, this ability can perform as usual, if not, it'll be ignored. We can use this to unlock abilities over time for example")]
+        //public bool isAbilityLocked = false;
 
         protected T _currentGridObject;
 
         protected virtual void OnEnable()
         {
-            if (isAbilityLocked)
-                this.enabled = false;
+            //if (isAbilityLocked)
+            //    this.enabled = false;
         }
 
         protected virtual void Awake()
@@ -36,15 +36,27 @@ namespace Bottle.Core.GridObjectAbility
 
         }
     }
+    //[CreateAssetMenu(fileName = "GridObjectAbilityGeneralDescription", menuName = "Bottle/Ability/GridObjectAbilityGeneralDescription", order = 1)]
     [Serializable]
-    public struct GridObjectAbilityGeneralDescription
+    public abstract class GridObjectAbilitySettings<T> : ScriptableObject where T : Component
     {
-        [ShowInInspector]
+        [BoxGroup("Grid Object Ability Settings")]
         [PreviewField]
-        Texture abilityIcon { get; set; }
+        public Texture abilityIcon;
 
-        [ShowInInspector]
-        string abilityDescription { get; set; }
+        [BoxGroup("Grid Object Ability Settings")]
+        [TextArea(2, 10)]
+        public string abilityDescription;
+
+        [BoxGroup("Grid Object Ability Settings")]
+        [TextArea(2, 10)]
+        public string abilityTip;
+
+        [BoxGroup("Grid Object Ability Settings")]
+        public T currentGridObject;
+
+        public abstract void AbilityStart();
+        public abstract void AbilityUpdate();
     }
 }
 

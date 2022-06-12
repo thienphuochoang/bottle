@@ -12,3 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd4a46294e0069f4eae144a203ae1d68, type: 3}
   m_Name: GridEntityInteractAbility
   m_EditorClassIdentifier: 
+  abilityIcon: {fileID: 2800000, guid: dd537e7a4bbfc874aab4bbe170d99ba5, type: 3}
+  abilityDescription: 
+  abilityTip: Press E to interact
+  currentGridObject: {fileID: 0}

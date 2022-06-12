@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f79d8961918fbd243bb3bf645c88f95d, type: 3}
+  m_Name: GridEntityMovementAbility
+  m_EditorClassIdentifier: 
+  abilityIcon: {fileID: 2800000, guid: fb7e809722580dc45b93fe4711520722, type: 3}
+  abilityDescription: 
+  abilityTip: 'Press W to move up.
+
+    Press A to move left.
+
+    Press D to move
+    right.
+
+    Press S to move down.'
+  currentGridObject: {fileID: 0}
+  currentAssignedPathCreator: {fileID: 0}
+  _isMoving: 0
+  maximumSpeed: 4
+  acceleration: 5
+  maximumSpeedMultiplier: 1
+  accelerationMultiplier: 1

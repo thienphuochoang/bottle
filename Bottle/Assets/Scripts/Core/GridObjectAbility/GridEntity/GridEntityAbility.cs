@@ -7,31 +7,35 @@ using Sirenix.OdinInspector;
 using System.Reflection;
 namespace Bottle.Core.GridObjectAbility
 {
-    [ExecuteInEditMode]
     public class GridEntityAbility : GridObjectAbility<GridEntity>
     {
-        [DictionaryDrawerSettings(DisplayMode = DictionaryDisplayOptions.ExpandedFoldout)]
-        public Dictionary<System.Type, GridEntityInteractAbility> abilities = new Dictionary<System.Type, GridEntityInteractAbility>();
+        [ListDrawerSettings(ShowPaging = true)]
+        public List<GridObjectAbilitySettings<GridEntity>> availableAbilities = new List<GridObjectAbilitySettings<GridEntity>>();
 
         protected override void Awake()
         {
             base.Awake();
-            abilities = new Dictionary<System.Type, GridEntityInteractAbility>();
-            foreach (var assemb in System.AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var ability in availableAbilities)
             {
-                foreach (var tp in assemb.GetTypes())
-                    if (tp.BaseType == typeof(GridEntityInteractAbility))
-                    {
-                        if (abilities.ContainsKey(tp))
-                        {
-                        }
-                        else
-                        {
-                            var instance = System.Activator.CreateInstance(tp);
-                            //Component new_weapon = (tp)(object)constructor.Invoke(null);
-                            abilities.Add(tp, (GridEntityInteractAbility)instance);
-                        }
-                    }
+                ability.currentGridObject = _currentGridObject;
+            }
+        }
+
+        protected override void Start()
+        {
+            base.Start();
+            foreach (var ability in availableAbilities)
+            {
+                ability.AbilityStart();
+            }
+        }
+
+        protected override void Update()
+        {
+            base.Update();
+            foreach (var ability in availableAbilities)
+            {
+                ability.AbilityUpdate();
             }
         }
     }
