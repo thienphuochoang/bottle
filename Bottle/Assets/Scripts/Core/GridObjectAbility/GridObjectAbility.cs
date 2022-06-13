@@ -37,8 +37,8 @@ namespace Bottle.Core.GridObjectAbility
         }
     }
     //[CreateAssetMenu(fileName = "GridObjectAbilityGeneralDescription", menuName = "Bottle/Ability/GridObjectAbilityGeneralDescription", order = 1)]
-    [Serializable]
-    public abstract class GridObjectAbilitySettings<T> : ScriptableObject where T : Component
+    //[Serializable]
+    public abstract class GridObjectAbilitySettings : ScriptableObject
     {
         [BoxGroup("Grid Object Ability Settings")]
         [PreviewField]
@@ -51,9 +51,6 @@ namespace Bottle.Core.GridObjectAbility
         [BoxGroup("Grid Object Ability Settings")]
         [TextArea(2, 10)]
         public string abilityTip;
-
-        [BoxGroup("Grid Object Ability Settings")]
-        public T currentGridObject;
 
         public abstract void AbilityStart();
         public abstract void AbilityUpdate();

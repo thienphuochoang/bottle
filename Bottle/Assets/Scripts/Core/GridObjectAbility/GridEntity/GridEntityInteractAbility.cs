@@ -10,9 +10,8 @@ namespace Bottle.Core.GridObjectAbility
 {
     [CreateAssetMenu(fileName = "GridEntityInteractAbility", menuName = "Bottle/Ability/[Grid Entity] Interact Ability", order = 1)]
     [InlineEditor]
-    public class GridEntityInteractAbility : GridObjectAbilitySettings<GridEntity>
+    public class GridEntityInteractAbility : GridObjectAbility<GridEntity>
     {
-
         [BoxGroup("Interact ability Settings")]
         [Tooltip("The current Grid Entity that this grid object is interacting")]
         [ShowInInspector]
@@ -27,19 +26,19 @@ namespace Bottle.Core.GridObjectAbility
             }
         }
 
-        public override void AbilityStart()
+        protected override void Start()
         {
             InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
         }
-        public override void AbilityUpdate()
+        protected override void Update()
         {
             
         }
 
         private GridEntity GetOppositeGridObject()
         {
-            Vector3Int convertedForwardVector = new Vector3Int((int)currentGridObject.transform.forward.x, (int)currentGridObject.transform.forward.y, (int)currentGridObject.transform.forward.z);
-            Vector3Int oppositeGridObjectPosition = new Vector3Int(currentGridObject.gridPosition.x, (int)currentGridObject.gridHeight, currentGridObject.gridPosition.y) + convertedForwardVector;
+            Vector3Int convertedForwardVector = new Vector3Int((int)_currentGridObject.transform.forward.x, (int)_currentGridObject.transform.forward.y, (int)_currentGridObject.transform.forward.z);
+            Vector3Int oppositeGridObjectPosition = new Vector3Int(_currentGridObject.gridPosition.x, (int)_currentGridObject.gridHeight, _currentGridObject.gridPosition.y) + convertedForwardVector;
             var targetEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(oppositeGridObjectPosition.x, oppositeGridObjectPosition.z), oppositeGridObjectPosition.y);
             if (targetEntities.Count > 0)
             {
@@ -57,5 +56,4 @@ namespace Bottle.Core.GridObjectAbility
                 currentInteractingGridObject = null;
         }
     }
-
 }
