@@ -9,10 +9,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dd4a46294e0069f4eae144a203ae1d68, type: 3}
-  m_Name: GridEntityInteractAbility
+  m_Script: {fileID: 11500000, guid: 082f7bf9dc6e0aa49b36be3944271767, type: 3}
+  m_Name: StringAsset
   m_EditorClassIdentifier: 
-  abilityIcon: {fileID: 2800000, guid: fb7e809722580dc45b93fe4711520722, type: 3}
-  abilityDescription: 
-  abilityTip: 
-  _currentGridObject: {fileID: 0}
+  value: {fileID: 1490497718876356236, guid: daa8e74e4031f8142b310698a15bff6f, type: 3}

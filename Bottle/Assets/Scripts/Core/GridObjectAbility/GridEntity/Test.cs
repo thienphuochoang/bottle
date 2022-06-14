@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
-
+using Bottle.Core.PathSystem;
 public abstract class ValueAsset<T> : ScriptableObject
 {
     public T value;
@@ -62,12 +62,12 @@ public abstract class ValueReference<TValue, TAsset> where TAsset : ValueAsset<T
     }
 }
 [CreateAssetMenu(fileName = "StringAsset", menuName = "Bottle/Test_StringAsset")]
-public class Test : ValueAsset<string>
+public class Test : ValueAsset<PathCreator>
 {
 
 }
 [System.Serializable]
-public class StringReference : ValueReference<string, Test>
+public class StringReference : ValueReference<PathCreator, Test>
 {
 
 }

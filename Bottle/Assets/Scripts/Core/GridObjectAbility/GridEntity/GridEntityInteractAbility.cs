@@ -6,11 +6,12 @@ using Bottle.Core.Manager;
 using Sirenix.OdinInspector;
 using System;
 using Sirenix.Serialization;
+using Bottle.Core.PathSystem;
 namespace Bottle.Core.GridObjectAbility
 {
     [CreateAssetMenu(fileName = "GridEntityInteractAbility", menuName = "Bottle/Ability/[Grid Entity] Interact Ability", order = 1)]
     [InlineEditor]
-    public class GridEntityInteractAbility : GridObjectAbility<GridEntity>
+    public class GridEntityInteractAbility : GridObjectAbilitySettings<GridEntity>
     {
         [BoxGroup("Interact ability Settings")]
         [Tooltip("The current Grid Entity that this grid object is interacting")]
@@ -25,14 +26,18 @@ namespace Bottle.Core.GridObjectAbility
                 _currentInteractingGridObject = value;
             }
         }
-
-        protected override void Start()
+        public override void AbilityStart()
         {
             InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
         }
-        protected override void Update()
+        public override void AbilityUpdate()
         {
             
+        }
+
+        public override void AbilityEnable()
+        {
+
         }
 
         private GridEntity GetOppositeGridObject()

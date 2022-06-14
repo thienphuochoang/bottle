@@ -2,27 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
+using Bottle.Core.PathSystem;
 public class Test2 : MonoBehaviour
 {
     [OnInspectorGUI("AdjustColor")]
     public StringReference testStringReference = new StringReference();
     [ReadOnly]
     [SerializeField]
-    private string testString;
+    private PathCreator testString;
     private void OnEnable()
     {
         AdjustColor();
     }
     private void AdjustColor()
     {
-        if (testString == "")
-            testString = this.gameObject.name;
+        if (testString == null)
+            testString = default(PathCreator);
 
-        if (testString != "")
+        if (testString != null)
             testString = this.testStringReference;
     }
     private void Start()
     {
-        Debug.Log(testString);
+        //Debug.Log(testString);
     }
 }

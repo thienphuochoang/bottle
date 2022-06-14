@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using Sirenix.OdinInspector;
+using Bottle.Extensions.Helper;
 namespace Bottle.Core.PathSystem
 {
     public class PathCreator : MonoBehaviour
@@ -17,6 +18,16 @@ namespace Bottle.Core.PathSystem
         [TitleGroup("Color Settings", alignment: TitleAlignments.Centered), Tooltip("Color Settings of nodes and paths")]
         public Color defaultColor = Color.white;
         public Color hoveredColor = Color.red;
+
+        public class PathCreatorDatabase : ValueAsset<PathCreator>
+        {
+
+        }
+        [System.Serializable]
+        public class PathCreatorReference : ValueReference<PathCreator, PathCreatorDatabase>
+        {
+
+        }
 
 
 #if UNITY_EDITOR
