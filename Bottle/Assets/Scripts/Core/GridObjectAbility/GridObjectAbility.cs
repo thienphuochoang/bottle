@@ -4,6 +4,7 @@ using UnityEngine;
 using Sirenix.OdinInspector;
 using Bottle.Core.GridObjectData;
 using System;
+using Bottle.Extensions.Helper;
 namespace Bottle.Core.GridObjectAbility
 {
     public class GridObjectAbility<T> : SerializedMonoBehaviour where T : Component
@@ -35,29 +36,6 @@ namespace Bottle.Core.GridObjectAbility
         {
 
         }
-    }
-    //[CreateAssetMenu(fileName = "GridObjectAbilityGeneralDescription", menuName = "Bottle/Ability/GridObjectAbilityGeneralDescription", order = 1)]
-    //[Serializable]
-    public abstract class GridObjectAbilitySettings<T> : ScriptableObject where T : Component
-    {
-        [BoxGroup("Grid Object Ability Settings")]
-        [PreviewField]
-        public Texture abilityIcon;
-
-        [BoxGroup("Grid Object Ability Settings")]
-        [TextArea(2, 10)]
-        public string abilityDescription;
-
-        [BoxGroup("Grid Object Ability Settings")]
-        [TextArea(2, 10)]
-        public string abilityTip;
-
-        [HideInInspector]
-        public T _currentGridObject;
-
-        public abstract void AbilityStart();
-        public abstract void AbilityUpdate();
-        public abstract void AbilityEnable();
     }
 }
 

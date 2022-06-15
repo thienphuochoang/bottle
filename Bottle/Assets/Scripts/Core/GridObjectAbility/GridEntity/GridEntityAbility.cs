@@ -10,42 +10,42 @@ namespace Bottle.Core.GridObjectAbility
     public class GridEntityAbility : GridObjectAbility<GridEntity>
     {
         [ListDrawerSettings(ShowPaging = true)]
-        public List<GridObjectAbilitySettings<GridEntity>> availableAbilities = new List<GridObjectAbilitySettings<GridEntity>>();
+        //public List<GridObjectAbilitySettings> availableAbilities = new List<GridObjectAbilitySettings>();
 
         protected override void Awake()
         {
             base.Awake();
-            foreach (var ability in availableAbilities)
-            {
-                ability._currentGridObject = this._currentGridObject;
-            }
+            //foreach (var ability in availableAbilities)
+            //{
+            //    ability._currentGridObject = this._currentGridObject;
+            //}
         }
 
         protected override void OnEnable()
         {
             base.OnEnable();
-            foreach (var ability in availableAbilities)
-            {
-                ability.AbilityEnable();
-            }
+            //foreach (var ability in availableAbilities)
+            //{
+            //    ability.AbilityEnable();
+            //}
         }
 
         protected override void Start()
         {
             base.Start();
-            foreach (var ability in availableAbilities)
-            {
-                ability.AbilityStart();
-            }
+            //foreach (var ability in availableAbilities)
+            //{
+            //    ability.AbilityStart();
+            //}
         }
 
         protected override void Update()
         {
             base.Update();
-            foreach (var ability in availableAbilities)
-            {
-                ability.AbilityUpdate();
-            }
+            //foreach (var ability in availableAbilities)
+            //{
+            //    ability.AbilityUpdate();
+            //}
         }
     }
 }

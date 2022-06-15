@@ -61,7 +61,7 @@ public abstract class ValueReference<TValue, TAsset> where TAsset : ValueAsset<T
         return valueRef.value;
     }
 }
-[CreateAssetMenu(fileName = "StringAsset", menuName = "Bottle/Test_StringAsset")]
+//[CreateAssetMenu(fileName = "StringAsset", menuName = "Bottle/Test_StringAsset")]
 public class Test : ValueAsset<PathCreator>
 {
 

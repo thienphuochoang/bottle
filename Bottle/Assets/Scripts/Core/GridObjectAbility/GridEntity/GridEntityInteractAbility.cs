@@ -11,8 +11,9 @@ namespace Bottle.Core.GridObjectAbility
 {
     [CreateAssetMenu(fileName = "GridEntityInteractAbility", menuName = "Bottle/Ability/[Grid Entity] Interact Ability", order = 1)]
     [InlineEditor]
-    public class GridEntityInteractAbility : GridObjectAbilitySettings<GridEntity>
+    public class GridEntityInteractAbility : GridObjectAbility<GridEntity>
     {
+        public GridObjectAbilitySettings _gridEntityInteractAbilitySettings;
         [BoxGroup("Interact ability Settings")]
         [Tooltip("The current Grid Entity that this grid object is interacting")]
         [ShowInInspector]
@@ -26,19 +27,23 @@ namespace Bottle.Core.GridObjectAbility
                 _currentInteractingGridObject = value;
             }
         }
-        public override void AbilityStart()
+        protected override void Start()
         {
             InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
         }
-        public override void AbilityUpdate()
+        protected override void Update()
         {
             
         }
-
-        public override void AbilityEnable()
+        protected override void OnEnable()
         {
-
+            _gridEntityInteractAbilitySettings.OnEnable();
         }
+
+        //public override void AbilityEnable()
+        //{
+
+        //}
 
         private GridEntity GetOppositeGridObject()
         {
