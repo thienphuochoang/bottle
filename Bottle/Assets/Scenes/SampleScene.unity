@@ -1745,7 +1745,25 @@ MonoBehaviour:
     PrefabModificationsReferencedUnityObjects: []
     PrefabModifications: []
     SerializationNodes: []
-  _gridEntityInteractAbilitySettings: {fileID: 11400000, guid: 6a54f6622258b7b4ebda15f4036d0ec4, type: 2}
+  _gridEntityInteractAbilitySettings:
+    abilityIcon:
+      useValue: 1
+      _value: {fileID: 0}
+      assetReference: {fileID: 0}
+      editAsset: 0
+      _assetReference: {fileID: 0}
+    abilityDescription:
+      useValue: 1
+      _value: 
+      assetReference: {fileID: 0}
+      editAsset: 0
+      _assetReference: {fileID: 0}
+    abilityTip:
+      useValue: 1
+      _value: 
+      assetReference: {fileID: 0}
+      editAsset: 0
+      _assetReference: {fileID: 0}
 --- !u!1001 &919054523
 PrefabInstance:
   m_ObjectHideFlags: 0

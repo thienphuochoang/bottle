@@ -48,5 +48,9 @@ namespace Bottle.Core.GridObjectAbility
             //}
         }
     }
+    public class GridEntityAbilitySettings
+    {
+
+    }
 }
 

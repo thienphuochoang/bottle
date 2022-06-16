@@ -7,13 +7,16 @@ using Sirenix.OdinInspector;
 using System;
 using Sirenix.Serialization;
 using Bottle.Core.PathSystem;
+using Bottle.Extensions.Helper;
 namespace Bottle.Core.GridObjectAbility
 {
-    [CreateAssetMenu(fileName = "GridEntityInteractAbility", menuName = "Bottle/Ability/[Grid Entity] Interact Ability", order = 1)]
-    [InlineEditor]
+    //[CreateAssetMenu(fileName = "GridEntityInteractAbility", menuName = "Bottle/Ability/[Grid Entity] Interact Ability", order = 1)]
     public class GridEntityInteractAbility : GridObjectAbility<GridEntity>
     {
         public GridObjectAbilitySettings _gridEntityInteractAbilitySettings;
+        //[OnInspectorGUI("SwitchInputType")]
+        //public TextureInputReference abilityIcon = new TextureInputReference();
+        //[ReadOnly]
         [BoxGroup("Interact ability Settings")]
         [Tooltip("The current Grid Entity that this grid object is interacting")]
         [ShowInInspector]
@@ -37,7 +40,8 @@ namespace Bottle.Core.GridObjectAbility
         }
         protected override void OnEnable()
         {
-            _gridEntityInteractAbilitySettings.OnEnable();
+            //SetupAbilityDescription();
+            //_gridEntityInteractAbilitySettings.OnEnable();
         }
 
         //public override void AbilityEnable()

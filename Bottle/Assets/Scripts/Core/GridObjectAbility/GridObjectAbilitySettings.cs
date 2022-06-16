@@ -7,27 +7,27 @@ using Bottle.Extensions.Helper;
 [CreateAssetMenu(fileName = "GridObjectAbilityGeneralDescription", menuName = "Bottle/Ability/GridObjectAbilityGeneralDescription", order = 1)]
 [System.Serializable]
 [InlineEditor]
-public class GridObjectAbilitySettings : ScriptableObject
+public class GridObjectAbilitySettings : SerializedScriptableObject
 {
     [BoxGroup("Grid Object Ability Settings")]
     //[OnInspectorGUI("SwitchInputType")]
     public TextureInputReference abilityIcon = new TextureInputReference();
     [ReadOnly]
-    public Texture _abilityIcon;
+    private Texture _abilityIcon;
 
     [BoxGroup("Grid Object Ability Settings")]
     //[TextArea(2, 10)]
     //[OnInspectorGUI("SwitchInputType")]
     public StringInputReference abilityDescription = new StringInputReference();
     [ReadOnly]
-    public string _abilityDescription;
+    private string _abilityDescription;
 
     [BoxGroup("Grid Object Ability Settings")]
     //[TextArea(2, 10)]
     //[OnInspectorGUI("SwitchInputType")]
     public StringInputReference abilityTip = new StringInputReference();
     [ReadOnly]
-    public string _abilityTip;
+    private string _abilityTip;
 
     //[HideInInspector]
     //public T _currentGridObject;
