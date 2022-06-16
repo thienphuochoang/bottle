@@ -1,56 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Bottle.Core.GridObjectData;
-using Bottle.Core.Manager;
 using Sirenix.OdinInspector;
-using System.Reflection;
+using Bottle.Core.GridObjectData;
 namespace Bottle.Core.GridObjectAbility
 {
-    public class GridEntityAbility : GridObjectAbility<GridEntity>
+    [System.Serializable]
+    [InlineEditor]
+    public abstract class GridEntityAbility
     {
-        [ListDrawerSettings(ShowPaging = true)]
-        //public List<GridObjectAbilitySettings> availableAbilities = new List<GridObjectAbilitySettings>();
-
-        protected override void Awake()
-        {
-            base.Awake();
-            //foreach (var ability in availableAbilities)
-            //{
-            //    ability._currentGridObject = this._currentGridObject;
-            //}
-        }
-
-        protected override void OnEnable()
-        {
-            base.OnEnable();
-            //foreach (var ability in availableAbilities)
-            //{
-            //    ability.AbilityEnable();
-            //}
-        }
-
-        protected override void Start()
-        {
-            base.Start();
-            //foreach (var ability in availableAbilities)
-            //{
-            //    ability.AbilityStart();
-            //}
-        }
-
-        protected override void Update()
-        {
-            base.Update();
-            //foreach (var ability in availableAbilities)
-            //{
-            //    ability.AbilityUpdate();
-            //}
-        }
-    }
-    public class GridEntityAbilitySettings
-    {
-
+        public GridObjectAbilitySettings gridEntityAbilitySettings;
+        [HideInInspector]
+        public GridEntity currenGridEntity;
+        public abstract void AbilityOnAwake();
+        public abstract void AbilityOnEnable();
+        public abstract void AbilityStart();
+        public abstract void AbilityUpdate();
     }
 }
-

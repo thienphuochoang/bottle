@@ -75,24 +75,24 @@ namespace Bottle.Extensions.Helper
             return valueRef.value;
         }
     }
-    [CreateAssetMenu(fileName = "TextureAsset", menuName = "Bottle/Test_TextureAsset")]
-    public class TextureInput : ValueAsset<Texture>
-    {
+    //[CreateAssetMenu(fileName = "TextureAsset", menuName = "Bottle/Test_TextureAsset")]
+    //public class TextureInput : ValueAsset<Texture>
+    //{
 
-    }
-    [System.Serializable]
-    public class TextureInputReference : ValueReference<Texture, TextureInput>
-    {
+    //}
+    //[System.Serializable]
+    //public class TextureInputReference : ValueReference<Texture, TextureInput>
+    //{
 
-    }
-    [CreateAssetMenu(fileName = "StringAsset", menuName = "Bottle/Test_StringAsset")]
-    public class StringInput : ValueAsset<string>
-    {
+    //}
+    //[CreateAssetMenu(fileName = "StringAsset", menuName = "Bottle/Test_StringAsset")]
+    //public class StringInput : ValueAsset<string>
+    //{
 
-    }
-    [System.Serializable]
-    public class StringInputReference : ValueReference<string, StringInput>
-    {
+    //}
+    //[System.Serializable]
+    //public class StringInputReference : ValueReference<string, StringInput>
+    //{
 
-    }
+    //}
 }
