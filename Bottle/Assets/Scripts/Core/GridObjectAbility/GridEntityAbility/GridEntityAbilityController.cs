@@ -4,7 +4,6 @@ using UnityEngine;
 using Bottle.Core.GridObjectData;
 using Bottle.Core.Manager;
 using Sirenix.OdinInspector;
-using System.Reflection;
 namespace Bottle.Core.GridObjectAbility
 {
     public class GridEntityAbilityController : GridObjectAbility<GridEntity>
@@ -18,6 +17,9 @@ namespace Bottle.Core.GridObjectAbility
             foreach (var ability in availableAbilities)
             {
                 ability.currenGridEntity = this._currentGridObject;
+                var gridEntityAbilityType = ability.gridEntityAbilitySettings.GetType();
+                ability.gridEntityAbilitySettingsType = gridEntityAbilityType;
+                //Debug.Log(ability.gridEntityAbilitySettingsType);
                 ability.AbilityOnAwake();
             }
         }

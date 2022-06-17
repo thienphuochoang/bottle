@@ -24,7 +24,8 @@ namespace Bottle.Core.GridObjectAbility
         }
         public override void AbilityOnAwake()
         {
-
+            var ahihi = gridEntityAbilitySettings.GetType();
+            Debug.Log(ahihi);
         }
         public override void AbilityOnEnable()
         {
@@ -33,7 +34,6 @@ namespace Bottle.Core.GridObjectAbility
         public override void AbilityStart()
         {
             InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
-            Debug.Log("Ability Start");
         }
         public override void AbilityUpdate()
         {
