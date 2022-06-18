@@ -19,16 +19,6 @@ namespace Bottle.Core.PathSystem
         public Color defaultColor = Color.white;
         public Color hoveredColor = Color.red;
 
-        public class PathCreatorDatabase : ValueAsset<PathCreator>
-        {
-
-        }
-        [System.Serializable]
-        public class PathCreatorReference : ValueReference<PathCreator, PathCreatorDatabase>
-        {
-
-        }
-
 
 #if UNITY_EDITOR
 
