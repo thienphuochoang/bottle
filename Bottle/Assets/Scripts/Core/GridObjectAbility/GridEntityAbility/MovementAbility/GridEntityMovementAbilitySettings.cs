@@ -10,37 +10,6 @@ namespace Bottle.Core.GridObjectAbility
     [CreateAssetMenu(fileName = "GridEntityMovementAbilitySettings", menuName = "Bottle/Ability/[Grid Entity] Movement Ability Settings", order = 1)]
     public class GridEntityMovementAbilitySettings : GridObjectAbilitySettings
     {
-        [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        //[HideIf("@_currentGridObject.isControllable", false)]
-        [ReadOnly]
-        [ShowInInspector]
-        private int _currentNode;
-        [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        //[HideIf("@_currentGridObject.isControllable", false)]
-        [ReadOnly]
-        [ShowInInspector]
-        private Vector3 _stepPos;
-        [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        //[HideIf("@_currentGridObject.isControllable", false)]
-        [ReadOnly]
-        [ShowInInspector]
-        private int _step = 1;
-
-        [HideInInspector]
-        protected static Dictionary<KeyCode, InputButton> _movementButtonStates => InputManager.Instance.buttonStates;
-        public enum MovementDirections { NONE, FORWARD, BACK, LEFT, RIGHT };
-        [BoxGroup("Movement Settings", true, true)]
-        [ReadOnly]
-        [ShowInInspector]
-        private MovementDirections _currentMovementDirection = MovementDirections.NONE;
-        [BoxGroup("Movement Settings", true, true)]
-        [ShowInInspector]
-        [ReadOnly]
-        private GridTile _targetTile;
-        [BoxGroup("Movement Settings", true, true)]
-        [ReadOnly]
-        [SerializeField]
-        public bool _isMoving = false;
         //[BoxGroup("Movement Settings", true, true)]
         //public AnimationCurve movementAnimCurve = AnimationCurve.Linear(0f, 0f, 1f, 1f);
 

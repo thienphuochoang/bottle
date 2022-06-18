@@ -17,9 +17,6 @@ namespace Bottle.Core.GridObjectAbility
             foreach (var ability in availableAbilities)
             {
                 ability.currenGridEntity = this._currentGridObject;
-                var gridEntityAbilityType = ability.gridEntityAbilitySettings.GetType();
-                ability.gridEntityAbilitySettingsType = gridEntityAbilityType;
-                //Debug.Log(ability.gridEntityAbilitySettingsType);
                 ability.AbilityOnAwake();
             }
         }

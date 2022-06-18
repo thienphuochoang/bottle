@@ -13,6 +13,7 @@ namespace Bottle.Core.GridObjectAbility
         [Tooltip("The current Grid Entity which this grid object is interacting")]
         [ShowInInspector]
         private GridEntity _currentInteractingGridObject;
+        private GridEntityInteractAbilitySettings _settings;
         public GridEntity currentInteractingGridObject
         {
             get => _currentInteractingGridObject;
@@ -24,8 +25,7 @@ namespace Bottle.Core.GridObjectAbility
         }
         public override void AbilityOnAwake()
         {
-            var ahihi = gridEntityAbilitySettings.GetType();
-            Debug.Log(ahihi);
+            _settings = gridEntityAbilitySettings as GridEntityInteractAbilitySettings;
         }
         public override void AbilityOnEnable()
         {

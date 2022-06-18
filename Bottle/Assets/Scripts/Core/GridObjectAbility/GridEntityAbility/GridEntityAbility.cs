@@ -10,7 +10,6 @@ namespace Bottle.Core.GridObjectAbility
     public abstract class GridEntityAbility
     {
         public GridObjectAbilitySettings gridEntityAbilitySettings;
-        public System.Type gridEntityAbilitySettingsType;
         [HideInInspector]
         public GridEntity currenGridEntity;
         public abstract void AbilityOnAwake();
