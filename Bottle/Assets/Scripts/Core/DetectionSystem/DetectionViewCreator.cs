@@ -10,20 +10,49 @@ namespace Bottle.Core.DetectionSystem
     [ExecuteInEditMode]
     public class DetectionViewCreator : MonoBehaviour
     {
-        private GridEntity thisGridObject;
         [BoxGroup("Detection View Settings", true, true)]
-        [Tooltip("The size of this detection view in the Grid.")]
+        [Tooltip("The X size of this detection view in the Grid.")]
         [SerializeField]
-        private Vector3Int _boundingBoxSize = new Vector3Int(1, 1, 1);
-        public Vector3Int boundingBoxSize
+        private int _xBoundingBoxSize = 1;
+        public int xBoundingBoxSize
         {
-            get => _boundingBoxSize;
+            get => _xBoundingBoxSize;
             set
             {
-                if (_boundingBoxSize == value) return;
-                _boundingBoxSize = value;
+                if (_xBoundingBoxSize == value) return;
+                _xBoundingBoxSize = value;
                 if (OnSizeChanged != null)
-                    OnSizeChanged(_boundingBoxSize);
+                    OnSizeChanged(_xBoundingBoxSize);
+            }
+        }
+        [BoxGroup("Detection View Settings", true, true)]
+        [Tooltip("The Y size of this detection view in the Grid.")]
+        [SerializeField]
+        private int _yBoundingBoxSize = 1;
+        public int yBoundingBoxSize
+        {
+            get => _yBoundingBoxSize;
+            set
+            {
+                if (_yBoundingBoxSize == value) return;
+                _yBoundingBoxSize = value;
+                if (OnSizeChanged != null)
+                    OnSizeChanged(_yBoundingBoxSize);
+            }
+        }
+        [BoxGroup("Detection View Settings", true, true)]
+        [Tooltip("The Z size of this detection view in the Grid.")]
+        [SerializeField]
+        private int _zBoundingBoxSize = 1;
+        public int zBoundingBoxSize
+        {
+            get => _zBoundingBoxSize;
+            set
+            {
+                if (_zBoundingBoxSize == value) return;
+                _zBoundingBoxSize = value;
+                if (OnSizeChanged != null)
+                    OnSizeChanged(_zBoundingBoxSize);
             }
         }
         [TitleGroup("Color Settings", alignment: TitleAlignments.Centered), Tooltip("Color Settings of nodes and paths")]
@@ -31,33 +60,61 @@ namespace Bottle.Core.DetectionSystem
         public Color hoveredColor = Color.red;
         public Color selectedColor = Color.green;
 
-        public delegate void OnSizeChangedDelegate(Vector3Int newBoundingBoxSize);
+        public delegate void OnSizeChangedDelegate(int newBoundingBoxSize);
         public event OnSizeChangedDelegate OnSizeChanged;
 
-        private void OnSizeChangedHandler(Vector3Int newBoundingBoxSize)
+        private void OnDetectionViewChangedHandler(Vector2Int newGridPosition, int newGridHeight)
         {
-            
+            for (int i = 1; i < xBoundingBoxSize; i++)
+            {
+                Debug.Log(i);
+            }
         }
-        private void Awake()
+        public void CalculateDetectionView(Dictionary<string, object> message)
         {
-            thisGridObject = GetComponent<GridEntity>();
+            for (int i = 1; i < xBoundingBoxSize - 1; i++)
+            {
+                Debug.Log(i);
+            }
         }
-        private void Start()
+        private void Awake() 
         {
-            this.OnSizeChanged += OnSizeChangedHandler;
+        }
+        public void Start()
+        {
+            EventManager.Instance.StartListening("RecalculateDetectionView", CalculateDetectionView);
+            //_thisGridObject.OnPositionChanged += OnDetectionViewChangedHandler;
         }
         private void Update()
         {
-            if (boundingBoxSize.x % 2 == 0)
-            { }
-                //var newX = boundingBoxSize.x + 1;
+            if (xBoundingBoxSize % 2 == 0)
+            {
+                xBoundingBoxSize = xBoundingBoxSize + 1;
+            }
+            if (zBoundingBoxSize % 2 == 0)
+            {
+                zBoundingBoxSize = zBoundingBoxSize + 1;
+            }
+            if (yBoundingBoxSize % 2 != 0)
+            {
+                yBoundingBoxSize = yBoundingBoxSize + 1;
+            }
+        }
+        private void OnValidate()
+        {
+            if (xBoundingBoxSize < 1)
+                xBoundingBoxSize = 1;
+            if (zBoundingBoxSize < 1)
+                zBoundingBoxSize = 1;
+            if (yBoundingBoxSize < 2)
+                yBoundingBoxSize = 2;
         }
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
             // Draw a semitransparent blue cube at the transforms position
             Gizmos.color = new Color(1, 0, 0, 0.3f);
-            Gizmos.DrawCube(transform.position, boundingBoxSize);
+            Gizmos.DrawCube(transform.position, new Vector3(xBoundingBoxSize, yBoundingBoxSize, zBoundingBoxSize));
         }
 #endif
     }
