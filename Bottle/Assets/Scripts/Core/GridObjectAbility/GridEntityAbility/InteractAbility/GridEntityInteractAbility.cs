@@ -41,8 +41,8 @@ namespace Bottle.Core.GridObjectAbility
         }
         private GridEntity GetOppositeGridObject()
         {
-            Vector3Int convertedForwardVector = new Vector3Int((int)currenGridEntity.transform.forward.x, (int)currenGridEntity.transform.forward.y, (int)currenGridEntity.transform.forward.z);
-            Vector3Int oppositeGridObjectPosition = new Vector3Int(currenGridEntity.gridPosition.x, (int)currenGridEntity.gridHeight, currenGridEntity.gridPosition.y) + convertedForwardVector;
+            Vector3Int convertedForwardVector = new Vector3Int((int)currentGridEntity.transform.forward.x, (int)currentGridEntity.transform.forward.y, (int)currentGridEntity.transform.forward.z);
+            Vector3Int oppositeGridObjectPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight, currentGridEntity.gridPosition.y) + convertedForwardVector;
             var targetEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(oppositeGridObjectPosition.x, oppositeGridObjectPosition.z), oppositeGridObjectPosition.y);
             if (targetEntities.Count > 0)
             {

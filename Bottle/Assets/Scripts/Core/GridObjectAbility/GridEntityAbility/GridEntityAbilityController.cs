@@ -16,7 +16,7 @@ namespace Bottle.Core.GridObjectAbility
             base.Awake();
             foreach (var ability in availableAbilities)
             {
-                ability.currenGridEntity = this._currentGridObject;
+                ability.currentGridEntity = this._currentGridObject;
                 ability.AbilityOnAwake();
             }
         }
@@ -47,10 +47,6 @@ namespace Bottle.Core.GridObjectAbility
                 ability.AbilityUpdate();
             }
         }
-    }
-    public class GridEntityAbilitySettings
-    {
-
     }
 }
 

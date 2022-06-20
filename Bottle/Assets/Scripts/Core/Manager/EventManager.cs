@@ -42,9 +42,12 @@ namespace Bottle.Core.Manager
         public void TriggerEvent(string eventName, Dictionary<string, object> message)
         {
             Action<Dictionary<string, object>> thisEvent = null;
-            if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+            if (eventName != null)
             {
-                thisEvent.Invoke(message);
+                if (Instance.eventDictionary.TryGetValue(eventName, out thisEvent))
+                {
+                    thisEvent.Invoke(message);
+                }
             }
         }
 

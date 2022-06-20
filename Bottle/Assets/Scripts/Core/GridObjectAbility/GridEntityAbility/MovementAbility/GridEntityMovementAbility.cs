@@ -14,17 +14,17 @@ namespace Bottle.Core.GridObjectAbility
         [SerializeField]
         private PathCreator currentAssignedPathCreator;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        //[DisableIf("@currenGridEntity.isControllable", true)]
+        //[DisableIf("@currentGridEntity.isControllable", true)]
         [ReadOnly]
         [ShowInInspector]
         private int _currentNode;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        //[DisableIf("@currenGridEntity.isControllable", true)]
+        //[DisableIf("@currentGridEntity.isControllable", true)]
         [ReadOnly]
         [ShowInInspector]
         private Vector3 _stepPos;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        //[DisableIf("@currenGridEntity.isControllable", true)]
+        //[DisableIf("@currentGridEntity.isControllable", true)]
         [ReadOnly]
         [SerializeField]
         private int _step = 1;
@@ -111,7 +111,7 @@ namespace Bottle.Core.GridObjectAbility
                         Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
                         Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
                         _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
-                        Vector3Int stepPosGridPosition = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currenGridEntity.pivotOffset.y);
+                        Vector3Int stepPosGridPosition = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currentGridEntity.pivotOffset.y);
                         Vector3Int rampGridPosition = new Vector3Int(stepPosGridPosition.x, stepPosGridPosition.y - 2, stepPosGridPosition.z);
                         List<GridTile> checkedRampTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(rampGridPosition.x, rampGridPosition.z), rampGridPosition.y);
                         if (checkedRampTile.Count > 0)
@@ -134,8 +134,8 @@ namespace Bottle.Core.GridObjectAbility
                         if (_targetTile != null && _targetTile.isStandable == true)
                         {
                             Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
-                            Vector3Int stepPosGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currenGridEntity.pivotOffset.y);
-                            Vector3Int nextNodeGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(nextNodeWorldSpacePos, currenGridEntity.pivotOffset.y);
+                            Vector3Int stepPosGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currentGridEntity.pivotOffset.y);
+                            Vector3Int nextNodeGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(nextNodeWorldSpacePos, currentGridEntity.pivotOffset.y);
                             if (stepPosGridData == nextNodeGridData || checkedRampTile.Count > 0)
                             {
                                 _step = 1;
@@ -249,7 +249,7 @@ namespace Bottle.Core.GridObjectAbility
         public override void AbilityStart()
         {
             EventManager.Instance.StartListening("MovementDirectionDetectionEventsChanged", AssignMovementDirectionDetectionEvents);
-            if (currenGridEntity.isControllable)
+            if (currentGridEntity.isControllable)
             {
                 _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
                 _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirectionFromPath;
@@ -277,7 +277,7 @@ namespace Bottle.Core.GridObjectAbility
 
         public void AssignMovementDirectionDetectionEvents(Dictionary<string, object> message)
         {
-            if ((bool)message["IsControllable"] && (GridEntity)message["GridEntity"] == currenGridEntity)
+            if ((bool)message["IsControllable"] && (GridEntity)message["GridEntity"] == currentGridEntity)
             {
                 currentAssignedPathCreator = null;
                 _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirectionFromPath;
@@ -290,7 +290,7 @@ namespace Bottle.Core.GridObjectAbility
                 _movementButtonStates[KeyCode.A].ButtonDownHandler += DetectMovementDirection;
                 _movementButtonStates[KeyCode.D].ButtonDownHandler += DetectMovementDirection;
             }
-            else if ((bool)message["IsControllable"] == false && (GridEntity)message["GridEntity"] == currenGridEntity)
+            else if ((bool)message["IsControllable"] == false && (GridEntity)message["GridEntity"] == currentGridEntity)
             {
                 _movementButtonStates[KeyCode.W].ButtonDownHandler -= DetectMovementDirection;
                 _movementButtonStates[KeyCode.S].ButtonDownHandler -= DetectMovementDirection;
@@ -313,12 +313,12 @@ namespace Bottle.Core.GridObjectAbility
             }
             //if (Input.GetKeyUp(KeyCode.T))
             //{
-            //    if (_currenGridEntity.isControllable)
+            //    if (_currentGridEntity.isControllable)
             //    {
-            //        _currenGridEntity.isControllable = false;
+            //        _currentGridEntity.isControllable = false;
             //    }
             //    else
-            //        _currenGridEntity.isControllable = true;
+            //        _currentGridEntity.isControllable = true;
             //}
         }
 
@@ -329,19 +329,19 @@ namespace Bottle.Core.GridObjectAbility
 
         private GridTile GetTargetTile(MovementDirections theDirection)
         {
-            Vector3Int targetGridPosition = new Vector3Int(currenGridEntity.gridPosition.x, (int)currenGridEntity.gridHeight - 1, currenGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
-            //Vector3Int blockableGridObjectPosition = new Vector3Int(_currenGridEntity.gridPosition.x, (int)_currenGridEntity.gridHeight, _currenGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
+            Vector3Int targetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight - 1, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
+            //Vector3Int blockableGridObjectPosition = new Vector3Int(_currentGridEntity.gridPosition.x, (int)_currentGridEntity.gridHeight, _currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
             List<GridTile> targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
             //var blockableGridTiles = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
             //var blockableGridEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
-            var (blockableGridTiles, blockableGridEntities) = GetBlockableGridObjects(currenGridEntity, theDirection);
+            var (blockableGridTiles, blockableGridEntities) = GetBlockableGridObjects(currentGridEntity, theDirection);
             if (targetTile.Count > 0)
             {
                 if (blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
                 {
                     if (targetTile[0].isARamp)
                     {
-                        Vector3Int nextTargetGridPosition = new Vector3Int(currenGridEntity.gridPosition.x, (int)currenGridEntity.gridHeight - 1, currenGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
+                        Vector3Int nextTargetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight - 1, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
                         var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
                         if (nextTargetTile.Count > 0)
                             return nextTargetTile[0];
@@ -351,13 +351,13 @@ namespace Bottle.Core.GridObjectAbility
             }
             else
             {
-                Vector3Int targetRampPosition = new Vector3Int(currenGridEntity.gridPosition.x, (int)currenGridEntity.gridHeight - 2, currenGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
+                Vector3Int targetRampPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight - 2, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
                 var targetRampTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetRampPosition.x, targetRampPosition.z), targetRampPosition.y);
                 if (targetRampTile.Count > 0)
                 {
                     if (targetRampTile[0].isARamp)
                     {
-                        Vector3Int nextTargetGridPosition = new Vector3Int(currenGridEntity.gridPosition.x, (int)currenGridEntity.gridHeight - 2, currenGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
+                        Vector3Int nextTargetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight - 2, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
                         var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y);
                         if (nextTargetTile.Count > 0)
                             return nextTargetTile[0];
@@ -407,18 +407,18 @@ namespace Bottle.Core.GridObjectAbility
         private void Move()
         {
             Vector3 destination = new Vector3(_targetTile.transform.position.x, _targetTile.transform.position.y + 1, _targetTile.transform.position.z);
-            Vector3 newPosition = Vector3.MoveTowards(currenGridEntity.transform.position, destination, Time.deltaTime * currentSpeed);
-            if (currenGridEntity.transform.position != newPosition)
+            Vector3 newPosition = Vector3.MoveTowards(currentGridEntity.transform.position, destination, Time.deltaTime * currentSpeed);
+            if (currentGridEntity.transform.position != newPosition)
             {
-                currenGridEntity.transform.position = newPosition;
+                currentGridEntity.transform.position = newPosition;
                 _isMoving = true;
                 GameplayManager.Instance.isTurnInProgress = true;
             }
             else
             {
-                var gridPos = GridManager.Instance.ConvertWorldPositionToGridPosition(currenGridEntity);
-                currenGridEntity.gridPosition = new Vector2Int(gridPos.x, gridPos.z);
-                currenGridEntity.gridHeight = gridPos.y;
+                var gridPos = GridManager.Instance.ConvertWorldPositionToGridPosition(currentGridEntity);
+                currentGridEntity.gridPosition = new Vector2Int(gridPos.x, gridPos.z);
+                currentGridEntity.gridHeight = gridPos.y;
                 _currentMovementDirection = MovementDirections.NONE;
                 _isMoving = false;
                 GameplayManager.Instance.isTurnInProgress = false;
@@ -434,79 +434,79 @@ namespace Bottle.Core.GridObjectAbility
         }
         private void Turn(MovementDirections targetDirection, GameplayManager.GlobalDirection globalDirection)
         {
-            Vector3 currentChildRotationEulerAngle = currenGridEntity.transform.rotation.eulerAngles;
+            Vector3 currentChildRotationEulerAngle = currentGridEntity.transform.rotation.eulerAngles;
             switch (globalDirection)
             {
                 case GameplayManager.GlobalDirection.POSITIVE_Z:
                     if (targetDirection == MovementDirections.FORWARD)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.BACK)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.LEFT)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.RIGHT)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
                     }
                     break;
                 case GameplayManager.GlobalDirection.NEGATIVE_Z:
                     if (targetDirection == MovementDirections.FORWARD)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.BACK)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.LEFT)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.RIGHT)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
                     }
                     break;
                 case GameplayManager.GlobalDirection.POSITIVE_X:
                     if (targetDirection == MovementDirections.FORWARD)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.BACK)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.LEFT)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.RIGHT)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
                     }
                     break;
                 case GameplayManager.GlobalDirection.NEGATIVE_X:
                     if (targetDirection == MovementDirections.FORWARD)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, -90 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.BACK)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 90 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.LEFT)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 180 - currentChildRotationEulerAngle.y);
                     }
                     else if (targetDirection == MovementDirections.RIGHT)
                     {
-                        currenGridEntity.transform.RotateAround(currenGridEntity.transform.position, currenGridEntity.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
+                        currentGridEntity.transform.RotateAround(currentGridEntity.transform.position, currentGridEntity.transform.parent.up, 0 - currentChildRotationEulerAngle.y);
                     }
                     break;
             }
