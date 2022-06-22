@@ -187,7 +187,7 @@ namespace Bottle.Core.DetectionSystem
         }
         public void Start()
         {
-            EventManager.Instance.StartListening("RecalculateDetectionView", CalculateDetectionView);
+            //EventManager.Instance.StartListening("RecalculateDetectionView", CalculateDetectionView);
             //_thisGridObject.OnPositionChanged += OnDetectionViewChangedHandler;
         }
         private void Update()
