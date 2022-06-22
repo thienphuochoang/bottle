@@ -5,12 +5,18 @@ using Sirenix.OdinInspector;
 using Bottle.Core.GridObjectAbility;
 using Bottle.Core.Manager;
 using Bottle.Core.GridObjectData;
+using System.Linq;
 namespace Bottle.Core.DetectionSystem
 {
     [ExecuteInEditMode]
     public class DetectionViewCreator : MonoBehaviour
     {
         private GridEntity currentGridEntity;
+        private List<GridTile> openList = new List<GridTile>();
+        private List<GridEntity> allGridEntitiesInView = new List<GridEntity>();
+        private List<GridTile> visitedTiles = new List<GridTile>();
+        [SerializeField]
+        private List<GridTile> finalPath = new List<GridTile>();
         public static Vector2Int[] eightDirections = new Vector2Int[]
         {
             new Vector2Int(0, 1),
@@ -82,7 +88,6 @@ namespace Bottle.Core.DetectionSystem
         {
             if ((GridEntity)message["GridEntity"] == currentGridEntity)
             {
-                List<GridEntity> allGridEntitiesInView = new List<GridEntity>();
                 for (int i = 1; i <= xBoundingBoxSize; i++)
                 {
                     if (i == 1)
@@ -199,7 +204,113 @@ namespace Bottle.Core.DetectionSystem
             {
                 yBoundingBoxSize = yBoundingBoxSize + 1;
             }
+            if (allGridEntitiesInView.Count > 0)
+            {
+                openList.Add(currentGridEntity.currentStandingGridTile);
+                FindingPath();
+            }
+                
         }
+
+        private static List<GridTile> GetWalkableTiles(GridTile currentTile, GridTile targetTile)
+        {
+            List<GridTile> possibleTiles = new List<GridTile>();
+            Vector2Int firstAroundTilePos = new Vector2Int(currentTile.gridPosition.x, currentTile.gridPosition.y - 1);
+            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentTile.gridHeight).Count > 0)
+            {
+                GridTile firstAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentTile.gridHeight)[0];
+                firstAroundTile.parent = currentTile;
+                possibleTiles.Add(firstAroundTile);
+            }
+
+            Vector2Int secondAroundTilePos = new Vector2Int(currentTile.gridPosition.x, currentTile.gridPosition.y + 1);
+            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentTile.gridHeight).Count > 0)
+            {
+                GridTile secondAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentTile.gridHeight)[0];
+                secondAroundTile.parent = currentTile;
+                possibleTiles.Add(secondAroundTile);
+            }
+
+            Vector2Int thirdAroundTilePos = new Vector2Int(currentTile.gridPosition.x - 1, currentTile.gridPosition.y);
+            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentTile.gridHeight).Count > 0)
+            {
+                GridTile thirdAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentTile.gridHeight)[0];
+                thirdAroundTile.parent = currentTile;
+                possibleTiles.Add(thirdAroundTile);
+            }
+
+            Vector2Int fourthAroundTilePos = new Vector2Int(currentTile.gridPosition.x + 1, currentTile.gridPosition.y);
+            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentTile.gridHeight).Count > 0)
+            {
+                GridTile fourthAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentTile.gridHeight)[0];
+                fourthAroundTile.parent = currentTile;
+                possibleTiles.Add(fourthAroundTile);
+            }
+
+
+            foreach (GridTile eachTile in possibleTiles)
+            {
+                //if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(eachTile.gridPosition, eachTile.gridHeight).Count > 0)
+                eachTile.SetDistance(targetTile.gridPosition.x, targetTile.gridPosition.y);
+                //else
+                //    possibleTiles.Remove(eachTile);
+            }
+            return possibleTiles;
+        }
+
+        private void FindingPath()
+        {
+            while (openList.Any())
+            {
+                var checkTile = openList.OrderByDescending(x => x.costDistance).Last();
+                if (checkTile.gridPosition == allGridEntitiesInView[0].currentStandingGridTile.gridPosition) //&& checkTile.Y == finish.Y)
+                {
+                    var tile = allGridEntitiesInView[0].currentStandingGridTile;
+                    finalPath.Add(tile);
+                    finalPath.Add(tile.parent);
+                    allGridEntitiesInView.RemoveAt(0);
+                    return;
+                    //while (true)
+                    //{
+                    //    finalPath.Add(tile.parent);
+                    //    tile = tile.parent;
+                    //    if (tile == null)
+                    //    {
+                    //        foreach (var eachTile in finalPath)
+                    //        {
+                    //            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    //            cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 3, eachTile.transform.position.z);
+                    //        }
+                    //        allGridEntitiesInView.RemoveAt(0);
+                    //        return;
+                    //    }
+                    //}
+                }
+                visitedTiles.Add(checkTile);
+                openList.Remove(checkTile);
+                var walkableTiles = GetWalkableTiles(checkTile, allGridEntitiesInView[0].currentStandingGridTile);
+                foreach (var walkableTile in walkableTiles)
+                {
+                    if (visitedTiles.Any(x => x.gridPosition == walkableTile.gridPosition))
+                        continue;
+                    if (openList.Any(x => x.gridPosition == walkableTile.gridPosition))
+                    {
+                        var existingTile = openList.First(x => x.gridPosition == walkableTile.gridPosition);
+                        if (existingTile.costDistance > checkTile.costDistance)
+                        {
+                            openList.Remove(existingTile);
+                            openList.Add(walkableTile);
+                        }
+                    }
+                    else
+                    {
+                        openList.Add(walkableTile);
+                    }
+                }
+            }
+            Debug.Log("No Path Found!");
+        }
+
         private void OnValidate()
         {
             if (xBoundingBoxSize < 1)
