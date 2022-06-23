@@ -12,8 +12,11 @@ namespace Bottle.Core.DetectionSystem
     public class DetectionViewCreator : MonoBehaviour
     {
         private GridEntity currentGridEntity;
-        private List<GridTile> openList = new List<GridTile>();
+        [SerializeField]
+        private List<GridTile> activeTiles = new List<GridTile>();
+        [SerializeField]
         private List<GridEntity> allGridEntitiesInView = new List<GridEntity>();
+        [SerializeField]
         private List<GridTile> visitedTiles = new List<GridTile>();
         [SerializeField]
         private List<GridTile> finalPath = new List<GridTile>();
@@ -179,6 +182,11 @@ namespace Bottle.Core.DetectionSystem
                         }
                     }
                 }
+                if (allGridEntitiesInView.Count > 0)
+                {
+                    activeTiles.Add(currentGridEntity.currentStandingGridTile);
+                    FindingPath();
+                }
             }
         }
         private void Awake() 
@@ -187,7 +195,7 @@ namespace Bottle.Core.DetectionSystem
         }
         public void Start()
         {
-            //EventManager.Instance.StartListening("RecalculateDetectionView", CalculateDetectionView);
+            EventManager.Instance.StartListening("RecalculateDetectionView", CalculateDetectionView);
             //_thisGridObject.OnPositionChanged += OnDetectionViewChangedHandler;
         }
         private void Update()
@@ -204,11 +212,6 @@ namespace Bottle.Core.DetectionSystem
             {
                 yBoundingBoxSize = yBoundingBoxSize + 1;
             }
-            if (allGridEntitiesInView.Count > 0)
-            {
-                openList.Add(currentGridEntity.currentStandingGridTile);
-                FindingPath();
-            }
                 
         }
 
@@ -220,6 +223,7 @@ namespace Bottle.Core.DetectionSystem
             {
                 GridTile firstAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentTile.gridHeight)[0];
                 firstAroundTile.parent = currentTile;
+                firstAroundTile.cost = currentTile.cost + 1;
                 possibleTiles.Add(firstAroundTile);
             }
 
@@ -228,6 +232,7 @@ namespace Bottle.Core.DetectionSystem
             {
                 GridTile secondAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentTile.gridHeight)[0];
                 secondAroundTile.parent = currentTile;
+                secondAroundTile.cost = currentTile.cost + 1;
                 possibleTiles.Add(secondAroundTile);
             }
 
@@ -236,6 +241,7 @@ namespace Bottle.Core.DetectionSystem
             {
                 GridTile thirdAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentTile.gridHeight)[0];
                 thirdAroundTile.parent = currentTile;
+                thirdAroundTile.cost = currentTile.cost + 1;
                 possibleTiles.Add(thirdAroundTile);
             }
 
@@ -244,6 +250,7 @@ namespace Bottle.Core.DetectionSystem
             {
                 GridTile fourthAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentTile.gridHeight)[0];
                 fourthAroundTile.parent = currentTile;
+                fourthAroundTile.cost = currentTile.cost + 1;
                 possibleTiles.Add(fourthAroundTile);
             }
 
@@ -260,51 +267,63 @@ namespace Bottle.Core.DetectionSystem
 
         private void FindingPath()
         {
-            while (openList.Any())
+            while (activeTiles.Any())
             {
-                var checkTile = openList.OrderByDescending(x => x.costDistance).Last();
+                var checkTile = activeTiles.OrderByDescending(x => x.costDistance).Last();
+                Debug.Log(checkTile);
+                Debug.Log(checkTile.distance);
+                // Path is found
                 if (checkTile.gridPosition == allGridEntitiesInView[0].currentStandingGridTile.gridPosition) //&& checkTile.Y == finish.Y)
                 {
-                    var tile = allGridEntitiesInView[0].currentStandingGridTile;
+                    finalPath.Clear();
+                    var tile = currentGridEntity.currentStandingGridTile;
                     finalPath.Add(tile);
-                    finalPath.Add(tile.parent);
-                    allGridEntitiesInView.RemoveAt(0);
-                    return;
+                    foreach (var eachTile in activeTiles)
+                    {
+                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
+                    }
                     //while (true)
                     //{
-                    //    finalPath.Add(tile.parent);
-                    //    tile = tile.parent;
-                    //    if (tile == null)
+                    //    if (tile.distance == 1)
                     //    {
-                    //        foreach (var eachTile in finalPath)
-                    //        {
-                    //            GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    //            cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 3, eachTile.transform.position.z);
-                    //        }
-                    //        allGridEntitiesInView.RemoveAt(0);
-                    //        return;
+                    //        finalPath.Add(allGridEntitiesInView[0].currentStandingGridTile);
+                    //        break;
+                    //    }
+                    //    else
+                    //    {
+                    //        finalPath.Add(tile.parent);
+                    //        tile = tile.parent;
                     //    }
                     //}
+                    ////finalPath.Add(tile.parent);
+                    //foreach (var eachTile in finalPath)
+                    //{
+                    //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    //    cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
+                    //}
+                    allGridEntitiesInView.RemoveAt(0);
+                    return;
                 }
                 visitedTiles.Add(checkTile);
-                openList.Remove(checkTile);
+                activeTiles.Remove(checkTile);
                 var walkableTiles = GetWalkableTiles(checkTile, allGridEntitiesInView[0].currentStandingGridTile);
                 foreach (var walkableTile in walkableTiles)
                 {
-                    if (visitedTiles.Any(x => x.gridPosition == walkableTile.gridPosition))
+                    if (visitedTiles.Any(tile => tile.gridPosition == walkableTile.gridPosition))
                         continue;
-                    if (openList.Any(x => x.gridPosition == walkableTile.gridPosition))
+                    if (activeTiles.Any(tile => tile.gridPosition == walkableTile.gridPosition))
                     {
-                        var existingTile = openList.First(x => x.gridPosition == walkableTile.gridPosition);
-                        if (existingTile.costDistance > checkTile.costDistance)
+                        var existingTile = activeTiles.First(tile => tile.gridPosition == walkableTile.gridPosition);
+                        if (existingTile.costDistance > walkableTile.costDistance)
                         {
-                            openList.Remove(existingTile);
-                            openList.Add(walkableTile);
+                            activeTiles.Remove(existingTile);
+                            activeTiles.Add(walkableTile);
                         }
                     }
                     else
                     {
-                        openList.Add(walkableTile);
+                        activeTiles.Add(walkableTile);
                     }
                 }
             }

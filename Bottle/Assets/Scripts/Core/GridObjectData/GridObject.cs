@@ -35,7 +35,7 @@ namespace Bottle.Core.GridObjectData
                 if (OnPositionChanged != null)
                 {
                     OnPositionChanged(_gridPosition, (int)_gridHeight);
-                    //EventManager.Instance.TriggerEvent("RecalculateDetectionView", new Dictionary<string, object> { { "GridEntity", this } });
+                    EventManager.Instance.TriggerEvent("RecalculateDetectionView", new Dictionary<string, object> { { "GridEntity", this } });
                 }
                     
             }
