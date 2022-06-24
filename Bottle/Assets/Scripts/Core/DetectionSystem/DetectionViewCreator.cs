@@ -185,6 +185,8 @@ namespace Bottle.Core.DetectionSystem
                 if (allGridEntitiesInView.Count > 0)
                 {
                     activeTiles.Add(currentGridEntity.currentStandingGridTile);
+                    currentGridEntity.currentStandingGridTile.gCost = 0;
+                    currentGridEntity.currentStandingGridTile.hCost = CalculateDistanceCost(currentGridEntity.currentStandingGridTile, allGridEntitiesInView[0].currentStandingGridTile);
                     FindingPath();
                 }
             }
@@ -215,88 +217,31 @@ namespace Bottle.Core.DetectionSystem
                 
         }
 
-        private static List<GridTile> GetWalkableTiles(GridTile currentTile, GridTile targetTile)
+        private int CalculateDistanceCost(GridTile a, GridTile b)
         {
-            List<GridTile> possibleTiles = new List<GridTile>();
-            Vector2Int firstAroundTilePos = new Vector2Int(currentTile.gridPosition.x, currentTile.gridPosition.y - 1);
-            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentTile.gridHeight).Count > 0)
-            {
-                GridTile firstAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentTile.gridHeight)[0];
-                firstAroundTile.parent = currentTile;
-                firstAroundTile.cost = currentTile.cost + 1;
-                possibleTiles.Add(firstAroundTile);
-            }
-
-            Vector2Int secondAroundTilePos = new Vector2Int(currentTile.gridPosition.x, currentTile.gridPosition.y + 1);
-            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentTile.gridHeight).Count > 0)
-            {
-                GridTile secondAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentTile.gridHeight)[0];
-                secondAroundTile.parent = currentTile;
-                secondAroundTile.cost = currentTile.cost + 1;
-                possibleTiles.Add(secondAroundTile);
-            }
-
-            Vector2Int thirdAroundTilePos = new Vector2Int(currentTile.gridPosition.x - 1, currentTile.gridPosition.y);
-            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentTile.gridHeight).Count > 0)
-            {
-                GridTile thirdAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentTile.gridHeight)[0];
-                thirdAroundTile.parent = currentTile;
-                thirdAroundTile.cost = currentTile.cost + 1;
-                possibleTiles.Add(thirdAroundTile);
-            }
-
-            Vector2Int fourthAroundTilePos = new Vector2Int(currentTile.gridPosition.x + 1, currentTile.gridPosition.y);
-            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentTile.gridHeight).Count > 0)
-            {
-                GridTile fourthAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentTile.gridHeight)[0];
-                fourthAroundTile.parent = currentTile;
-                fourthAroundTile.cost = currentTile.cost + 1;
-                possibleTiles.Add(fourthAroundTile);
-            }
-
-
-            foreach (GridTile eachTile in possibleTiles)
-            {
-                //if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(eachTile.gridPosition, eachTile.gridHeight).Count > 0)
-                eachTile.SetDistance(targetTile.gridPosition.x, targetTile.gridPosition.y);
-                //else
-                //    possibleTiles.Remove(eachTile);
-            }
-            return possibleTiles;
+            int xDistance = Mathf.Abs(a.gridPosition.x - b.gridPosition.x);
+            int yDistance = Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
+            int remaining = Mathf.Abs(xDistance - yDistance);
+            return remaining;
         }
 
         private void FindingPath()
         {
-            while (activeTiles.Any())
+            while (activeTiles.Count > 0)
             {
-                var checkTile = activeTiles.OrderByDescending(x => x.costDistance).Last();
-                Debug.Log(checkTile);
-                Debug.Log(checkTile.distance);
+                var currentNode = activeTiles.OrderByDescending(x => x.fCost).Last();
                 // Path is found
-                if (checkTile.gridPosition == allGridEntitiesInView[0].currentStandingGridTile.gridPosition) //&& checkTile.Y == finish.Y)
+                if (currentNode == allGridEntitiesInView[0].currentStandingGridTile)
                 {
                     finalPath.Clear();
-                    var tile = currentGridEntity.currentStandingGridTile;
-                    finalPath.Add(tile);
-                    foreach (var eachTile in activeTiles)
+                    finalPath.Add(allGridEntitiesInView[0].currentStandingGridTile);
+                    var currentTile = allGridEntitiesInView[0].currentStandingGridTile;
+                    while (currentTile.previousTile != null)
                     {
-                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                        cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
+                        finalPath.Add(currentTile.previousTile);
+                        currentTile = currentTile.previousTile;
                     }
-                    //while (true)
-                    //{
-                    //    if (tile.distance == 1)
-                    //    {
-                    //        finalPath.Add(allGridEntitiesInView[0].currentStandingGridTile);
-                    //        break;
-                    //    }
-                    //    else
-                    //    {
-                    //        finalPath.Add(tile.parent);
-                    //        tile = tile.parent;
-                    //    }
-                    //}
-                    ////finalPath.Add(tile.parent);
+                    finalPath.Reverse();
                     //foreach (var eachTile in finalPath)
                     //{
                     //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -305,25 +250,24 @@ namespace Bottle.Core.DetectionSystem
                     allGridEntitiesInView.RemoveAt(0);
                     return;
                 }
-                visitedTiles.Add(checkTile);
-                activeTiles.Remove(checkTile);
-                var walkableTiles = GetWalkableTiles(checkTile, allGridEntitiesInView[0].currentStandingGridTile);
-                foreach (var walkableTile in walkableTiles)
+                visitedTiles.Add(currentNode);
+                activeTiles.Remove(currentNode);
+                foreach (var neighbourNode in GridManager.Instance.GetNeighbourGridTiles(currentNode))
                 {
-                    if (visitedTiles.Any(tile => tile.gridPosition == walkableTile.gridPosition))
+                    if (visitedTiles.Contains(neighbourNode))
                         continue;
-                    if (activeTiles.Any(tile => tile.gridPosition == walkableTile.gridPosition))
+
+                    int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
+                    if (tentativeGCost < neighbourNode.gCost)
                     {
-                        var existingTile = activeTiles.First(tile => tile.gridPosition == walkableTile.gridPosition);
-                        if (existingTile.costDistance > walkableTile.costDistance)
+                        neighbourNode.previousTile = currentNode;
+                        neighbourNode.gCost = tentativeGCost;
+                        neighbourNode.hCost = CalculateDistanceCost(neighbourNode, allGridEntitiesInView[0].currentStandingGridTile);
+
+                        if (!activeTiles.Contains(neighbourNode))
                         {
-                            activeTiles.Remove(existingTile);
-                            activeTiles.Add(walkableTile);
+                            activeTiles.Add(neighbourNode);
                         }
-                    }
-                    else
-                    {
-                        activeTiles.Add(walkableTile);
                     }
                 }
             }

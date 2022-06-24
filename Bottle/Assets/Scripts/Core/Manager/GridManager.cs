@@ -178,6 +178,39 @@ namespace Bottle.Core.Manager
             float gridHeight = (int)newPos.y + Mathf.Ceil(pivotOffsetYAxis);
             return new Vector3Int(gridPosition.x, (int)gridHeight, gridPosition.y);
         }
+
+        public List<GridTile> GetNeighbourGridTiles(GridTile currentTile)
+        {
+            List<GridTile> possibleTiles = new List<GridTile>();
+            Vector2Int firstAroundTilePos = new Vector2Int(currentTile.gridPosition.x, currentTile.gridPosition.y - 1);
+            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentTile.gridHeight).Count > 0)
+            {
+                GridTile firstAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentTile.gridHeight)[0];
+                possibleTiles.Add(firstAroundTile);
+            }
+
+            Vector2Int secondAroundTilePos = new Vector2Int(currentTile.gridPosition.x, currentTile.gridPosition.y + 1);
+            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentTile.gridHeight).Count > 0)
+            {
+                GridTile secondAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentTile.gridHeight)[0];
+                possibleTiles.Add(secondAroundTile);
+            }
+
+            Vector2Int thirdAroundTilePos = new Vector2Int(currentTile.gridPosition.x - 1, currentTile.gridPosition.y);
+            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentTile.gridHeight).Count > 0)
+            {
+                GridTile thirdAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentTile.gridHeight)[0];
+                possibleTiles.Add(thirdAroundTile);
+            }
+
+            Vector2Int fourthAroundTilePos = new Vector2Int(currentTile.gridPosition.x + 1, currentTile.gridPosition.y);
+            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentTile.gridHeight).Count > 0)
+            {
+                GridTile fourthAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentTile.gridHeight)[0];
+                possibleTiles.Add(fourthAroundTile);
+            }
+            return possibleTiles;
+        }
     }
 }
 
