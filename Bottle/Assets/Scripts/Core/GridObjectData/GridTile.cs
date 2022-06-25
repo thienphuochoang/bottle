@@ -26,10 +26,10 @@ namespace Bottle.Core.GridObjectData
         [Tooltip("Is this Grid Tile a ramp?")]
         public GameplayManager.GlobalDirection stepOnDirection = GameplayManager.GlobalDirection.NONE;
 
-        public int gCost;
-        public int hCost;
-        public int fCost => gCost + hCost;
-        public GridTile previousTile;
+        //public int gCost;
+        //public int hCost;
+        //public int fCost => gCost + hCost;
+        //public GridTile previousTile;
 
         //public delegate void OnStandingGridEntityDelegate(List<GridEntity> newStandingGridEntity);
         //public event OnStandingGridEntityDelegate OnStandingGridEntityChanged;
@@ -38,8 +38,8 @@ namespace Bottle.Core.GridObjectData
         {
             base.Awake();
             currentStandingGridEntity = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(this.gridPosition, this.gridHeight + 1);
-            gCost = int.MaxValue;
-            previousTile = null;
+            //gCost = int.MaxValue;
+            //previousTile = null;
         }
 
         protected override void Start()
