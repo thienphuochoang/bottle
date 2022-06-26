@@ -6,6 +6,7 @@ using Bottle.Core.GridObjectAbility;
 using Bottle.Core.Manager;
 using Bottle.Core.GridObjectData;
 using System.Linq;
+using Bottle.Core.PathSystem;
 namespace Bottle.Core.DetectionSystem
 {
     [ExecuteInEditMode]
@@ -185,9 +186,14 @@ namespace Bottle.Core.DetectionSystem
                 if (allGridEntitiesInView.Count > 0)
                 {
                     activeTiles.Add(currentGridEntity.currentStandingGridTile);
-                    currentGridEntity.currentStandingGridTile.gCost = 0;
-                    currentGridEntity.currentStandingGridTile.hCost = CalculateDistanceCost(currentGridEntity.currentStandingGridTile, allGridEntitiesInView[0].currentStandingGridTile);
-                    FindingPath();
+                    PathFindingGridTile startNode = new PathFindingGridTile();
+                    PathFindingGridTile endNode = new PathFindingGridTile();
+                    startNode.currentGridTile = currentGridEntity.currentStandingGridTile;
+                    startNode.gCost = 0;
+                    endNode.currentGridTile = allGridEntitiesInView[0].currentStandingGridTile;
+                    startNode.hCost = PathFinding.CalculateDistanceCost(startNode.currentGridTile, endNode.currentGridTile);
+                    var ahihi = PathFinding.FindingPath(startNode, endNode);
+                    allGridEntitiesInView.RemoveAt(0);
                 }
             }
         }
@@ -225,54 +231,54 @@ namespace Bottle.Core.DetectionSystem
             return remaining;
         }
 
-        private void FindingPath()
-        {
-            while (activeTiles.Count > 0)
-            {
-                var currentNode = activeTiles.OrderByDescending(x => x.fCost).Last();
-                // Path is found
-                if (currentNode == allGridEntitiesInView[0].currentStandingGridTile)
-                {
-                    finalPath.Clear();
-                    finalPath.Add(allGridEntitiesInView[0].currentStandingGridTile);
-                    var currentTile = allGridEntitiesInView[0].currentStandingGridTile;
-                    while (currentTile.previousTile != null)
-                    {
-                        finalPath.Add(currentTile.previousTile);
-                        currentTile = currentTile.previousTile;
-                    }
-                    finalPath.Reverse();
-                    //foreach (var eachTile in finalPath)
-                    //{
-                    //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    //    cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
-                    //}
-                    allGridEntitiesInView.RemoveAt(0);
-                    return;
-                }
-                visitedTiles.Add(currentNode);
-                activeTiles.Remove(currentNode);
-                foreach (var neighbourNode in GridManager.Instance.GetNeighbourGridTiles(currentNode))
-                {
-                    if (visitedTiles.Contains(neighbourNode))
-                        continue;
+        //private void FindingPath()
+        //{
+        //    while (activeTiles.Count > 0)
+        //    {
+        //        var currentNode = activeTiles.OrderByDescending(x => x.fCost).Last();
+        //        // Path is found
+        //        if (currentNode == allGridEntitiesInView[0].currentStandingGridTile)
+        //        {
+        //            finalPath.Clear();
+        //            finalPath.Add(allGridEntitiesInView[0].currentStandingGridTile);
+        //            var currentTile = allGridEntitiesInView[0].currentStandingGridTile;
+        //            while (currentTile.previousTile != null)
+        //            {
+        //                finalPath.Add(currentTile.previousTile);
+        //                currentTile = currentTile.previousTile;
+        //            }
+        //            finalPath.Reverse();
+        //            //foreach (var eachTile in finalPath)
+        //            //{
+        //            //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        //            //    cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
+        //            //}
+        //            allGridEntitiesInView.RemoveAt(0);
+        //            return;
+        //        }
+        //        visitedTiles.Add(currentNode);
+        //        activeTiles.Remove(currentNode);
+        //        foreach (var neighbourNode in GridManager.Instance.GetNeighbourGridTiles(currentNode))
+        //        {
+        //            if (visitedTiles.Contains(neighbourNode))
+        //                continue;
 
-                    int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
-                    if (tentativeGCost < neighbourNode.gCost)
-                    {
-                        neighbourNode.previousTile = currentNode;
-                        neighbourNode.gCost = tentativeGCost;
-                        neighbourNode.hCost = CalculateDistanceCost(neighbourNode, allGridEntitiesInView[0].currentStandingGridTile);
+        //            int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
+        //            if (tentativeGCost < neighbourNode.gCost)
+        //            {
+        //                neighbourNode.previousTile = currentNode;
+        //                neighbourNode.gCost = tentativeGCost;
+        //                neighbourNode.hCost = CalculateDistanceCost(neighbourNode, allGridEntitiesInView[0].currentStandingGridTile);
 
-                        if (!activeTiles.Contains(neighbourNode))
-                        {
-                            activeTiles.Add(neighbourNode);
-                        }
-                    }
-                }
-            }
-            Debug.Log("No Path Found!");
-        }
+        //                if (!activeTiles.Contains(neighbourNode))
+        //                {
+        //                    activeTiles.Add(neighbourNode);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    Debug.Log("No Path Found!");
+        //}
 
         private void OnValidate()
         {
