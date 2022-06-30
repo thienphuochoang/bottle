@@ -185,14 +185,11 @@ namespace Bottle.Core.DetectionSystem
                 }
                 if (allGridEntitiesInView.Count > 0)
                 {
-                    activeTiles.Add(currentGridEntity.currentStandingGridTile);
-                    PathFindingGridTile startNode = new PathFindingGridTile();
-                    PathFindingGridTile endNode = new PathFindingGridTile();
-                    startNode.currentGridTile = currentGridEntity.currentStandingGridTile;
-                    startNode.gCost = 0;
-                    endNode.currentGridTile = allGridEntitiesInView[0].currentStandingGridTile;
-                    startNode.hCost = PathFinding.CalculateDistanceCost(startNode.currentGridTile, endNode.currentGridTile);
-                    var ahihi = PathFinding.FindingPath(startNode, endNode);
+                    //activeTiles.Add(currentGridEntity.currentStandingGridTile);
+                    currentGridEntity.currentStandingGridTile.gCost = 0;
+                    currentGridEntity.currentStandingGridTile.hCost = PathFinding.CalculateDistanceCost(currentGridEntity.currentStandingGridTile, allGridEntitiesInView[0].currentStandingGridTile);
+                    var foundPath = PathFinding.FindingPath(currentGridEntity.currentStandingGridTile, allGridEntitiesInView[0].currentStandingGridTile);
+                    finalPath = foundPath;
                     allGridEntitiesInView.RemoveAt(0);
                 }
             }

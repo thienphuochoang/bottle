@@ -212,46 +212,6 @@ namespace Bottle.Core.Manager
             }
             return possibleTiles;
         }
-        public List<PathFindingGridTile> GetNeighbourGridTiles(PathFindingGridTile currentPathFindingGridTile)
-        {
-            List<PathFindingGridTile> possibleTiles = new List<PathFindingGridTile>();
-            Vector2Int firstAroundTilePos = new Vector2Int(currentPathFindingGridTile.currentGridTile.gridPosition.x, currentPathFindingGridTile.currentGridTile.gridPosition.y - 1);
-            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentPathFindingGridTile.currentGridTile.gridHeight).Count > 0)
-            {
-                GridTile firstAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(firstAroundTilePos, currentPathFindingGridTile.currentGridTile.gridHeight)[0];
-                PathFindingGridTile firstAroundPathFindingGridTile = new PathFindingGridTile();
-                firstAroundPathFindingGridTile.currentGridTile = firstAroundTile;
-                possibleTiles.Add(firstAroundPathFindingGridTile);
-            }
-
-            Vector2Int secondAroundTilePos = new Vector2Int(currentPathFindingGridTile.currentGridTile.gridPosition.x, currentPathFindingGridTile.currentGridTile.gridPosition.y + 1);
-            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentPathFindingGridTile.currentGridTile.gridHeight).Count > 0)
-            {
-                GridTile secondAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(secondAroundTilePos, currentPathFindingGridTile.currentGridTile.gridHeight)[0];
-                PathFindingGridTile secondAroundPathFindingGridTile = new PathFindingGridTile();
-                secondAroundPathFindingGridTile.currentGridTile = secondAroundTile;
-                possibleTiles.Add(secondAroundPathFindingGridTile);
-            }
-
-            Vector2Int thirdAroundTilePos = new Vector2Int(currentPathFindingGridTile.currentGridTile.gridPosition.x - 1, currentPathFindingGridTile.currentGridTile.gridPosition.y);
-            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentPathFindingGridTile.currentGridTile.gridHeight).Count > 0)
-            {
-                GridTile thirdAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(thirdAroundTilePos, currentPathFindingGridTile.currentGridTile.gridHeight)[0];
-                PathFindingGridTile thirdAroundPathFindingGridTile = new PathFindingGridTile();
-                thirdAroundPathFindingGridTile.currentGridTile = thirdAroundTile;
-                possibleTiles.Add(thirdAroundPathFindingGridTile);
-            }
-
-            Vector2Int fourthAroundTilePos = new Vector2Int(currentPathFindingGridTile.currentGridTile.gridPosition.x + 1, currentPathFindingGridTile.currentGridTile.gridPosition.y);
-            if (GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentPathFindingGridTile.currentGridTile.gridHeight).Count > 0)
-            {
-                GridTile fourthAroundTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(fourthAroundTilePos, currentPathFindingGridTile.currentGridTile.gridHeight)[0];
-                PathFindingGridTile fourthAroundPathFindingGridTile = new PathFindingGridTile();
-                fourthAroundPathFindingGridTile.currentGridTile = fourthAroundTile;
-                possibleTiles.Add(fourthAroundPathFindingGridTile);
-            }
-            return possibleTiles;
-        }
     }
 }
 

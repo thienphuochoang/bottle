@@ -15,32 +15,32 @@ namespace Bottle.Core.PathSystem
             int result = Mathf.Abs(xDistance - yDistance);
             return result;
         }
-        public static List<PathFindingGridTile> FindingPath(PathFindingGridTile startNode, PathFindingGridTile endNode)
+        public static List<GridTile> FindingPath(GridTile startNode, GridTile endNode)
         {
-            List<PathFindingGridTile> activeTiles = new List<PathFindingGridTile>();
-            List<PathFindingGridTile> visitedTiles = new List<PathFindingGridTile>();
-            List<PathFindingGridTile> finalPath = new List<PathFindingGridTile>();
+            List<GridTile> activeTiles = new List<GridTile>();
+            List<GridTile> visitedTiles = new List<GridTile>();
+            List<GridTile> finalPath = new List<GridTile>();
             activeTiles.Add(startNode);
             while (activeTiles.Count > 0)
             {
                 var currentNode = activeTiles.OrderByDescending(x => x.fCost).Last();
                 // Path is found
-                if (currentNode.currentGridTile.gridPosition == endNode.currentGridTile.gridPosition)
+                if (currentNode == endNode)
                 {
                     finalPath.Clear();
                     finalPath.Add(endNode);
-                    var previousNode = endNode;
-                    //while (previousNode.previousGridTile != null)
-                    //{
-                    //    finalPath.Add(previousNode);
-                    //    previousNode = previousNode.previousGridTile;
-                    //}
+                    var currentTile = endNode;
+                    while (currentTile.cameFromGridTile != null)
+                    {
+                        finalPath.Add(currentTile.cameFromGridTile);
+                        currentTile = currentTile.cameFromGridTile;
+                    }
                     finalPath.Reverse();
-                    //foreach (var eachTile in finalPath)
-                    //{
-                    //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-                    //    cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
-                    //}
+                    foreach (var eachTile in finalPath)
+                    {
+                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
+                    }
                     //allGridEntitiesInView.RemoveAt(0);
                     return finalPath;
                 }
@@ -51,12 +51,12 @@ namespace Bottle.Core.PathSystem
                     if (visitedTiles.Contains(neighbourNode))
                         continue;
 
-                    int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode.currentGridTile, neighbourNode.currentGridTile);
+                    int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
                     if (tentativeGCost < neighbourNode.gCost)
                     {
-                        neighbourNode.previousGridTile = currentNode;
+                        neighbourNode.cameFromGridTile = currentNode;
                         neighbourNode.gCost = tentativeGCost;
-                        neighbourNode.hCost = CalculateDistanceCost(neighbourNode.currentGridTile, endNode.currentGridTile);
+                        neighbourNode.hCost = CalculateDistanceCost(neighbourNode, endNode);
 
                         if (!activeTiles.Contains(neighbourNode))
                         {
@@ -66,7 +66,7 @@ namespace Bottle.Core.PathSystem
                 }
             }
             Debug.Log("No Path Found!");
-            return finalPath;
+            return null;
         }
     }
 }
