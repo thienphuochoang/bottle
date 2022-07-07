@@ -41,7 +41,6 @@ namespace Bottle.Core.PathSystem
                         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
                     }
-                    //allGridEntitiesInView.RemoveAt(0);
                     return finalPath;
                 }
                 visitedTiles.Add(currentNode);
@@ -67,6 +66,12 @@ namespace Bottle.Core.PathSystem
             }
             Debug.Log("No Path Found!");
             return null;
+        }
+        public static void ResetDistanceCost(GridTile tile)
+        {
+            tile.gCost = int.MaxValue;
+            tile.hCost = 0;
+            tile.cameFromGridTile = null;
         }
     }
 }

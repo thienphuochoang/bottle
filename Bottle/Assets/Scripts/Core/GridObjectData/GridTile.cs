@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Bottle.Core.Manager;
+using Bottle.Core.PathSystem;
 namespace Bottle.Core.GridObjectData
 {
     public class GridTile : GridObject
@@ -37,26 +38,16 @@ namespace Bottle.Core.GridObjectData
         [HideInInspector]
         public GridTile cameFromGridTile;
 
-        //public delegate void OnStandingGridEntityDelegate(List<GridEntity> newStandingGridEntity);
-        //public event OnStandingGridEntityDelegate OnStandingGridEntityChanged;
-
         protected override void Awake()
         {
             base.Awake();
             currentStandingGridEntity = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(this.gridPosition, this.gridHeight + 1);
-            gCost = int.MaxValue;
-            cameFromGridTile = null;
+            PathFinding.ResetDistanceCost(this);
         }
 
         protected override void Start()
         {
             base.Start();
-            //OnStandingGridEntityChanged += SetStandingGridEntity;
         }
-
-        //public void SetStandingGridEntity(List<GridEntity> newStandingGridEntity)
-        //{
-        //    _currentStandingGridEntity = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(this.gridPosition, this.gridHeight + 1);
-        //}
     }
 }

@@ -33,18 +33,16 @@ namespace Bottle.Core.DetectionSystem
             new Vector2Int(-1, 1)
         };
         [BoxGroup("Detection View Settings", true, true)]
-        [Tooltip("The X size of this detection view in the Grid.")]
+        [Tooltip("The X and Z size of this detection view in the Grid.")]
         [SerializeField]
-        private int _xBoundingBoxSize = 1;
-        public int xBoundingBoxSize
+        private int _xzBoundingBoxSize = 1;
+        public int xzBoundingBoxSize
         {
-            get => _xBoundingBoxSize;
+            get => _xzBoundingBoxSize;
             set
             {
-                if (_xBoundingBoxSize == value) return;
-                _xBoundingBoxSize = value;
-                if (OnSizeChanged != null)
-                    OnSizeChanged(_xBoundingBoxSize);
+                if (_xzBoundingBoxSize == value) return;
+                _xzBoundingBoxSize = value;
             }
         }
         [BoxGroup("Detection View Settings", true, true)]
@@ -58,142 +56,217 @@ namespace Bottle.Core.DetectionSystem
             {
                 if (_yBoundingBoxSize == value) return;
                 _yBoundingBoxSize = value;
-                if (OnSizeChanged != null)
-                    OnSizeChanged(_yBoundingBoxSize);
             }
         }
-        [BoxGroup("Detection View Settings", true, true)]
-        [Tooltip("The Z size of this detection view in the Grid.")]
-        [SerializeField]
-        private int _zBoundingBoxSize = 1;
-        public int zBoundingBoxSize
-        {
-            get => _zBoundingBoxSize;
-            set
-            {
-                if (_zBoundingBoxSize == value) return;
-                _zBoundingBoxSize = value;
-                if (OnSizeChanged != null)
-                    OnSizeChanged(_zBoundingBoxSize);
-            }
-        }
-        [TitleGroup("Color Settings", alignment: TitleAlignments.Centered), Tooltip("Color Settings of nodes and paths")]
-        public Color defaultColor = Color.white;
-        public Color hoveredColor = Color.red;
-        public Color selectedColor = Color.green;
 
-        public delegate void OnSizeChangedDelegate(int newBoundingBoxSize);
-        public event OnSizeChangedDelegate OnSizeChanged;
 
-        private void OnDetectionViewChangedHandler(Vector2Int newGridPosition, int newGridHeight)
-        {
-        }
         public void CalculateDetectionView(Dictionary<string, object> message)
         {
             if ((GridEntity)message["GridEntity"] == currentGridEntity)
             {
-                for (int i = 1; i <= xBoundingBoxSize; i++)
+                for (int height = 2; height <= yBoundingBoxSize; height = height + 2)
                 {
-                    if (i == 1)
+                    for (int i = 1; i <= xzBoundingBoxSize; i++)
                     {
-                        Vector2Int targetGridEntity = new Vector2Int(currentGridEntity.gridPosition.x, currentGridEntity.gridPosition.y);
-                        List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(targetGridEntity, (int)currentGridEntity.gridHeight);
-                        if (gridEntitiesAtPosition.Count > 0)
-                        {
-                            foreach (GridEntity gridEntity in gridEntitiesAtPosition)
-                            {
-                                if (gridEntity != currentGridEntity)
-                                    allGridEntitiesInView.Add(gridEntity);
-                            }
-                            
-                        }
-                    }
-                    if (i == 2)
-                    {
-                        foreach (Vector2Int direction in eightDirections)
-                        {
-                            Vector2Int targetGridEntity = new Vector2Int(currentGridEntity.gridPosition.x, currentGridEntity.gridPosition.y) + direction;
-                            List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(targetGridEntity, (int)currentGridEntity.gridHeight);
-                            if (gridEntitiesAtPosition.Count > 0)
-                            {
-                                allGridEntitiesInView.Add(gridEntitiesAtPosition[0]);
-                            }
-                        }
-                    }
-                    if (i > 2)
-                    {
-                        for (int n = 0; n < eightDirections.Length; n++)
-                        {
-                            Vector2Int currentTargetEntity = new Vector2Int();
-                            Vector2Int nextTargetEntity = new Vector2Int();
-                            if (n == (eightDirections.Length - 1))
-                            {
-                                currentTargetEntity = new Vector2Int(currentGridEntity.gridPosition.x, currentGridEntity.gridPosition.y) + eightDirections[n] * (i - 1);
-                                nextTargetEntity = new Vector2Int(currentGridEntity.gridPosition.x, currentGridEntity.gridPosition.y) + eightDirections[0] * (i - 1);
-                            }
-                            else
-                            {
-                                currentTargetEntity = new Vector2Int(currentGridEntity.gridPosition.x, currentGridEntity.gridPosition.y) + eightDirections[n] * (i - 1);
-                                nextTargetEntity = new Vector2Int(currentGridEntity.gridPosition.x, currentGridEntity.gridPosition.y) + eightDirections[n + 1] * (i - 1);
-                            }
-
-                            Vector2Int value = nextTargetEntity - currentTargetEntity;
-                            if (currentTargetEntity.x != nextTargetEntity.x)
-                            {
-                                for (int n2 = 1; n2 <= Mathf.Abs(value.x); n2++)
-                                {
-                                    if (value.x < 0)
-                                    {
-                                        Vector2Int middlePos = new Vector2Int(currentTargetEntity.x + -n2, currentTargetEntity.y);
-                                        List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(middlePos, (int)currentGridEntity.gridHeight);
-                                        if (gridEntitiesAtPosition.Count > 0)
-                                            allGridEntitiesInView.Add(gridEntitiesAtPosition[0]);
-                                    }
-                                    else
-                                    {
-                                        Vector2Int middlePos = new Vector2Int(currentTargetEntity.x + n2, currentTargetEntity.y);
-                                        List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(middlePos, (int)currentGridEntity.gridHeight);
-                                        if (gridEntitiesAtPosition.Count > 0)
-                                            allGridEntitiesInView.Add(gridEntitiesAtPosition[0]);
-                                    }
-
-                                }
-                            }
-                            if (currentTargetEntity.y != nextTargetEntity.y)
-                            {
-                                for (int n2 = 1; n2 <= Mathf.Abs(value.y); n2++)
-                                {
-                                    if (value.y < 0)
-                                    {
-                                        Vector2Int middlePos = new Vector2Int(currentTargetEntity.x, currentTargetEntity.y + -n2);
-                                        List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(middlePos, (int)currentGridEntity.gridHeight);
-                                        if (gridEntitiesAtPosition.Count > 0)
-                                            allGridEntitiesInView.Add(gridEntitiesAtPosition[0]);
-                                    }
-                                    else
-                                    {
-                                        Vector2Int middlePos = new Vector2Int(currentTargetEntity.x, currentTargetEntity.y + n2);
-                                        List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(middlePos, (int)currentGridEntity.gridHeight);
-                                        if (gridEntitiesAtPosition.Count > 0)
-                                            allGridEntitiesInView.Add(gridEntitiesAtPosition[0]);
-                                    }
-
-                                }
-                            }
-                        }
+                        GridEntity targetEntity = ScanTargetInDetectionView(currentGridEntity, GameplayManager.Instance.controllableMainGridEntity, height, i);
+                        Debug.Log(targetEntity);
+                        if (targetEntity != null)
+                            allGridEntitiesInView.Add(targetEntity);
                     }
                 }
+
                 if (allGridEntitiesInView.Count > 0)
                 {
-                    //activeTiles.Add(currentGridEntity.currentStandingGridTile);
                     currentGridEntity.currentStandingGridTile.gCost = 0;
                     currentGridEntity.currentStandingGridTile.hCost = PathFinding.CalculateDistanceCost(currentGridEntity.currentStandingGridTile, allGridEntitiesInView[0].currentStandingGridTile);
                     var foundPath = PathFinding.FindingPath(currentGridEntity.currentStandingGridTile, allGridEntitiesInView[0].currentStandingGridTile);
                     finalPath = foundPath;
                     allGridEntitiesInView.RemoveAt(0);
+                    GridTile[] allGridTiles = GridManager.Instance.TileHolder.GetComponentsInChildren<GridTile>();
+                    for (int i = 0; i < allGridTiles.Length; i++)
+                    {
+                        PathFinding.ResetDistanceCost(allGridTiles[i]);
+                    }
                 }
             }
         }
+
+        private List<int> ConvertDetectionViewHeightToEntityHeight(int detectionViewHeight)
+        {
+            if (detectionViewHeight == 2)
+            {
+                return new List<int>() { 0, -1 };
+            }
+            if (detectionViewHeight > 2)
+            {
+                //6
+                List<int> result = new List<int>();
+                for (int i = 0; i < detectionViewHeight; i++)
+                {
+                    if (i < detectionViewHeight / 2)
+                    {
+                        result.Add(i);
+                    }
+                    
+                }
+                //result[result.Count];
+            }
+            return null;
+        }
+
+        public static GridEntity ScanTargetInDetectionView(GridEntity currentEntity, GridEntity targetEntity, int gridHeight, int detectionBoundingBoxLength)
+        {
+            // Scan the target in the same grid position of the current grid entity
+            /*
+
+             - - -
+             - * -
+             - - -
+
+             */
+            if (detectionBoundingBoxLength == 1)
+            {
+                Vector2Int targetGridEntity = new Vector2Int(currentEntity.gridPosition.x, currentEntity.gridPosition.y);
+                List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(targetGridEntity, gridHeight);
+                if (gridEntitiesAtPosition.Count > 0)
+                {
+                    foreach (GridEntity gridEntity in gridEntitiesAtPosition)
+                    {
+                        if (gridEntity != currentEntity && gridEntity == targetEntity)
+                            return gridEntity;
+                    }
+                }
+            }
+
+            // Scan the target in the neighbour grid tiles of the current grid entity
+
+            /*
+
+             - * -
+             * * *
+             - * -
+
+             */
+            if (detectionBoundingBoxLength == 2)
+            {
+                foreach (Vector2Int direction in eightDirections)
+                {
+                    Vector2Int targetGridEntity = new Vector2Int(currentEntity.gridPosition.x, currentEntity.gridPosition.y) + direction;
+                    List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(targetGridEntity, gridHeight);
+                    if (gridEntitiesAtPosition.Count > 0)
+                    {
+                        foreach (GridEntity gridEntity in gridEntitiesAtPosition)
+                        {
+                            if (gridEntity != currentEntity && gridEntity == targetEntity)
+                                return gridEntity;
+                        }
+                    }
+                }
+            }
+
+            // Scan the target in the further neighbour grid tiles of the current grid entity
+
+            /*
+
+             - - - - - - -
+             - * * * * * -
+             - * * * * * -
+             - * * * * * -
+             - * * * * * -
+             - * * * * * -
+             - - - - - - -
+
+             */
+
+            if (detectionBoundingBoxLength > 2)
+            {
+                for (int n = 0; n < eightDirections.Length; n++)
+                {
+                    Vector2Int currentTargetEntity = new Vector2Int();
+                    Vector2Int nextTargetEntity = new Vector2Int();
+                    // Get all of the grid positions between the last direction and the first direction in the eight directions array
+                    if (n == (eightDirections.Length - 1))
+                    {
+                        currentTargetEntity = new Vector2Int(currentEntity.gridPosition.x, currentEntity.gridPosition.y) + eightDirections[n] * (detectionBoundingBoxLength - 1);
+                        nextTargetEntity = new Vector2Int(currentEntity.gridPosition.x, currentEntity.gridPosition.y) + eightDirections[0] * (detectionBoundingBoxLength - 1);
+                    }
+                    // The other directions
+                    else
+                    {
+                        currentTargetEntity = new Vector2Int(currentEntity.gridPosition.x, currentEntity.gridPosition.y) + eightDirections[n] * (detectionBoundingBoxLength - 1);
+                        nextTargetEntity = new Vector2Int(currentEntity.gridPosition.x, currentEntity.gridPosition.y) + eightDirections[n + 1] * (detectionBoundingBoxLength - 1);
+                    }
+
+                    Vector2Int value = nextTargetEntity - currentTargetEntity;
+                    if (currentTargetEntity.x != nextTargetEntity.x)
+                    {
+                        for (int n2 = 1; n2 <= Mathf.Abs(value.x); n2++)
+                        {
+                            if (value.x < 0)
+                            {
+                                Vector2Int middlePos = new Vector2Int(currentTargetEntity.x + -n2, currentTargetEntity.y);
+                                List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(middlePos, gridHeight);
+                                if (gridEntitiesAtPosition.Count > 0)
+                                {
+                                    foreach (GridEntity gridEntity in gridEntitiesAtPosition)
+                                    {
+                                        if (gridEntity != currentEntity && gridEntity == targetEntity)
+                                            return gridEntity;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Vector2Int middlePos = new Vector2Int(currentTargetEntity.x + n2, currentTargetEntity.y);
+                                List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(middlePos, gridHeight);
+                                if (gridEntitiesAtPosition.Count > 0)
+                                {
+                                    foreach (GridEntity gridEntity in gridEntitiesAtPosition)
+                                    {
+                                        if (gridEntity != currentEntity && gridEntity == targetEntity)
+                                            return gridEntity;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    if (currentTargetEntity.y != nextTargetEntity.y)
+                    {
+                        for (int n2 = 1; n2 <= Mathf.Abs(value.y); n2++)
+                        {
+                            if (value.y < 0)
+                            {
+                                Vector2Int middlePos = new Vector2Int(currentTargetEntity.x, currentTargetEntity.y + -n2);
+                                List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(middlePos, gridHeight);
+                                if (gridEntitiesAtPosition.Count > 0)
+                                {
+                                    foreach (GridEntity gridEntity in gridEntitiesAtPosition)
+                                    {
+                                        if (gridEntity != currentEntity && gridEntity == targetEntity)
+                                            return gridEntity;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                Vector2Int middlePos = new Vector2Int(currentTargetEntity.x, currentTargetEntity.y + n2);
+                                List<GridEntity> gridEntitiesAtPosition = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(middlePos, gridHeight);
+                                if (gridEntitiesAtPosition.Count > 0)
+                                {
+                                    foreach (GridEntity gridEntity in gridEntitiesAtPosition)
+                                    {
+                                        if (gridEntity != currentEntity && gridEntity == targetEntity)
+                                            return gridEntity;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
         private void Awake() 
         {
             currentGridEntity = GetComponent<GridEntity>();
@@ -205,84 +278,16 @@ namespace Bottle.Core.DetectionSystem
         }
         private void Update()
         {
-            //if (xBoundingBoxSize % 2 == 0)
-            //{
-            //    xBoundingBoxSize = xBoundingBoxSize + 1;
-            //}
-            //if (zBoundingBoxSize % 2 == 0)
-            //{
-            //    zBoundingBoxSize = zBoundingBoxSize + 1;
-            //}
             if (yBoundingBoxSize % 2 != 0)
             {
                 yBoundingBoxSize = yBoundingBoxSize + 1;
             }
-                
         }
-
-        private int CalculateDistanceCost(GridTile a, GridTile b)
-        {
-            int xDistance = Mathf.Abs(a.gridPosition.x - b.gridPosition.x);
-            int yDistance = Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
-            int remaining = Mathf.Abs(xDistance - yDistance);
-            return remaining;
-        }
-
-        //private void FindingPath()
-        //{
-        //    while (activeTiles.Count > 0)
-        //    {
-        //        var currentNode = activeTiles.OrderByDescending(x => x.fCost).Last();
-        //        // Path is found
-        //        if (currentNode == allGridEntitiesInView[0].currentStandingGridTile)
-        //        {
-        //            finalPath.Clear();
-        //            finalPath.Add(allGridEntitiesInView[0].currentStandingGridTile);
-        //            var currentTile = allGridEntitiesInView[0].currentStandingGridTile;
-        //            while (currentTile.previousTile != null)
-        //            {
-        //                finalPath.Add(currentTile.previousTile);
-        //                currentTile = currentTile.previousTile;
-        //            }
-        //            finalPath.Reverse();
-        //            //foreach (var eachTile in finalPath)
-        //            //{
-        //            //    GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        //            //    cube.transform.position = new Vector3(eachTile.transform.position.x, eachTile.transform.position.y + 2, eachTile.transform.position.z);
-        //            //}
-        //            allGridEntitiesInView.RemoveAt(0);
-        //            return;
-        //        }
-        //        visitedTiles.Add(currentNode);
-        //        activeTiles.Remove(currentNode);
-        //        foreach (var neighbourNode in GridManager.Instance.GetNeighbourGridTiles(currentNode))
-        //        {
-        //            if (visitedTiles.Contains(neighbourNode))
-        //                continue;
-
-        //            int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
-        //            if (tentativeGCost < neighbourNode.gCost)
-        //            {
-        //                neighbourNode.previousTile = currentNode;
-        //                neighbourNode.gCost = tentativeGCost;
-        //                neighbourNode.hCost = CalculateDistanceCost(neighbourNode, allGridEntitiesInView[0].currentStandingGridTile);
-
-        //                if (!activeTiles.Contains(neighbourNode))
-        //                {
-        //                    activeTiles.Add(neighbourNode);
-        //                }
-        //            }
-        //        }
-        //    }
-        //    Debug.Log("No Path Found!");
-        //}
 
         private void OnValidate()
         {
-            if (xBoundingBoxSize < 1)
-                xBoundingBoxSize = 1;
-            if (zBoundingBoxSize < 1)
-                zBoundingBoxSize = 1;
+            if (xzBoundingBoxSize < 1)
+                xzBoundingBoxSize = 1;
             if (yBoundingBoxSize < 2)
                 yBoundingBoxSize = 2;
         }
@@ -290,7 +295,7 @@ namespace Bottle.Core.DetectionSystem
         void OnDrawGizmos()
         {
             Gizmos.color = new Color(1, 0, 0, 0.3f);
-            Gizmos.DrawCube(transform.position, new Vector3(xBoundingBoxSize + xBoundingBoxSize - 1, yBoundingBoxSize, zBoundingBoxSize + zBoundingBoxSize - 1));
+            Gizmos.DrawCube(transform.position, new Vector3(xzBoundingBoxSize + xzBoundingBoxSize - 1, yBoundingBoxSize, xzBoundingBoxSize + xzBoundingBoxSize - 1));
         }
 #endif
     }

@@ -24,7 +24,7 @@ namespace Bottle.Core.Manager
         private int _turnCount;
 
         [ShowInInspector]
-        private GridEntity _controllableMainGridEntity;
+        public GridEntity controllableMainGridEntity;
 
         public bool isTurnInProgress = false;
 
@@ -113,7 +113,7 @@ namespace Bottle.Core.Manager
             {
                 if (entity.isControllable == true)
                 {
-                    _controllableMainGridEntity = entity;
+                    controllableMainGridEntity = entity;
                     break;
                 }
             }    
