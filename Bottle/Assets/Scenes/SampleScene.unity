@@ -1287,8 +1287,8 @@ MonoBehaviour:
   allGridEntitiesInView: []
   visitedTiles: []
   finalPath: []
-  _xzBoundingBoxSize: 6
-  _yBoundingBoxSize: 6
+  _xzBoundingBoxSize: 4
+  _yBoundingBoxSize: 2
 --- !u!1001 &307865728
 PrefabInstance:
   m_ObjectHideFlags: 0

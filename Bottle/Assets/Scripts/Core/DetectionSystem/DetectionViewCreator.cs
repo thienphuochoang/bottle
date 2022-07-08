@@ -14,11 +14,7 @@ namespace Bottle.Core.DetectionSystem
     {
         private GridEntity currentGridEntity;
         [SerializeField]
-        private List<GridTile> activeTiles = new List<GridTile>();
-        [SerializeField]
         private List<GridEntity> allGridEntitiesInView = new List<GridEntity>();
-        [SerializeField]
-        private List<GridTile> visitedTiles = new List<GridTile>();
         [SerializeField]
         private List<GridTile> finalPath = new List<GridTile>();
         public static Vector2Int[] eightDirections = new Vector2Int[]
@@ -64,16 +60,18 @@ namespace Bottle.Core.DetectionSystem
         {
             if ((GridEntity)message["GridEntity"] == currentGridEntity)
             {
-                for (int height = 2; height <= yBoundingBoxSize; height = height + 2)
+                List<int> convertedHeightList = ConvertDetectionViewHeightToEntityHeight(yBoundingBoxSize);
+                // Scan each grid height
+                foreach (int height in convertedHeightList)
                 {
                     for (int i = 1; i <= xzBoundingBoxSize; i++)
                     {
-                        GridEntity targetEntity = ScanTargetInDetectionView(currentGridEntity, GameplayManager.Instance.controllableMainGridEntity, height, i);
-                        Debug.Log(targetEntity);
+                        GridEntity targetEntity = ScanTargetInDetectionView(currentGridEntity, GameplayManager.Instance.controllableMainGridEntity, (int)currentGridEntity.gridHeight + height, i);
                         if (targetEntity != null)
                             allGridEntitiesInView.Add(targetEntity);
                     }
                 }
+
 
                 if (allGridEntitiesInView.Count > 0)
                 {
@@ -97,19 +95,18 @@ namespace Bottle.Core.DetectionSystem
             {
                 return new List<int>() { 0, -1 };
             }
-            if (detectionViewHeight > 2)
+            else if (detectionViewHeight > 2)
             {
-                //6
                 List<int> result = new List<int>();
-                for (int i = 0; i < detectionViewHeight; i++)
+                for (int i = 0; i < detectionViewHeight / 2; i++)
                 {
-                    if (i < detectionViewHeight / 2)
-                    {
-                        result.Add(i);
-                    }
-                    
+                    result.Add(i);
                 }
-                //result[result.Count];
+                for (int i = 1; i <= detectionViewHeight / 2; i++)
+                {
+                    result.Add(-i);
+                }
+                return result;
             }
             return null;
         }
