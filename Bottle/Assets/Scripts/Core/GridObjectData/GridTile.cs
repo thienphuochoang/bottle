@@ -18,14 +18,9 @@ namespace Bottle.Core.GridObjectData
         [ShowInInspector]
         public List<GridEntity> currentStandingGridEntity;
 
-        [DisableIf("isStandable", true)]
         [BoxGroup("Grid Tile Settings", true, true)]
         [Tooltip("Is this Grid Tile a ramp?")]
         public bool isARamp = false;
-        [DisableIf("isStandable", true)]
-        [BoxGroup("Grid Tile Settings", true, true)]
-        [Tooltip("Is this Grid Tile a ramp?")]
-        public GameplayManager.GlobalDirection stepOnDirection = GameplayManager.GlobalDirection.NONE;
 
 
         // These are properties for path finding

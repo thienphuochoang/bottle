@@ -44,14 +44,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uID: 23186
+  _uID: 78212
   _gridPosition: {x: 0, y: 0}
   _gridHeight: 0
   pivotOffset: {x: 0, y: 0, z: 0}
   isBlockable: 1
-  isStandable: 0
+  isStandable: 1
+  currentStandingGridEntity: []
   isARamp: 1
-  stepOnDirection: 0
+  gCost: 2147483647
+  hCost: 0
+  cameFromGridTile: {fileID: 0}
 --- !u!1001 &4272868018629101723
 PrefabInstance:
   m_ObjectHideFlags: 0

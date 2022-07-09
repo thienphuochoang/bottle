@@ -13,6 +13,7 @@ namespace Bottle.Core.DetectionSystem
     public class DetectionViewCreator : MonoBehaviour
     {
         private GridEntity currentGridEntity;
+        public GridEntity targetGridEntity;
         [SerializeField]
         private List<GridEntity> allGridEntitiesInView = new List<GridEntity>();
         [SerializeField]
@@ -66,7 +67,7 @@ namespace Bottle.Core.DetectionSystem
                 {
                     for (int i = 1; i <= xzBoundingBoxSize; i++)
                     {
-                        GridEntity targetEntity = ScanTargetInDetectionView(currentGridEntity, GameplayManager.Instance.controllableMainGridEntity, (int)currentGridEntity.gridHeight + height, i);
+                        GridEntity targetEntity = ScanTargetInDetectionView(currentGridEntity, targetGridEntity, (int)currentGridEntity.gridHeight + height, i);
                         if (targetEntity != null)
                             allGridEntitiesInView.Add(targetEntity);
                     }
@@ -291,8 +292,8 @@ namespace Bottle.Core.DetectionSystem
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
-            Gizmos.color = new Color(1, 0, 0, 0.3f);
-            Gizmos.DrawCube(transform.position, new Vector3(xzBoundingBoxSize + xzBoundingBoxSize - 1, yBoundingBoxSize, xzBoundingBoxSize + xzBoundingBoxSize - 1));
+            //Gizmos.color = new Color(1, 0, 0, 0.3f);
+            //Gizmos.DrawCube(transform.position, new Vector3(xzBoundingBoxSize + xzBoundingBoxSize - 1, yBoundingBoxSize, xzBoundingBoxSize + xzBoundingBoxSize - 1));
         }
 #endif
     }

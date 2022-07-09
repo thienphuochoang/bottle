@@ -36,6 +36,11 @@ namespace Bottle.Core.PathSystem
                         currentTile = currentTile.cameFromGridTile;
                     }
                     finalPath.Reverse();
+                    foreach (var tile in finalPath)
+                    {
+                        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                        cube.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 2, tile.transform.position.z);
+                    }
                     return finalPath;
                 }
                 visitedTiles.Add(currentNode);
