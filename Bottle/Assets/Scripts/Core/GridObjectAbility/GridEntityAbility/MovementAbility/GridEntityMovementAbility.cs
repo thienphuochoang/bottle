@@ -329,47 +329,43 @@ namespace Bottle.Core.GridObjectAbility
 
         private GridTile GetTargetTile(MovementDirections theDirection)
         {
+            // Check if entity is standing on a ramp tile
             if(currentGridEntity.currentStandingGridTile.isARamp == true)
             {
-                Vector3Int targetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight + 1, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
-                List<GridTile> targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
+                // The entity needs to move to a grid tile with higher grid height
+                Vector3Int targetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
+                List<GridTile> higherTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
+                var (blockableGridTiles, blockableGridEntities) = GetBlockableGridObjects(currentGridEntity, theDirection, 1);
+                if (higherTargetTile.Count > 0)
+                {
+                    if (blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
+                    {
+                        return higherTargetTile[0];
+                    }
+                }
+                else
+                {
+                    List<GridTile> lowerTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y - 1);
+                    if (lowerTargetTile.Count > 0)
+                    {
+                        return lowerTargetTile[0];
+                    }
+                }
             }
+            // The grid entity is moving on tiles with unchanged grid height
             else
             {
                 Vector3Int targetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight - 1, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
-                //Vector3Int blockableGridObjectPosition = new Vector3Int(_currentGridEntity.gridPosition.x, (int)_currentGridEntity.gridHeight, _currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
                 List<GridTile> targetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(targetGridPosition.x, targetGridPosition.z), targetGridPosition.y);
-                //var blockableGridTiles = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
-                //var blockableGridEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
-                var (blockableGridTiles, blockableGridEntities) = GetBlockableGridObjects(currentGridEntity, theDirection);
+                var (blockableGridTiles, blockableGridEntities) = GetBlockableGridObjects(currentGridEntity, theDirection, 0);
                 if (targetTile.Count > 0)
                 {
-                    // When the controllable entity going up the ramp
                     if (blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
                     {
-                        if (currentGridEntity.currentStandingGridTile.isARamp == true)
-                        {
-                            Vector3Int nextTargetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight - 1, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection);
-                            var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
-                            Debug.Log(nextTargetGridPosition);
-                            if (nextTargetTile.Count > 0)
-                                return nextTargetTile[0];
-                        }
-                        else
-                        {
-                            if (targetTile[0].isARamp)
-                            {
-                                Debug.Log(targetTile[0]);
-                                //Vector3Int nextTargetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight - 1, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
-                                //var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y + 1);
-                                //if (nextTargetTile.Count > 0)
-                                //    return nextTargetTile[0];
-                                return targetTile[0];
-                            }
-                        }
                         return targetTile[0];
                     }
                 }
+                // The grid entity is moving to a ramp grid tile
                 else
                 {
                     // When the controllable entity going down the ramp
@@ -379,24 +375,19 @@ namespace Bottle.Core.GridObjectAbility
                     {
                         if (targetRampTile[0].isARamp)
                         {
-                            //Vector3Int nextTargetGridPosition = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight - 2, currentGridEntity.gridPosition.y) + GetValueFromDirection(theDirection, GameplayManager.Instance.globalFrontDirection) * 2;
-                            //var nextTargetTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(nextTargetGridPosition.x, nextTargetGridPosition.z), nextTargetGridPosition.y);
-                            //if (nextTargetTile.Count > 0)
-                            //    return nextTargetTile[0];
-                            return targetTile[0];
+                            return targetRampTile[0];
                         }
                     }
                 }
             }
-
             return null;
         }
 
-        public static (List<GridTile> gridTiles, List<GridEntity> gridEntities) GetBlockableGridObjects(GridEntity theMovingGridEntity, MovementDirections movementDirection)
+        public static (List<GridTile> gridTiles, List<GridEntity> gridEntities) GetBlockableGridObjects(GridEntity theMovingGridEntity, MovementDirections movementDirection, int heightDifferenceValue)
         {
             Vector3Int blockableGridObjectPosition = new Vector3Int(theMovingGridEntity.gridPosition.x, (int)theMovingGridEntity.gridHeight, theMovingGridEntity.gridPosition.y) + GetValueFromDirection(movementDirection, GameplayManager.Instance.globalFrontDirection);
-            List<GridTile> blockableGridTiles = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
-            List<GridEntity> blockableGridEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y);
+            List<GridTile> blockableGridTiles = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y + heightDifferenceValue);
+            List<GridEntity> blockableGridEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y + heightDifferenceValue);
             List<GridTile> blockedGridTiles = new List<GridTile>();
             List<GridEntity> blockedGridEntities = new List<GridEntity>();
             if (blockableGridTiles.Count > 0)
