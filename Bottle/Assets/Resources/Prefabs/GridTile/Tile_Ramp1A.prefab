@@ -47,7 +47,7 @@ MonoBehaviour:
   _uID: 23080
   _gridPosition: {x: 0, y: 0}
   _gridHeight: 0
-  pivotOffset: {x: 0, y: 0, z: 0}
+  pivotOffset: {x: 0, y: -0.5, z: 0}
   isBlockable: 1
   isStandable: 1
   currentStandingGridEntity: []

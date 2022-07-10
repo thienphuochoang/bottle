@@ -8,12 +8,15 @@ namespace Bottle.Core.PathSystem
 {
     public class PathFinding
     {
+        public static List<Vector2Int> offsetGridPositionValueList = new List<Vector2Int>() { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0) };
+        public static List<int> offsetGridHeightValueList = new List<int>() { 0, -1, 1 };
         public static int CalculateDistanceCost(GridTile a, GridTile b)
         {
             int xDistance = Mathf.Abs(a.gridPosition.x - b.gridPosition.x);
             int yDistance = Mathf.Abs(a.gridPosition.y - b.gridPosition.y);
+            int heightDistance = (int)Mathf.Abs(a.gridHeight - b.gridHeight);
             int result = Mathf.Abs(xDistance - yDistance);
-            return result;
+            return result * 10 + heightDistance * 15;
         }
         public static List<GridTile> FindingPath(GridTile startNode, GridTile endNode)
         {
@@ -45,7 +48,7 @@ namespace Bottle.Core.PathSystem
                 }
                 visitedTiles.Add(currentNode);
                 activeTiles.Remove(currentNode);
-                foreach (var neighbourNode in GridManager.Instance.GetNeighbourGridTiles(currentNode))
+                foreach (var neighbourNode in GridManager.Instance.GetNeighbourGridTiles(currentNode, offsetGridPositionValueList, offsetGridHeightValueList))
                 {
                     if (visitedTiles.Contains(neighbourNode))
                         continue;
