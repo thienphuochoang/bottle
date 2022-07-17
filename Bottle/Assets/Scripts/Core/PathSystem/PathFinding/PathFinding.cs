@@ -9,7 +9,7 @@ namespace Bottle.Core.PathSystem
     public class PathFinding
     {
         public static List<Vector2Int> offsetGridPositionValueList = new List<Vector2Int>() { new Vector2Int(0, 1), new Vector2Int(0, -1), new Vector2Int(1, 0), new Vector2Int(-1, 0) };
-        public static List<int> offsetGridHeightValueList = new List<int>() { 0, -1, 1 };
+        public static List<int> offsetGridHeightValueList = new List<int>() { 1, 0, -1 };
         public static int CalculateDistanceCost(GridTile a, GridTile b)
         {
             int xDistance = Mathf.Abs(a.gridPosition.x - b.gridPosition.x);
@@ -24,6 +24,7 @@ namespace Bottle.Core.PathSystem
             List<GridTile> visitedTiles = new List<GridTile>();
             List<GridTile> finalPath = new List<GridTile>();
             activeTiles.Add(startNode);
+            bool isFromDownToUpperHeight = startNode.gridHeight - endNode.gridHeight > 0 ? false : true;
             while (activeTiles.Count > 0)
             {
                 var currentNode = activeTiles.OrderByDescending(x => x.fCost).Last();
@@ -39,7 +40,7 @@ namespace Bottle.Core.PathSystem
                         currentTile = currentTile.cameFromGridTile;
                     }
                     finalPath.Reverse();
-                    foreach (var tile in finalPath)
+                    foreach (GridTile tile in finalPath)
                     {
                         GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
                         cube.transform.position = new Vector3(tile.transform.position.x, tile.transform.position.y + 2, tile.transform.position.z);
@@ -48,7 +49,7 @@ namespace Bottle.Core.PathSystem
                 }
                 visitedTiles.Add(currentNode);
                 activeTiles.Remove(currentNode);
-                foreach (var neighbourNode in GridManager.Instance.GetNeighbourGridTiles(currentNode, offsetGridPositionValueList, offsetGridHeightValueList))
+                foreach (var neighbourNode in GridManager.Instance.GetNeighbourGridTiles(currentNode, offsetGridPositionValueList, offsetGridHeightValueList, isFromDownToUpperHeight))
                 {
                     if (visitedTiles.Contains(neighbourNode))
                         continue;
@@ -56,13 +57,33 @@ namespace Bottle.Core.PathSystem
                     int tentativeGCost = currentNode.gCost + CalculateDistanceCost(currentNode, neighbourNode);
                     if (tentativeGCost < neighbourNode.gCost)
                     {
-                        neighbourNode.cameFromGridTile = currentNode;
-                        neighbourNode.gCost = tentativeGCost;
-                        neighbourNode.hCost = CalculateDistanceCost(neighbourNode, endNode);
-
-                        if (!activeTiles.Contains(neighbourNode))
+                        if (isFromDownToUpperHeight == true)
                         {
-                            activeTiles.Add(neighbourNode);
+                            neighbourNode.cameFromGridTile = currentNode;
+                            neighbourNode.gCost = tentativeGCost;
+                            neighbourNode.hCost = CalculateDistanceCost(neighbourNode, endNode);
+
+                            if (!activeTiles.Contains(neighbourNode))
+                            {
+                                activeTiles.Add(neighbourNode);
+                            }
+                        }
+                        else
+                        {
+                            if (neighbourNode.cameFromGridTile != null)
+                            {
+                            }
+                            else
+                            {
+                                neighbourNode.cameFromGridTile = currentNode;
+                            }
+                            neighbourNode.gCost = tentativeGCost;
+                            neighbourNode.hCost = CalculateDistanceCost(neighbourNode, endNode);
+
+                            if (!activeTiles.Contains(neighbourNode))
+                            {
+                                activeTiles.Add(neighbourNode);
+                            }
                         }
                     }
                 }
