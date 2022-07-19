@@ -147,7 +147,7 @@ namespace Bottle.Core.Manager
         {
             EventManager.Instance.StartListening("ChangeMainControllableGridEntity", GetControllableMainGridEntity);
             EventManager.Instance.StartListening("ChangeMainControllableGridEntityPosition", UpdateGameTurn);
-            EventManager.Instance.StartListening("RecalculateDetectionView", DetectionView.CalculateDetectionView);
+            EventManager.Instance.StartListening("RecalculateDetectionView", DetectionView.CheckTargetInView);
         }
     }
 }

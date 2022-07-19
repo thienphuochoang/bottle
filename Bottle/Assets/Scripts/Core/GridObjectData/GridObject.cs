@@ -35,7 +35,13 @@ namespace Bottle.Core.GridObjectData
                 if (OnPositionChanged != null)
                 {
                     OnPositionChanged(_gridPosition, (int)_gridHeight);
-                    EventManager.Instance.TriggerEvent("RecalculateDetectionView", new Dictionary<string, object> { { "GridEntity", this } });
+                    if (GetComponent<DetectionViewCreator>() != null)
+                    {
+                        EventManager.Instance.TriggerEvent("RecalculateDetectionView", new Dictionary<string, object> { { "CurrentGridEntity", this }, 
+                            { "TargetGridEntity", GameplayManager.Instance.controllableMainGridEntity }, 
+                            { "DetectionViewXZBoundingBoxSize", GetComponent<DetectionViewCreator>().xzBoundingBoxSize}, 
+                            { "DetectionViewYBoundingBoxSize", GetComponent<DetectionViewCreator>().yBoundingBoxSize}});
+                    }
                 }    
             }
         }
@@ -57,7 +63,13 @@ namespace Bottle.Core.GridObjectData
                 if (OnPositionChanged != null)
                 {
                     OnPositionChanged(_gridPosition, (int)_gridHeight);
-                    //EventManager.Instance.TriggerEvent("RecalculateDetectionView", new Dictionary<string, object> { { "GridEntity", this } });
+                    if (GetComponent<DetectionViewCreator>() != null)
+                    {
+                        EventManager.Instance.TriggerEvent("RecalculateDetectionView", new Dictionary<string, object> { { "CurrentGridEntity", this }, 
+                            { "TargetGridEntity", GameplayManager.Instance.controllableMainGridEntity }, 
+                            { "DetectionViewXZBoundingBoxSize", GetComponent<DetectionViewCreator>().xzBoundingBoxSize}, 
+                            { "DetectionViewYBoundingBoxSize", GetComponent<DetectionViewCreator>().yBoundingBoxSize}});
+                    }
                 }
             }
         }

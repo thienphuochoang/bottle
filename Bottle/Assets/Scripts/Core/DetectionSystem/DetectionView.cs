@@ -9,14 +9,9 @@ using System.Linq;
 using Bottle.Core.PathSystem;
 namespace Bottle.Core.DetectionSystem
 {
-    [ExecuteInEditMode]
     public class DetectionView
     {
-        [SerializeField]
-        private List<GridEntity> allGridEntitiesInView = new List<GridEntity>();
-        [SerializeField]
-        private List<GridTile> finalPath = new List<GridTile>();
-        public static Vector2Int[] eightDirections = new Vector2Int[]
+        public static readonly Vector2Int[] eightDirections = new Vector2Int[]
         {
             new Vector2Int(0, 1),
             new Vector2Int(1, 1),
@@ -29,46 +24,49 @@ namespace Bottle.Core.DetectionSystem
         };
 
 
-        public static void CalculateDetectionView(Dictionary<string, object> message, GridEntity currentGridEntity, GridEntity targetGridEntity)
+        public static void CheckTargetInView(Dictionary<string, object> message)
         {
-            if ((GridEntity)message["GridEntity"] == currentGridEntity)
+            GridEntity currentGridEntity = (GridEntity)message["CurrentGridEntity"];
+            GridEntity targetGridEntity = (GridEntity)message["TargetGridEntity"];
+            int yBoundingBoxSize = (int)message["DetectionViewYBoundingBoxSize"];
+            int xzBoundingBoxSize = (int)message["DetectionViewXZBoundingBoxSize"];
+            bool isTargetEntityFounded = false;
+            List<int> convertedHeightList = ConvertDetectionViewHeightToEntityHeight(yBoundingBoxSize);
+            // Scan each grid height
+            foreach (int height in convertedHeightList)
             {
-                List<int> convertedHeightList = ConvertDetectionViewHeightToEntityHeight(yBoundingBoxSize);
-                // Scan each grid height
-                foreach (int height in convertedHeightList)
+                for (int i = 1; i <= xzBoundingBoxSize; i++)
                 {
-                    for (int i = 1; i <= xzBoundingBoxSize; i++)
+                    GridEntity targetEntity = ScanTargetInDetectionView(currentGridEntity, targetGridEntity, (int)currentGridEntity.gridHeight + height, i);
+                    if (targetEntity != null)
                     {
-                        GridEntity targetEntity = ScanTargetInDetectionView(currentGridEntity, targetGridEntity, (int)currentGridEntity.gridHeight + height, i);
-                        if (targetEntity != null)
-                            allGridEntitiesInView.Add(targetEntity);
-                    }
-                }
-
-
-                if (allGridEntitiesInView.Count > 0)
-                {
-                    currentGridEntity.currentStandingGridTile.gCost = 0;
-                    currentGridEntity.currentStandingGridTile.hCost = PathFinding.CalculateDistanceCost(currentGridEntity.currentStandingGridTile, allGridEntitiesInView[0].currentStandingGridTile);
-                    var foundPath = PathFinding.FindingPath(currentGridEntity.currentStandingGridTile, allGridEntitiesInView[0].currentStandingGridTile);
-                    finalPath = foundPath;
-                    allGridEntitiesInView.RemoveAt(0);
-                    GridTile[] allGridTiles = GridManager.Instance.TileHolder.GetComponentsInChildren<GridTile>();
-                    for (int i = 0; i < allGridTiles.Length; i++)
-                    {
-                        PathFinding.ResetDistanceCost(allGridTiles[i]);
+                        isTargetEntityFounded = true;
+                        break;
                     }
                 }
             }
+
+
+            // if (isTargetEntityFounded)
+            // {
+            //     currentGridEntity.currentStandingGridTile.gCost = 0;
+            //     currentGridEntity.currentStandingGridTile.hCost = PathFinding.CalculateDistanceCost(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
+            //     List<GridTile> finalPath = PathFinding.FindingPath(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
+            //     GridTile[] allGridTiles = GridManager.Instance.TileHolder.GetComponentsInChildren<GridTile>();
+            //     for (int i = 0; i < allGridTiles.Length; i++)
+            //     {
+            //         PathFinding.ResetDistanceCost(allGridTiles[i]);
+            //     }
+            // }
         }
 
-        private List<int> ConvertDetectionViewHeightToEntityHeight(int detectionViewHeight)
+        private static List<int> ConvertDetectionViewHeightToEntityHeight(int detectionViewHeight)
         {
             if (detectionViewHeight == 2)
             {
-                return new List<int>() { 0, -1 };
+                return new List<int> { 0, -1 };
             }
-            else if (detectionViewHeight > 2)
+            if (detectionViewHeight > 2)
             {
                 List<int> result = new List<int>();
                 for (int i = 0; i < detectionViewHeight / 2; i++)
