@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -1362,6 +1362,21 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 2024445348716748897, guid: c0871dae6a8643244bda0174631552cb, type: 3}
   m_PrefabInstance: {fileID: 842128179}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &279789924
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 279789923}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41f9ec588eaa32941a860050d8648ea9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHidingGizmoWhenDeselect: 0
+  _xzBoundingBoxSize: 1
+  _yBoundingBoxSize: 2
 --- !u!114 &279789927
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1390,7 +1405,7 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 1
     - Name: 
       Entry: 7
       Data: 1|Bottle.Core.GridObjectAbility.GridEntityMovementAbility, Assembly-CSharp
@@ -1419,40 +1434,11 @@ MonoBehaviour:
       Entry: 8
       Data: 
     - Name: 
-      Entry: 7
-      Data: 2|Bottle.Core.GridObjectAbility.GridEntityInteractAbility, Assembly-CSharp
-    - Name: gridEntityAbilitySettings
-      Entry: 6
-      Data: 
-    - Name: currentGridEntity
-      Entry: 6
-      Data: 
-    - Name: 
-      Entry: 8
-      Data: 
-    - Name: 
       Entry: 13
       Data: 
     - Name: 
       Entry: 8
       Data: 
---- !u!114 &279789928
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 279789923}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57403e93dfa73384c9f8f591e17315c8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  targetGridEntity: {fileID: 338947508}
-  allGridEntitiesInView: []
-  finalPath: []
-  _xzBoundingBoxSize: 8
-  _yBoundingBoxSize: 4
 --- !u!1001 &307865728
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1802,17 +1788,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 830955856e7007a40a3a12e41ca3702d, type: 3}
---- !u!114 &338947508 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 4690770049057008018, guid: 4651fdbd4bf1db7429fdade8d59b586c, type: 3}
-  m_PrefabInstance: {fileID: 272463792}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 467395081}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ae0337436b621c46964711fdad24d7c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &345187021
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3717,7 +3692,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2021183094770717879, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -6.5
+      value: -7.5
       objectReference: {fileID: 0}
     - target: {fileID: 2021183094770717879, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: m_LocalPosition.y
@@ -3725,7 +3700,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2021183094770717879, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.5
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 2021183094770717879, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: m_LocalRotation.w
@@ -3761,7 +3736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: _uID
-      value: -2336
+      value: -2478
       objectReference: {fileID: 0}
     - target: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: _gridHeight
@@ -3769,11 +3744,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: _gridPosition.x
-      value: -9
+      value: -8
       objectReference: {fileID: 0}
     - target: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
       propertyPath: _gridPosition.y
-      value: -3
+      value: -1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c0871dae6a8643244bda0174631552cb, type: 3}

@@ -9,11 +9,11 @@ namespace Bottle.Core.GridObjectAbility
 {
     public class GridEntityInteractAbility : GridEntityAbility
     {
+        private GridEntityInteractAbilitySettings _settings;
         [BoxGroup("Interact Ability Settings")]
         [Tooltip("The current Grid Entity which this grid object is interacting")]
         [ShowInInspector]
         private GridEntity _currentInteractingGridObject;
-        private GridEntityInteractAbilitySettings _settings;
         public GridEntity currentInteractingGridObject
         {
             get => _currentInteractingGridObject;

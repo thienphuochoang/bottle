@@ -9,6 +9,8 @@ using Newtonsoft.Json;
 using System.IO;
 using Bottle.Extensions.Helper;
 using Bottle.Core.GridObjectAbility;
+using Bottle.Core.DetectionSystem;
+using System.Linq;
 namespace Bottle.Core.Manager
 {
     public class GameplayManager : PersistentObject<GameplayManager>
@@ -69,7 +71,6 @@ namespace Bottle.Core.Manager
 
         public void UpdateGameTurn(Dictionary<string, object> message)
         {
-            Debug.Log("Ahihi");
             currentTurn += 1;
             _turnCount += 1;
         }
@@ -129,8 +130,7 @@ namespace Bottle.Core.Manager
         {
             base.Start();
             GetControllableMainGridEntity(null);
-            EventManager.Instance.StartListening("ChangeMainControllableGridEntity", GetControllableMainGridEntity);
-            EventManager.Instance.StartListening("ChangeMainControllableGridEntityPosition", UpdateGameTurn);
+            RegisterGlobalEvents();
             SaveSceneState(0);
         }
         private void Update()
@@ -142,6 +142,12 @@ namespace Bottle.Core.Manager
             {
                 File.Delete(DatabaseHelper.sceneStateDatabaseFileName);
             }
+        }
+        private void RegisterGlobalEvents()
+        {
+            EventManager.Instance.StartListening("ChangeMainControllableGridEntity", GetControllableMainGridEntity);
+            EventManager.Instance.StartListening("ChangeMainControllableGridEntityPosition", UpdateGameTurn);
+            EventManager.Instance.StartListening("RecalculateDetectionView", DetectionView.CalculateDetectionView);
         }
     }
 }
