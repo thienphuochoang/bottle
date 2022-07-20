@@ -9,7 +9,6 @@ using Newtonsoft.Json;
 using System.IO;
 using Bottle.Extensions.Helper;
 using Bottle.Core.GridObjectAbility;
-using Bottle.Core.DetectionSystem;
 using System.Linq;
 namespace Bottle.Core.Manager
 {
@@ -147,7 +146,6 @@ namespace Bottle.Core.Manager
         {
             EventManager.Instance.StartListening("ChangeMainControllableGridEntity", GetControllableMainGridEntity);
             EventManager.Instance.StartListening("ChangeMainControllableGridEntityPosition", UpdateGameTurn);
-            EventManager.Instance.StartListening("RecalculateDetectionView", DetectionView.CheckTargetInView);
         }
     }
 }
