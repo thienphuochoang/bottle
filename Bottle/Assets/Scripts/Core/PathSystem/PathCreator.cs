@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Bottle.Core.Manager;
 using UnityEngine;
 using UnityEditor;
 using Sirenix.OdinInspector;
 using Bottle.Extensions.Helper;
+using Bottle.Core.GridObjectData;
 namespace Bottle.Core.PathSystem
 {
     public class PathCreator : MonoBehaviour
@@ -19,6 +21,10 @@ namespace Bottle.Core.PathSystem
         public Color defaultColor = Color.white;
         public Color hoveredColor = Color.red;
 
+        public Vector3 ConvertGridPosToNodeLocalPos(GridObject gridObject)
+        {
+            return this.transform.InverseTransformPoint(gridObject.transform.position);
+        }
 
 #if UNITY_EDITOR
 

@@ -45,7 +45,7 @@ namespace Bottle.Core.GridObjectAbility
 
         public override void AbilityStart()
         {
-            EventManager.Instance.StartListening("RecalculateDetectionView", CheckTargetInView);
+            EventManager.Instance.StartListening("RecalculateDetectionView", Chase);
         }
         private static List<int> ConvertDetectionViewHeightToEntityHeight(int detectionViewHeight)
         {
@@ -221,7 +221,7 @@ namespace Bottle.Core.GridObjectAbility
             }
             return null;
         }
-        public void CheckTargetInView(Dictionary<string, object> message)
+        private void Chase(Dictionary<string, object> message)
         {
             GridEntity currentGridEntity = (GridEntity)message["CurrentGridEntity"];
             GridEntity targetGridEntity = (GridEntity)message["TargetGridEntity"];
@@ -248,7 +248,7 @@ namespace Bottle.Core.GridObjectAbility
             {
                 currentGridEntity.currentStandingGridTile.gCost = 0;
                 currentGridEntity.currentStandingGridTile.hCost = PathFinding.CalculateDistanceCost(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
-                List<GridTile> finalPath = PathFinding.FindingPath(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
+                finalPath = PathFinding.FindingPath(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
                 GridTile[] allGridTiles = GridManager.Instance.TileHolder.GetComponentsInChildren<GridTile>();
                 for (int i = 0; i < allGridTiles.Length; i++)
                 {
@@ -257,43 +257,47 @@ namespace Bottle.Core.GridObjectAbility
                 AddNewPathCreator();
             }
         }
-        private void Chase()
-        {
-            finalPath = null;
-            currentGridEntity.currentStandingGridTile.gCost = 0;
-            currentGridEntity.currentStandingGridTile.hCost = PathFinding.CalculateDistanceCost(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
-            finalPath = PathFinding.FindingPath(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
-            GridTile[] allGridTiles = GridManager.Instance.TileHolder.GetComponentsInChildren<GridTile>();
-            for (int i = 0; i < allGridTiles.Length; i++)
-            {
-                PathFinding.ResetDistanceCost(allGridTiles[i]);
-            }
-            isTargetInView = false;
-            AddNewPathCreator();
-        }
+        // private void Chase()
+        // {
+        //     finalPath = null;
+        //     currentGridEntity.currentStandingGridTile.gCost = 0;
+        //     currentGridEntity.currentStandingGridTile.hCost = PathFinding.CalculateDistanceCost(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
+        //     finalPath = PathFinding.FindingPath(currentGridEntity.currentStandingGridTile, targetGridEntity.currentStandingGridTile);
+        //     GridTile[] allGridTiles = GridManager.Instance.TileHolder.GetComponentsInChildren<GridTile>();
+        //     for (int i = 0; i < allGridTiles.Length; i++)
+        //     {
+        //         PathFinding.ResetDistanceCost(allGridTiles[i]);
+        //     }
+        //     isTargetInView = false;
+        //     AddNewPathCreator();
+        // }
 
         private void AddNewPathCreator()
         {
-            foreach (var ahihi in gridEntityAbilityController.availableAbilities)
-            {
-                Debug.Log(ahihi.gridEntityAbilitySettings.GetType());
-            }
             GridEntityMovementAbility movementAbilityRef = (GridEntityMovementAbility)gridEntityAbilityController.availableAbilities.Find(entityAbility =>
-                entityAbility.gridEntityAbilitySettings.GetType() == typeof(GridEntityMovementAbilitySettings));
-             if (movementAbilityRef.currentAssignedPathCreator != null)
-             {
-                 Debug.Log("ahihi");
-                 GameObject pathGameObject = new GameObject(currentGridEntity.name + "_Path");
-                 pathGameObject.transform.position = Vector3.zero;
-             }
+                entityAbility.gridEntityAbilitySettings.GetType() == typeof(GridEntityMovementAbilitySettings)); 
+            if (movementAbilityRef.currentAssignedPathCreator != null) 
+            { 
+
+                movementAbilityRef.currentAssignedPathCreator.nodes = new List<Vector3>();
+                foreach (GridTile tile in finalPath)
+                {
+                    Vector3 localNodePos = movementAbilityRef.currentAssignedPathCreator.ConvertGridPosToNodeLocalPos(tile);
+                    localNodePos.y += 1;
+                    Debug.Log(localNodePos);
+                    movementAbilityRef.currentAssignedPathCreator.nodes.Add(localNodePos);
+                }
+            }
+            else
+            {
+                GameObject pathGameObject = new GameObject(currentGridEntity.name + "_Path"); 
+                pathGameObject.transform.position = Vector3.zero;
+                pathGameObject.AddComponent<PathCreator>();
+            }
         }
 
         public override void AbilityUpdate()
         {
-            // if (isTargetInView && targetGridEntity != null)
-            // {
-            //     Chase();
-            // }
         }
     }
 }
