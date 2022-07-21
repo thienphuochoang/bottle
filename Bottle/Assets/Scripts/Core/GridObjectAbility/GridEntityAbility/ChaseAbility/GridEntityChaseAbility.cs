@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Bottle.Core.GridObjectAbility;
 using Bottle.Core.GridObjectData;
@@ -220,7 +221,7 @@ namespace Bottle.Core.GridObjectAbility
             }
             return null;
         }
-        public static void CheckTargetInView(Dictionary<string, object> message)
+        public void CheckTargetInView(Dictionary<string, object> message)
         {
             GridEntity currentGridEntity = (GridEntity)message["CurrentGridEntity"];
             GridEntity targetGridEntity = (GridEntity)message["TargetGridEntity"];
@@ -253,6 +254,7 @@ namespace Bottle.Core.GridObjectAbility
                 {
                     PathFinding.ResetDistanceCost(allGridTiles[i]);
                 }
+                AddNewPathCreator();
             }
         }
         private void Chase()
@@ -267,6 +269,23 @@ namespace Bottle.Core.GridObjectAbility
                 PathFinding.ResetDistanceCost(allGridTiles[i]);
             }
             isTargetInView = false;
+            AddNewPathCreator();
+        }
+
+        private void AddNewPathCreator()
+        {
+            foreach (var ahihi in gridEntityAbilityController.availableAbilities)
+            {
+                Debug.Log(ahihi.gridEntityAbilitySettings.GetType());
+            }
+            GridEntityMovementAbility movementAbilityRef = (GridEntityMovementAbility)gridEntityAbilityController.availableAbilities.Find(entityAbility =>
+                entityAbility.gridEntityAbilitySettings.GetType() == typeof(GridEntityMovementAbilitySettings));
+             if (movementAbilityRef.currentAssignedPathCreator != null)
+             {
+                 Debug.Log("ahihi");
+                 GameObject pathGameObject = new GameObject(currentGridEntity.name + "_Path");
+                 pathGameObject.transform.position = Vector3.zero;
+             }
         }
 
         public override void AbilityUpdate()

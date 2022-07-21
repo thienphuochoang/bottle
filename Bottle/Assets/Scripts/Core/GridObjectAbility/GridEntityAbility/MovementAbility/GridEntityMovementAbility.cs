@@ -11,8 +11,7 @@ namespace Bottle.Core.GridObjectAbility
     {
         private GridEntityMovementAbilitySettings _settings;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
-        [SerializeField]
-        private PathCreator currentAssignedPathCreator;
+        public PathCreator currentAssignedPathCreator;
         [BoxGroup("Uncontrollable Movement Settings", true, true)]
         //[DisableIf("@currentGridEntity.isControllable", true)]
         [ReadOnly]
