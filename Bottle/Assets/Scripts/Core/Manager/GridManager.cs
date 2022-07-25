@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Bottle.Core.GridObjectAbility;
 using UnityEngine;
 using Bottle.Extensions.Singleton;
 using Bottle.Core.GridObjectData;
@@ -207,14 +208,16 @@ namespace Bottle.Core.Manager
                                 possibleTiles.Add(neighbourTile);
                                 foreach (var tile in GetNeighbourGridTiles(neighbourTile, offsetGridPositionValueList, new List<int>() { -1 }, isFromDownToUpperHeight))
                                 {
-                                    if (isFromDownToUpperHeight == false)
+                                    var (blockableGridTiles, blockableGridEntities) = GridEntityMovementAbility.GetBlockableGridObjects(neighbourTile);
+                                    if (tile.isStandable == true && blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
                                     {
-                                        possibleTiles.Add(tile);
-                                        tile.cameFromGridTile = neighbourTile;
+                                        if (isFromDownToUpperHeight == false)
+                                        {
+                                            possibleTiles.Add(tile);
+                                            tile.cameFromGridTile = neighbourTile;
+                                        }
                                     }
-
                                 }
-                                    
                             }
                             else
                                 possibleTiles.Add(neighbourTile);

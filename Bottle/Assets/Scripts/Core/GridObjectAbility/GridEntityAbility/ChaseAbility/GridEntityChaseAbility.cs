@@ -284,7 +284,6 @@ namespace Bottle.Core.GridObjectAbility
                 {
                     Vector3 localNodePos = movementAbilityRef.currentAssignedPathCreator.ConvertGridPosToNodeLocalPos(tile);
                     localNodePos.y += 1;
-                    Debug.Log(localNodePos);
                     movementAbilityRef.currentAssignedPathCreator.nodes.Add(localNodePos);
                 }
             }

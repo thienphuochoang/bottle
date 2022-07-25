@@ -114,23 +114,29 @@ namespace Bottle.Core.GridObjectAbility
                         Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
                         _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
                         Vector3Int stepPosGridPosition = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currentGridEntity.pivotOffset.y);
-                        Vector3Int rampGridPosition = new Vector3Int(stepPosGridPosition.x, stepPosGridPosition.y - 2, stepPosGridPosition.z);
-                        List<GridTile> checkedRampTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(rampGridPosition.x, rampGridPosition.z), rampGridPosition.y);
-                        if (checkedRampTile.Count > 0)
+                        Debug.Log(direction);
+                        // Vector3Int rampGridPosition = new Vector3Int(stepPosGridPosition.x, stepPosGridPosition.y - 1, stepPosGridPosition.z);
+                        // List<GridTile> checkedRampTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(rampGridPosition.x, rampGridPosition.z), rampGridPosition.y);
+                        // if (checkedRampTile.Count > 0)
+                        // {
+                        if ((direction.x != 0 && direction.y != 0) || (direction.x != 0 && direction.z != 0) ||
+                            (direction.y != 0 && direction.z != 0))
                         {
                             if (direction.x > 1)
                                 direction.x = 1;
-                            else if (direction.x == 1)
+                            else if (direction.x == -1)
                                 direction.x = 0;
                             if (direction.y > 1)
                                 direction.y = 1;
-                            else if (direction.y == 1)
+                            else if (direction.y == -1)
                                 direction.y = 0;
                             if (direction.z > 1)
                                 direction.z = 1;
-                            else if (direction.z == 1)
+                            else if (direction.z == -1)
                                 direction.z = 0;
                         }
+
+                        // }
                         _currentMovementDirection = GetDirectionFromValue(direction, GameplayManager.Instance.globalFrontDirection);
                         _targetTile = GetTargetTile(_currentMovementDirection);
                         if (_targetTile != null && _targetTile.isStandable == true)
@@ -138,7 +144,8 @@ namespace Bottle.Core.GridObjectAbility
                             Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
                             Vector3Int stepPosGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currentGridEntity.pivotOffset.y);
                             Vector3Int nextNodeGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(nextNodeWorldSpacePos, currentGridEntity.pivotOffset.y);
-                            if (stepPosGridData == nextNodeGridData || checkedRampTile.Count > 0)
+                            if (stepPosGridData == nextNodeGridData)
+                            //if (stepPosGridData == nextNodeGridData || checkedRampTile.Count > 0)
                             {
                                 _step = 1;
                                 _currentNode = _currentNode + 1;
@@ -421,6 +428,35 @@ namespace Bottle.Core.GridObjectAbility
             return (blockedGridTiles, blockedGridEntities);
         }
 
+        public static (List<GridTile> gridTiles, List<GridEntity> gridEntities) GetBlockableGridObjects(GridTile checkingTile)
+        {
+            Vector3Int blockableGridObjectPosition = new Vector3Int(checkingTile.gridPosition.x, (int)checkingTile.gridHeight, checkingTile.gridPosition.y);
+            List<GridTile> blockableGridTiles = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y + 1);
+            List<GridEntity> blockableGridEntities = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(new Vector2Int(blockableGridObjectPosition.x, blockableGridObjectPosition.z), blockableGridObjectPosition.y + 1);
+            List<GridTile> blockedGridTiles = new List<GridTile>();
+            List<GridEntity> blockedGridEntities = new List<GridEntity>();
+            if (blockableGridTiles.Count > 0)
+            {
+                foreach (GridTile blockableGridTile in blockableGridTiles)
+                {
+                    if (blockableGridTile.isBlockable)
+                    {
+                        blockedGridTiles.Add(blockableGridTile);
+                    }
+                }
+            }
+            if (blockableGridEntities.Count > 0)
+            {
+                foreach (GridEntity blockableGridEntity in blockableGridEntities)
+                {
+                    if (blockableGridEntity.isBlockable)
+                    {
+                        blockedGridEntities.Add(blockableGridEntity);
+                    }
+                }
+            }
+            return (blockedGridTiles, blockedGridEntities);
+        }
         private MovementDirections GetOppositeMovementDirection(MovementDirections direction)
         {
             switch (direction)
