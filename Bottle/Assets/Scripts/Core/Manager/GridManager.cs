@@ -199,7 +199,13 @@ namespace Bottle.Core.Manager
                                 possibleTiles.Add(neighbourTile);
                             }
                             else if (offsetGridHeightValueList.Count == 1 && offsetGridHeightValueList[0] == -1)
-                                possibleTiles.Add(neighbourTile);
+                            {
+                                var (blockableGridTiles, blockableGridEntities) = GridEntityMovementAbility.GetBlockableGridObjects(neighbourTile);
+                                if (neighbourTile.isStandable == true && blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
+                                {
+                                    possibleTiles.Add(neighbourTile);
+                                }
+                            }
                         }
                         if (offsetGridHeightValue == 0)
                         {
@@ -208,7 +214,7 @@ namespace Bottle.Core.Manager
                                 possibleTiles.Add(neighbourTile);
                                 foreach (var tile in GetNeighbourGridTiles(neighbourTile, offsetGridPositionValueList, new List<int>() { -1 }, isFromDownToUpperHeight))
                                 {
-                                    var (blockableGridTiles, blockableGridEntities) = GridEntityMovementAbility.GetBlockableGridObjects(neighbourTile);
+                                    var (blockableGridTiles, blockableGridEntities) = GridEntityMovementAbility.GetBlockableGridObjects(tile);
                                     if (tile.isStandable == true && blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
                                     {
                                         if (isFromDownToUpperHeight == false)
@@ -220,7 +226,13 @@ namespace Bottle.Core.Manager
                                 }
                             }
                             else
-                                possibleTiles.Add(neighbourTile);
+                            {
+                                var (blockableGridTiles, blockableGridEntities) = GridEntityMovementAbility.GetBlockableGridObjects(neighbourTile);
+                                if (neighbourTile.isStandable == true && blockableGridTiles.Count == 0 && blockableGridEntities.Count == 0)
+                                {
+                                    possibleTiles.Add(neighbourTile);
+                                }
+                            }
                         }
                     }
                 }

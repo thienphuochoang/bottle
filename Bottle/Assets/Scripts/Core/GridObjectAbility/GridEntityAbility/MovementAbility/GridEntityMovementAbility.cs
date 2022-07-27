@@ -119,26 +119,72 @@ namespace Bottle.Core.GridObjectAbility
                         // List<GridTile> checkedRampTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(rampGridPosition.x, rampGridPosition.z), rampGridPosition.y);
                         // if (checkedRampTile.Count > 0)
                         // {
-                        if ((direction.x != 0 && direction.y != 0) || (direction.x != 0 && direction.z != 0) ||
-                            (direction.y != 0 && direction.z != 0))
+                        if (direction.x != 0 && direction.y != 0)
                         {
-                            if (direction.x > 1)
-                                direction.x = 1;
-                            else if (direction.x == -1)
-                                direction.x = 0;
-                            if (direction.y > 1)
-                                direction.y = 1;
-                            else if (direction.y == -1)
-                                direction.y = 0;
-                            if (direction.z > 1)
-                                direction.z = 1;
-                            else if (direction.z == -1)
-                                direction.z = 0;
+                            Vector3 guessingDirection1 = new Vector3(direction.x, 0, 0);
+                            Vector3 guessingDirection2 = new Vector3(0, direction.y, 0);
+                            var guessingMovementDirection1 = GetDirectionFromValue(guessingDirection1, GameplayManager.Instance.globalFrontDirection);
+                            GridTile guessingTargetTile1 = GetTargetTile(guessingMovementDirection1);
+                            if (guessingTargetTile1 != null)
+                            {
+                                if (guessingTargetTile1.isARamp)
+                                {
+                                    _currentMovementDirection = guessingMovementDirection1;
+                                    _targetTile = guessingTargetTile1;
+                                }
+                            }
+                            else
+                            {
+                                _currentMovementDirection = GetDirectionFromValue(guessingDirection2, GameplayManager.Instance.globalFrontDirection);
+                                _targetTile = GetTargetTile(_currentMovementDirection);
+                            }
                         }
-
+                        else if (direction.y != 0 && direction.z != 0)
+                        {
+                            Vector3 guessingDirection1 = new Vector3(0, direction.y, 0);
+                            Vector3 guessingDirection2 = new Vector3(0, 0, direction.z);
+                            var guessingMovementDirection1 = GetDirectionFromValue(guessingDirection1, GameplayManager.Instance.globalFrontDirection);
+                            GridTile guessingTargetTile1 = GetTargetTile(guessingMovementDirection1);
+                            if (guessingTargetTile1 != null)
+                            {
+                                if (guessingTargetTile1.isARamp)
+                                {
+                                    _currentMovementDirection = guessingMovementDirection1;
+                                    _targetTile = guessingTargetTile1;
+                                }
+                            }
+                            else
+                            {
+                                _currentMovementDirection = GetDirectionFromValue(guessingDirection2, GameplayManager.Instance.globalFrontDirection);
+                                _targetTile = GetTargetTile(_currentMovementDirection);
+                            }
+                        }
+                        else if (direction.x != 0 && direction.z != 0)
+                        {
+                            Vector3 guessingDirection1 = new Vector3(direction.x, 0, 0);
+                            Vector3 guessingDirection2 = new Vector3(0, 0, direction.z);
+                            var guessingMovementDirection1 = GetDirectionFromValue(guessingDirection1, GameplayManager.Instance.globalFrontDirection);
+                            GridTile guessingTargetTile1 = GetTargetTile(guessingMovementDirection1);
+                            if (guessingTargetTile1 != null)
+                            {
+                                if (guessingTargetTile1.isARamp)
+                                {
+                                    _currentMovementDirection = guessingMovementDirection1;
+                                    _targetTile = guessingTargetTile1;
+                                }
+                            }
+                            else
+                            {
+                                _currentMovementDirection = GetDirectionFromValue(guessingDirection2, GameplayManager.Instance.globalFrontDirection);
+                                _targetTile = GetTargetTile(_currentMovementDirection);
+                            }
+                        }
                         // }
-                        _currentMovementDirection = GetDirectionFromValue(direction, GameplayManager.Instance.globalFrontDirection);
-                        _targetTile = GetTargetTile(_currentMovementDirection);
+                        else if ((direction.x != 0 && (direction.y == 0 || direction.z == 0)) || (direction.y != 0 && (direction.x == 0 || direction.z == 0)) || (direction.z != 0 && (direction.y == 0 || direction.x == 0)))
+                        {
+                            _currentMovementDirection = GetDirectionFromValue(direction, GameplayManager.Instance.globalFrontDirection);
+                            _targetTile = GetTargetTile(_currentMovementDirection);
+                        }
                         if (_targetTile != null && _targetTile.isStandable == true)
                         {
                             Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
