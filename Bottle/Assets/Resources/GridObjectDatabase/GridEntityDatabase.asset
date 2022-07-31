@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a6427a87a7a564a94ccb077adf9577, type: 3}
   m_Name: GridEntityDatabase
   m_EditorClassIdentifier: 
-  selectedGridBrushIndex: 1
+  selectedGridBrushIndex: 2
   _gridBrushDatas:
   - gridTile: {fileID: 0}
     gridEntity: {fileID: 3690702818722106090, guid: c0871dae6a8643244bda0174631552cb, type: 3}
@@ -21,4 +21,8 @@ MonoBehaviour:
   - gridTile: {fileID: 0}
     gridEntity: {fileID: 4690770049057008018, guid: 4651fdbd4bf1db7429fdade8d59b586c, type: 3}
     scale: 0.25
+    rotation: {x: 0, y: 0, z: 0}
+  - gridTile: {fileID: 0}
+    gridEntity: {fileID: 8248193937089174610, guid: f34b94d8db961454886c3a8c3a8cc0ac, type: 3}
+    scale: 1
     rotation: {x: 0, y: 0, z: 0}

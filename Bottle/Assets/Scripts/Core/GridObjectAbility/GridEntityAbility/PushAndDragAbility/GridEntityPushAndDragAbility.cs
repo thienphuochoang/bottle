@@ -1,13 +1,30 @@
-//using System.Collections;
-//using System.Collections.Generic;
-//using UnityEngine;
-//using Bottle.Core.GridObjectData;
-//using Bottle.Core.Manager;
-//using Sirenix.OdinInspector;
-//namespace Bottle.Core.GridObjectAbility
-//{
-//    public class GridEntityPushAndDragAbility : GridObjectAbility<GridEntity>
-//    {
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using Bottle.Core.GridObjectData;
+using Bottle.Core.Manager;
+using Sirenix.OdinInspector;
+namespace Bottle.Core.GridObjectAbility
+{
+    public class GridEntityPushAndDragAbility : GridEntityAbility
+    {
+        private GridEntityPushAndDragAbilitySettings _settings;
+        public override void AbilityOnAwake()
+        {
+            _settings = gridEntityAbilitySettings as GridEntityPushAndDragAbilitySettings;
+        }
+        public override void AbilityOnEnable()
+        {
+
+        }
+        public override void AbilityStart()
+        {
+            //InputManager.Instance.buttonStates[KeyCode.E].ButtonDownHandler += Interact;
+        }
+        public override void AbilityUpdate()
+        {
+
+        }
 //        [ShowInInspector]
 //        [ReadOnly]
 //        private List<Vector3Int> _availableMovementDirection = new List<Vector3Int>();
@@ -100,6 +117,6 @@
 //                }
 //            }
 //            availableMovementDirectionList.Clear();
-//        }
-//    }
-//}
+        // }
+    }
+}

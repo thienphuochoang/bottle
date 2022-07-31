@@ -99,7 +99,7 @@ namespace Bottle.Core.GridObjectAbility
                     break;
             }
         }
-
+        
         private void DetectMovementDirectionFromPath(InputButton.States state, KeyCode keyCode)
         {
             if (currentAssignedPathCreator != null)
@@ -111,14 +111,8 @@ namespace Bottle.Core.GridObjectAbility
                         int nextNode = _currentNode + 1;
                         Vector3 currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
                         Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
-                        Vector3 direction = nextNodeWorldSpacePos - currentNodeWorldSpacePos;
+                        Vector3 direction = Vector3.Normalize(nextNodeWorldSpacePos - currentNodeWorldSpacePos);
                         _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
-                        Vector3Int stepPosGridPosition = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currentGridEntity.pivotOffset.y);
-                        Debug.Log(direction);
-                        // Vector3Int rampGridPosition = new Vector3Int(stepPosGridPosition.x, stepPosGridPosition.y - 1, stepPosGridPosition.z);
-                        // List<GridTile> checkedRampTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(new Vector2Int(rampGridPosition.x, rampGridPosition.z), rampGridPosition.y);
-                        // if (checkedRampTile.Count > 0)
-                        // {
                         if (direction.x != 0 && direction.y != 0)
                         {
                             Vector3 guessingDirection1 = new Vector3(direction.x, 0, 0);
