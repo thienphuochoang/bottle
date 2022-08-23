@@ -25,7 +25,7 @@ namespace Bottle.Core.GridObjectAbility
         }
         public override void AbilityOnAwake()
         {
-            _settings = gridEntityAbilitySettings as GridEntityInteractAbilitySettings;
+            _settings = gridEntityAbilitySettings[0] as GridEntityInteractAbilitySettings;
         }
         public override void AbilityOnEnable()
         {

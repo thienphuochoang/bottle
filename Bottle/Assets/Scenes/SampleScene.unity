@@ -1402,13 +1402,26 @@ MonoBehaviour:
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 3
     - Name: 
       Entry: 7
       Data: 1|Bottle.Core.GridObjectAbility.GridEntityMovementAbility, Assembly-CSharp
     - Name: gridEntityAbilitySettings
+      Entry: 7
+      Data: 2|MS.Internal.Xml.XPath.ClonableStack`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], System.Xml
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
       Entry: 10
       Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: gridEntityAbilityController
       Entry: 6
       Data: 
@@ -1435,10 +1448,51 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 2|Bottle.Core.GridObjectAbility.GridEntityInteractAbility, Assembly-CSharp
+      Data: 3|Bottle.Core.GridObjectAbility.GridEntityInteractAbility, Assembly-CSharp
     - Name: gridEntityAbilitySettings
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
       Entry: 10
       Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gridEntityAbilityController
+      Entry: 6
+      Data: 
+    - Name: currentGridEntity
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 5|Bottle.Core.GridObjectAbility.GridEntityPushAndDragAbility, Assembly-CSharp
+    - Name: gridEntityAbilitySettings
+      Entry: 7
+      Data: 6|System.Collections.Generic.List`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: gridEntityAbilityController
       Entry: 6
       Data: 
@@ -2403,8 +2457,21 @@ MonoBehaviour:
       Entry: 7
       Data: 1|Bottle.Core.GridObjectAbility.GridEntityMovementAbility, Assembly-CSharp
     - Name: gridEntityAbilitySettings
+      Entry: 7
+      Data: 2|MS.Internal.Xml.XPath.ClonableStack`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], System.Xml
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
       Entry: 10
       Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: gridEntityAbilityController
       Entry: 6
       Data: 
@@ -2431,10 +2498,23 @@ MonoBehaviour:
       Data: 
     - Name: 
       Entry: 7
-      Data: 2|Bottle.Core.GridObjectAbility.GridEntityChaseAbility, Assembly-CSharp
+      Data: 3|Bottle.Core.GridObjectAbility.GridEntityChaseAbility, Assembly-CSharp
     - Name: gridEntityAbilitySettings
+      Entry: 7
+      Data: 4|MS.Internal.Xml.XPath.ClonableStack`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], System.Xml
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
       Entry: 10
       Data: 2
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
     - Name: gridEntityAbilityController
       Entry: 6
       Data: 
@@ -2449,7 +2529,7 @@ MonoBehaviour:
       Data: 
     - Name: finalPath
       Entry: 7
-      Data: 3|System.Collections.Generic.List`1[[Bottle.Core.GridObjectData.GridTile,
+      Data: 5|System.Collections.Generic.List`1[[Bottle.Core.GridObjectData.GridTile,
         Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
@@ -3535,6 +3615,79 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 90, y: 0, z: -90}
+--- !u!1 &774139630 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6343636987350192243, guid: f34b94d8db961454886c3a8c3a8cc0ac, type: 3}
+  m_PrefabInstance: {fileID: 1018283016}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &774139631
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 774139630}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ef7562bcef76174aac31b06cc075315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: 95ef96829fe7e2043a6f3149643817c6, type: 2}
+    - {fileID: 11400000, guid: f40595d21853b914b81fdbf25132fb53, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: availableAbilities
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[Bottle.Core.GridObjectAbility.GridEntityAbility,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 7
+      Data: 1|Bottle.Core.GridObjectAbility.GridEntityPushAndDragPassiveAbility,
+        Assembly-CSharp
+    - Name: gridEntityAbilitySettings
+      Entry: 7
+      Data: 2|MS.Internal.Xml.XPath.ClonableStack`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], System.Xml
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 10
+      Data: 1
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gridEntityAbilityController
+      Entry: 6
+      Data: 
+    - Name: currentGridEntity
+      Entry: 6
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1001 &791451619
 PrefabInstance:
   m_ObjectHideFlags: 0

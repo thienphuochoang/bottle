@@ -35,7 +35,7 @@ namespace Bottle.Core.GridObjectAbility
         };
         public override void AbilityOnAwake()
         {
-            _settings = gridEntityAbilitySettings as GridEntityChaseAbilitySettings;
+            _settings = gridEntityAbilitySettings[0] as GridEntityChaseAbilitySettings;
         }
 
         public override void AbilityOnEnable()
@@ -275,7 +275,7 @@ namespace Bottle.Core.GridObjectAbility
         private void AddNewPathCreator()
         {
             GridEntityMovementAbility movementAbilityRef = (GridEntityMovementAbility)gridEntityAbilityController.availableAbilities.Find(entityAbility =>
-                entityAbility.gridEntityAbilitySettings.GetType() == typeof(GridEntityMovementAbilitySettings)); 
+                entityAbility.gridEntityAbilitySettings.Find(entityAbilitySetting => entityAbilitySetting.GetType() == typeof(GridEntityMovementAbilitySettings))); 
             if (movementAbilityRef.currentAssignedPathCreator != null) 
             { 
 

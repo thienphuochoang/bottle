@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Bottle.Core.GridObjectAbility;
 using UnityEngine;
 using Sirenix.OdinInspector;
 using Bottle.Core.Manager;

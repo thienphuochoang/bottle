@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 995acb9a5c2612749b6c25920195ff79, type: 3}
   m_Name: GridEntityChaseAbilitySettings
   m_EditorClassIdentifier: 
-  abilityIcon: {fileID: 0}
+  abilityIcon: {fileID: 2800000, guid: 190cd24f3a8c4224abecf8f1b8147ffc, type: 3}
   abilityDescription: 
   abilityTip: 

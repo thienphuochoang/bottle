@@ -56,7 +56,7 @@ namespace Bottle.Core.GridObjectAbility
 
         public override void AbilityOnAwake()
         {
-            _settings = gridEntityAbilitySettings as GridEntityMovementAbilitySettings;
+            _settings = gridEntityAbilitySettings[0] as GridEntityMovementAbilitySettings;
             _step = 1;
         }
 

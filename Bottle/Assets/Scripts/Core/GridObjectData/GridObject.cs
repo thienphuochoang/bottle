@@ -5,6 +5,7 @@ using Sirenix.OdinInspector;
 using UnityEditor;
 using Bottle.Core.Manager;
 using Newtonsoft.Json;
+using Bottle.Core.GridObjectAbility;
 namespace Bottle.Core.GridObjectData
 {
     [JsonObject(MemberSerialization.OptIn)]
