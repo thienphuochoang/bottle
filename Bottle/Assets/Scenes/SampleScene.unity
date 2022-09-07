@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -776,6 +776,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1b099a0bef8f08a479d1ae5d54b35bb3, type: 3}
+--- !u!114 &225235389 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3980794118029237015, guid: 830955856e7007a40a3a12e41ca3702d, type: 3}
+  m_PrefabInstance: {fileID: 1979301923}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &232004411
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3636,7 +3647,6 @@ MonoBehaviour:
     SerializedFormat: 2
     SerializedBytes: 
     ReferencedUnityObjects:
-    - {fileID: 11400000, guid: 95ef96829fe7e2043a6f3149643817c6, type: 2}
     - {fileID: 11400000, guid: f40595d21853b914b81fdbf25132fb53, type: 2}
     SerializedBytesString: 
     Prefab: {fileID: 0}
@@ -3656,17 +3666,14 @@ MonoBehaviour:
         Assembly-CSharp
     - Name: gridEntityAbilitySettings
       Entry: 7
-      Data: 2|MS.Internal.Xml.XPath.ClonableStack`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
-        Assembly-CSharp]], System.Xml
+      Data: 2|System.Collections.Generic.List`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], mscorlib
     - Name: 
       Entry: 12
-      Data: 2
+      Data: 1
     - Name: 
       Entry: 10
       Data: 0
-    - Name: 
-      Entry: 10
-      Data: 1
     - Name: 
       Entry: 13
       Data: 
@@ -3679,6 +3686,12 @@ MonoBehaviour:
     - Name: currentGridEntity
       Entry: 6
       Data: 
+    - Name: triggerGridEntity
+      Entry: 6
+      Data: 
+    - Name: isBeingPushedOrDragged
+      Entry: 5
+      Data: false
     - Name: 
       Entry: 8
       Data: 
@@ -4187,6 +4200,124 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 830955856e7007a40a3a12e41ca3702d, type: 3}
+--- !u!1 &860617479 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6274937679250924306, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+  m_PrefabInstance: {fileID: 1920690937}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &860617480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860617479}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ef7562bcef76174aac31b06cc075315, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  serializationData:
+    SerializedFormat: 2
+    SerializedBytes: 
+    ReferencedUnityObjects:
+    - {fileID: 11400000, guid: f40595d21853b914b81fdbf25132fb53, type: 2}
+    SerializedBytesString: 
+    Prefab: {fileID: 0}
+    PrefabModificationsReferencedUnityObjects: []
+    PrefabModifications: []
+    SerializationNodes:
+    - Name: availableAbilities
+      Entry: 7
+      Data: 0|System.Collections.Generic.List`1[[Bottle.Core.GridObjectAbility.GridEntityAbility,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 2
+    - Name: 
+      Entry: 7
+      Data: 1|Bottle.Core.GridObjectAbility.GridEntityPushAndDragPassiveAbility,
+        Assembly-CSharp
+    - Name: gridEntityAbilitySettings
+      Entry: 7
+      Data: 2|System.Collections.Generic.List`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gridEntityAbilityController
+      Entry: 6
+      Data: 
+    - Name: currentGridEntity
+      Entry: 6
+      Data: 
+    - Name: triggerGridEntity
+      Entry: 6
+      Data: 
+    - Name: isBeingPushedOrDragged
+      Entry: 5
+      Data: false
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 7
+      Data: 3|Bottle.Core.GridObjectAbility.GridEntityMovementAbility, Assembly-CSharp
+    - Name: gridEntityAbilitySettings
+      Entry: 7
+      Data: 4|System.Collections.Generic.List`1[[Bottle.Core.GridObjectAbility.GridObjectAbilitySettings,
+        Assembly-CSharp]], mscorlib
+    - Name: 
+      Entry: 12
+      Data: 1
+    - Name: 
+      Entry: 10
+      Data: 0
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: gridEntityAbilityController
+      Entry: 6
+      Data: 
+    - Name: currentGridEntity
+      Entry: 6
+      Data: 
+    - Name: currentAssignedPathCreator
+      Entry: 6
+      Data: 
+    - Name: _step
+      Entry: 3
+      Data: 1
+    - Name: _isMoving
+      Entry: 5
+      Data: false
+    - Name: _lastMovementDirection
+      Entry: 3
+      Data: 0
+    - Name: currentSpeed
+      Entry: 4
+      Data: 0
+    - Name: 
+      Entry: 8
+      Data: 
+    - Name: 
+      Entry: 13
+      Data: 
+    - Name: 
+      Entry: 8
+      Data: 
 --- !u!1001 &875893998
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -8400,6 +8531,71 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 830955856e7007a40a3a12e41ca3702d, type: 3}
+--- !u!1001 &1920690937
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1634756548}
+    m_Modifications:
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_RootOrder
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250712774, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250799844, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: _uID
+      value: -3958
+      objectReference: {fileID: 0}
+    - target: {fileID: 6274937679250799844, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: currentStandingGridTile
+      value: 
+      objectReference: {fileID: 225235389}
+    - target: {fileID: 6274937679250924306, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
+      propertyPath: m_Name
+      value: Pillar_01
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 79cb4a5b2f4fd104e9ab2e02bc907a6f, type: 3}
 --- !u!1001 &1979301923
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9577,6 +9773,14 @@ PrefabInstance:
       propertyPath: serializationData.Prefab
       value: 
       objectReference: {fileID: 8358505835632888178, guid: 37577c6384aa4324997b7acf15af663b, type: 3}
+    - target: {fileID: 8358505835632888178, guid: 37577c6384aa4324997b7acf15af663b, type: 3}
+      propertyPath: _allSkillableGridEntities.Array.size
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8358505835632888178, guid: 37577c6384aa4324997b7acf15af663b, type: 3}
+      propertyPath: _allSkillableGridEntities.Array.data[0]
+      value: 
+      objectReference: {fileID: 279789927}
     - target: {fileID: 8358505835632888179, guid: 37577c6384aa4324997b7acf15af663b, type: 3}
       propertyPath: m_RootOrder
       value: 3

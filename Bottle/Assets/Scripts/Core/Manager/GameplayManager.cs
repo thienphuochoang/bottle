@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -18,8 +19,11 @@ namespace Bottle.Core.Manager
         public int currentTurn = 0;
         public enum GlobalDirection { NONE, POSITIVE_X, NEGATIVE_X, POSITIVE_Z, NEGATIVE_Z };
         public GlobalDirection globalFrontDirection = GlobalDirection.NONE;
+        [ShowInInspector]
         private GridEntity[] _allGridEntities => GridManager.Instance.EntityHolder.GetComponentsInChildren<GridEntity>();
         private GridTile[] _allGridTiles => GridManager.Instance.TileHolder.GetComponentsInChildren<GridTile>();
+        [SerializeField]
+        private List<GridEntityAbilityController> _allSkillableGridEntities;
 
         [SerializeField]
         private int _turnCount;
@@ -119,21 +123,43 @@ namespace Bottle.Core.Manager
             }    
         }
 
+        private void GetSkillableGridEntities()
+        {
+            _allSkillableGridEntities = new List<GridEntityAbilityController>();
+            _allSkillableGridEntities.Insert(0, controllableMainGridEntity.GetComponent<GridEntityAbilityController>());
+            foreach (var entity in _allGridEntities)
+            {
+                if (entity.GetComponent<GridEntityAbilityController>() && entity.isControllable == false)
+                {
+                    _allSkillableGridEntities.Add(entity.GetComponent<GridEntityAbilityController>());
+                }
+            }
+        }
+
         protected override void Awake()
         {
             base.Awake();
-            
+        }
+
+        private void OnEnable()
+        {
+            //RegisterGlobalEvents();
+            GetControllableMainGridEntity(null);
+            GetSkillableGridEntities();
         }
 
         protected override void Start()
         {
             base.Start();
-            GetControllableMainGridEntity(null);
             RegisterGlobalEvents();
             SaveSceneState(0);
         }
         private void Update()
         {
+            foreach (GridEntityAbilityController skillableEntity in _allSkillableGridEntities)
+            {
+                skillableEntity.Update();
+            }
         }
         protected override void OnApplicationQuit()
         {

@@ -15,24 +15,24 @@ namespace Bottle.Core.GridObjectAbility
 
         protected T _currentGridObject;
 
-        protected virtual void OnEnable()
+        public virtual void OnEnable()
         {
             //if (isAbilityLocked)
             //    this.enabled = false;
         }
 
-        protected virtual void Awake()
+        public virtual void Awake()
         {
             _currentGridObject = this.gameObject.GetComponentInParent<T>();
         }
 
-        protected virtual void Start()
+        public virtual void Start()
         {
             
         }
 
         // Update is called once per frame
-        protected virtual void Update()
+        public virtual void Update()
         {
 
         }

@@ -18,5 +18,20 @@ namespace Bottle.Core.GridObjectAbility
         public abstract void AbilityOnEnable();
         public abstract void AbilityStart();
         public abstract void AbilityUpdate();
+        public static bool CheckIfAbilityExist<T>(GridEntity targetGridEntity)
+        {
+            var isPassiveAbilityExist = GetGridEntityAbility<T>(targetGridEntity);
+            if (isPassiveAbilityExist != null)
+                return true;
+            return false;
+        }
+
+        public static GridEntityAbility GetGridEntityAbility<T>(GridEntity targetGridEntity)
+        {
+            var entityAbility = targetGridEntity.GetComponent<GridEntityAbilityController>()
+                .availableAbilities.Find(gridEntityAbility =>
+                    gridEntityAbility.GetType() == typeof(T));
+            return entityAbility;
+        }
     }
 }

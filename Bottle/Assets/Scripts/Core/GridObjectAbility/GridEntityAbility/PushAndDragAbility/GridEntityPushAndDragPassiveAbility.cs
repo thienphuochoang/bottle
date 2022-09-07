@@ -4,18 +4,29 @@ using UnityEngine;
 using Bottle.Core.GridObjectData;
 using Bottle.Core.Manager;
 using Sirenix.OdinInspector;
+using Bottle.Core.PathSystem;
 namespace Bottle.Core.GridObjectAbility
 {
-    public class GridEntityPushAndDragPassiveAbility : GridEntityAbility
+    public class GridEntityPushAndDragPassiveAbility : GridEntityPassiveAbility
     {
         //private GridEntityPushAndDragAbilitySettings _pushAndDragSettings;
         private GridEntityMovementAbilitySettings _movementSettings;
-        [ShowInInspector]
-        [ReadOnly]
-        private GridTile _targetTile;
-        [ShowInInspector]
-        private List<Vector3Int> _availableMovementDirection = new List<Vector3Int>();
-        private bool _isBeingPushedOrDragged = false;
+        private PathCreator pathCreatorGameObject;
+
+        //private bool _isBeingPushedOrDragged => isInteracted;
+        [SerializeField]
+        public bool isBeingPushedOrDragged
+        {
+            get => isTriggered;
+            set
+            {
+                if (isTriggered == value) return;
+                isTriggered = value;
+                EventManager.Instance.TriggerEvent("PushAndDragPassiveEvent", null);
+            }
+        }
+        private GridEntityMovementAbility gridEntityMovementAbilityRef;
+        
 
         // protected override void Start()
         // {
@@ -29,6 +40,7 @@ namespace Bottle.Core.GridObjectAbility
         //
         private void BeginBeingPushedOrDragged(Dictionary<string, object> message)
         {
+            Debug.Log(currentGridEntity);
             Debug.Log("Test event");
             // bool isTriggeredValue = (bool)message["isTriggered"];
             // GridEntity currentInteractingObject = (GridEntity)message["interactingGridObject"];
@@ -192,13 +204,11 @@ namespace Bottle.Core.GridObjectAbility
         {
             // _pushAndDragSettings = (GridEntityPushAndDragAbilitySettings)gridEntityAbilitySettings.Find(entityAbilitySettings =>
             //     entityAbilitySettings.GetType() == typeof(GridEntityPushAndDragAbilitySettings));
-            _movementSettings = (GridEntityMovementAbilitySettings)gridEntityAbilitySettings.Find(entityAbilitySettings =>
-                entityAbilitySettings.GetType() == typeof(GridEntityMovementAbilitySettings));
+            gridEntityMovementAbilityRef = (GridEntityMovementAbility)GridEntityAbility.GetGridEntityAbility<GridEntityMovementAbility>(currentGridEntity);
         }
 
         public override void AbilityOnEnable()
         {
-
         }
 
         public override void AbilityStart()
@@ -208,7 +218,33 @@ namespace Bottle.Core.GridObjectAbility
 
         public override void AbilityUpdate()
         {
-
+            if (isBeingPushedOrDragged)
+            {
+                if (gridEntityMovementAbilityRef.currentAssignedPathCreator != null) 
+                {
+                    gridEntityMovementAbilityRef.currentAssignedPathCreator.nodes.Clear();
+                    gridEntityMovementAbilityRef.currentAssignedPathCreator.nodes = new List<Vector3>();
+                    Vector3 localCurrentStandingGridTileNodePos =
+                        gridEntityMovementAbilityRef.currentAssignedPathCreator.ConvertGridPosToNodeLocalPos(
+                            currentGridEntity.currentStandingGridTile);
+                    localCurrentStandingGridTileNodePos.y += 1;
+                    Vector3 localTriggerCurrentStandingGridTileNodePos = gridEntityMovementAbilityRef.currentAssignedPathCreator.ConvertGridPosToNodeLocalPos(
+                        triggerGridEntity.currentStandingGridTile);
+                    localTriggerCurrentStandingGridTileNodePos.y += 1;
+                    gridEntityMovementAbilityRef.currentAssignedPathCreator.nodes.Insert(0, localCurrentStandingGridTileNodePos);
+                    gridEntityMovementAbilityRef.currentAssignedPathCreator.nodes.Insert(1, localTriggerCurrentStandingGridTileNodePos);
+                }
+                else
+                {
+                    GameObject pathGameObject = new GameObject(currentGridEntity.name + "_Path"); 
+                    pathGameObject.transform.position = Vector3.zero;
+                    pathGameObject.AddComponent<PathCreator>();
+                    pathCreatorGameObject = pathGameObject.GetComponent<PathCreator>();
+                    gridEntityMovementAbilityRef.currentAssignedPathCreator = pathCreatorGameObject;
+                }
+            }
+            //Debug.Log(isInteracted);
+            //Debug.Log(isBeingPushedOrDragged);
         }
     }
 }

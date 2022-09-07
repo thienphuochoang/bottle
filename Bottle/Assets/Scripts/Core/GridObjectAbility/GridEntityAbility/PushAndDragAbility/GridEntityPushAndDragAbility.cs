@@ -9,8 +9,9 @@ namespace Bottle.Core.GridObjectAbility
     public class GridEntityPushAndDragAbility : GridEntityAbility
     {
         private GridEntityPushAndDragAbilitySettings _settings;
-        private GridEntityInteractAbility gridEntityInteractAbilityRef;
-        private GridEntityMovementAbility gridEntityMovementAbilityRef;
+        private GridEntityInteractAbility _gridEntityInteractAbilityRef;
+        private GridEntityMovementAbility _gridEntityMovementAbilityRef;
+        private GridEntityPushAndDragPassiveAbility _gridEntityPushAndDragPassiveAbilityRef;
         [ShowInInspector]
         [ReadOnly]
         private List<Vector3Int> _availableMovementDirection = new List<Vector3Int>();
@@ -31,9 +32,9 @@ namespace Bottle.Core.GridObjectAbility
         public override void AbilityOnEnable()
         {
             _availableMovementDirection = new List<Vector3Int>();
-            gridEntityInteractAbilityRef = (GridEntityInteractAbility)gridEntityAbilityController.availableAbilities.Find(entityAbility =>
+            _gridEntityInteractAbilityRef = (GridEntityInteractAbility)gridEntityAbilityController.availableAbilities.Find(entityAbility =>
                 entityAbility.gridEntityAbilitySettings.Find(entityAbilitySetting => entityAbilitySetting.GetType() == typeof(GridEntityInteractAbilitySettings)));
-            gridEntityMovementAbilityRef = (GridEntityMovementAbility)gridEntityAbilityController.availableAbilities.Find(entityAbility =>
+            _gridEntityMovementAbilityRef = (GridEntityMovementAbility)gridEntityAbilityController.availableAbilities.Find(entityAbility =>
                 entityAbility.gridEntityAbilitySettings.Find(entityAbilitySetting => entityAbilitySetting.GetType() == typeof(GridEntityMovementAbilitySettings)));
         }
         public override void AbilityStart()
@@ -42,21 +43,41 @@ namespace Bottle.Core.GridObjectAbility
         }
         public override void AbilityUpdate()
         {
-            if (gridEntityInteractAbilityRef.currentInteractingGridObject != null && availableMovementDirection.Count == 0)
+            if (_gridEntityInteractAbilityRef.currentInteractingGridObject != null && availableMovementDirection.Count == 0)
             {
-                Vector3Int interactingGridObjectDirection = new Vector3Int(gridEntityInteractAbilityRef.currentInteractingGridObject.gridPosition.x, (int)gridEntityInteractAbilityRef.currentInteractingGridObject.gridHeight, gridEntityInteractAbilityRef.currentInteractingGridObject.gridPosition.y);
-                Vector3Int currentGridObjectDirection = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight, currentGridEntity.gridPosition.y);
-                Vector3Int direction = interactingGridObjectDirection - currentGridObjectDirection;
-                Vector3Int oppositeDirection = direction * -1;
-                List<Vector3Int> directionList = new List<Vector3Int> { direction, oppositeDirection };
-                availableMovementDirection = directionList;
+                if (GridEntityAbility.CheckIfAbilityExist<GridEntityPushAndDragPassiveAbility>(
+                        _gridEntityInteractAbilityRef.currentInteractingGridObject))
+                {
+                    Vector3Int interactingGridObjectDirection = new Vector3Int(_gridEntityInteractAbilityRef.currentInteractingGridObject.gridPosition.x, (int)_gridEntityInteractAbilityRef.currentInteractingGridObject.gridHeight, _gridEntityInteractAbilityRef.currentInteractingGridObject.gridPosition.y);
+                    Vector3Int currentGridObjectDirection = new Vector3Int(currentGridEntity.gridPosition.x, (int)currentGridEntity.gridHeight, currentGridEntity.gridPosition.y);
+                    Vector3Int direction = interactingGridObjectDirection - currentGridObjectDirection;
+                    Vector3Int oppositeDirection = direction * -1;
+                    List<Vector3Int> directionList = new List<Vector3Int> { direction, oppositeDirection };
+                    availableMovementDirection = directionList;
+                }
+                return;
             }
-            else if (gridEntityInteractAbilityRef.currentInteractingGridObject == null && availableMovementDirection.Count > 0)
+
+            if (availableMovementDirection.Count > 0)
             {
-                ResetToDefault(availableMovementDirection);
+                if (_gridEntityInteractAbilityRef.currentInteractingGridObject != null)
+                {
+                    
+                }
+                else
+                {
+                    ResetToDefault(availableMovementDirection);
+                }
             }
         }
 
+        private void ActivatePushAndDragPassiveAbility()
+        {
+            _gridEntityPushAndDragPassiveAbilityRef = (GridEntityPushAndDragPassiveAbility)GridEntityAbility.GetGridEntityAbility<GridEntityPushAndDragPassiveAbility>(
+                _gridEntityInteractAbilityRef.currentInteractingGridObject);
+            _gridEntityPushAndDragPassiveAbilityRef.isTriggered = true;
+            _gridEntityPushAndDragPassiveAbilityRef.triggerGridEntity = currentGridEntity;
+        }
        private void LimitMovementDirection(Dictionary<string,object> message)
        {
            List<Vector3Int> availableMovementDirectionList = (List<Vector3Int>)message["availableMovementDirectionList"];
@@ -66,23 +87,24 @@ namespace Bottle.Core.GridObjectAbility
                switch (direction)
                {
                    case GridEntityMovementAbility.MovementDirections.FORWARD:
-                       InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler -= gridEntityMovementAbilityRef.DetectMovementDirection;
-                       InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler -= gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler -= _gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler -= _gridEntityMovementAbilityRef.DetectMovementDirection;
                        break;
                    case GridEntityMovementAbility.MovementDirections.BACK:
-                       InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler -= gridEntityMovementAbilityRef.DetectMovementDirection;
-                       InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler -= gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler -= _gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler -= _gridEntityMovementAbilityRef.DetectMovementDirection;
                        break;
                    case GridEntityMovementAbility.MovementDirections.LEFT:
-                       InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler -= gridEntityMovementAbilityRef.DetectMovementDirection;
-                       InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler -= gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler -= _gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler -= _gridEntityMovementAbilityRef.DetectMovementDirection;
                        break;
                    case GridEntityMovementAbility.MovementDirections.RIGHT:
-                       InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler -= gridEntityMovementAbilityRef.DetectMovementDirection;
-                       InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler -= gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler -= _gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler -= _gridEntityMovementAbilityRef.DetectMovementDirection;
                        break;
                }
            }
+           ActivatePushAndDragPassiveAbility();
        }
        private void ResetToDefault(List<Vector3Int> availableMovementDirectionList)
        {
@@ -92,24 +114,26 @@ namespace Bottle.Core.GridObjectAbility
                switch (direction)
                {
                    case GridEntityMovementAbility.MovementDirections.FORWARD:
-                       InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler += gridEntityMovementAbilityRef.DetectMovementDirection;
-                       InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler += gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler += _gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler += _gridEntityMovementAbilityRef.DetectMovementDirection;
                        break;
                    case GridEntityMovementAbility.MovementDirections.BACK:
-                       InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler += gridEntityMovementAbilityRef.DetectMovementDirection;
-                       InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler += gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.A].ButtonDownHandler += _gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.D].ButtonDownHandler += _gridEntityMovementAbilityRef.DetectMovementDirection;
                        break;
                    case GridEntityMovementAbility.MovementDirections.LEFT:
-                       InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler += gridEntityMovementAbilityRef.DetectMovementDirection;
-                       InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler += gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler += _gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler += _gridEntityMovementAbilityRef.DetectMovementDirection;
                        break;
                    case GridEntityMovementAbility.MovementDirections.RIGHT:
-                       InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler += gridEntityMovementAbilityRef.DetectMovementDirection;
-                       InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler += gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.W].ButtonDownHandler += _gridEntityMovementAbilityRef.DetectMovementDirection;
+                       InputManager.Instance.buttonStates[KeyCode.S].ButtonDownHandler += _gridEntityMovementAbilityRef.DetectMovementDirection;
                        break;
                }
            }
            availableMovementDirectionList.Clear();
+           _gridEntityPushAndDragPassiveAbilityRef.isTriggered = false;
+           _gridEntityPushAndDragPassiveAbilityRef.triggerGridEntity = null;
        }
     }
 }
