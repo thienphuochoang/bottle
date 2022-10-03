@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:engine="UnityEngine.UIElements"
+    xmlns:editor="UnityEditor.UIElements"
+    xsi:noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd"
+>
+    <engine:VisualElement>
+        <engine:Label text="Importer General Settings" class="headerLabel"/>
+        <engine:Label text="___________________________________________________________________________________"/>
+    </engine:VisualElement>
+    <engine:VisualElement class="row">
+        <engine:Label text="Model Path (FBX)"/>
+        <engine:TextField class="generalTextField" name="Models_Path"/>
+    </engine:VisualElement>
+    <engine:VisualElement class="row">
+        <engine:Label text="Materials Path"/>
+        <engine:TextField class="generalTextField" name="Materials_Path"/>
+    </engine:VisualElement>
+    <engine:VisualElement class="row">
+        <engine:Label text="Textures Path"/>
+        <engine:TextField class="generalTextField" name="Textures_Path"/>
+    </engine:VisualElement>
+    <engine:VisualElement class="row">
+        <engine:Label text="Entity Prefab Path"/>
+        <engine:TextField class="generalTextField" name="Entity_Prefabs_Path"/>
+    </engine:VisualElement>
+    <engine:VisualElement class="row">
+        <engine:Label text="Tile Prefab Path"/>
+        <engine:TextField class="generalTextField" name="Tile_Prefabs_Path"/>
+    </engine:VisualElement>
+    <engine:VisualElement class="middleRow">
+        <engine:Button name="Import_FBX" text="Import FBX" class="customButton"/>
+        <engine:Button name="Save_New_Settings" text="Save New Settings" class="customButton"/>
+    </engine:VisualElement>
+    
+    
+</engine:UXML>

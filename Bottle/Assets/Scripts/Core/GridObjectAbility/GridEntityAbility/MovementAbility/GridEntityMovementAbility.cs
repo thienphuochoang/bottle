@@ -113,10 +113,10 @@ namespace Bottle.Core.GridObjectAbility
                     if (_isMoving == false)
                     {
                         int nextNode = _currentNode + 1;
-                        // Vector3 currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
-                        // Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
-                        // Vector3 direction = Vector3.Normalize(nextNodeWorldSpacePos - currentNodeWorldSpacePos);
-                        // _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
+                        Vector3 currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
+                        Vector3 nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[nextNode]);
+                        Vector3 direction = Vector3.Normalize(nextNodeWorldSpacePos - currentNodeWorldSpacePos);
+                        _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
                         Debug.Log(direction);
                         if (direction.x != 0 && direction.y != 0)
                         {
@@ -128,6 +128,7 @@ namespace Bottle.Core.GridObjectAbility
                             {
                                 if (guessingTargetTile1.isARamp)
                                 {
+                                    
                                     _currentMovementDirection = guessingMovementDirection1;
                                     _targetTile = guessingTargetTile1;
                                 }
@@ -364,26 +365,66 @@ namespace Bottle.Core.GridObjectAbility
         public override void AbilityUpdate()
         {
             ApplyAcceleration();
-            if (_isMoving == false && currentAssignedPathCreator != null)
-            {
-                currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
-                nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode + 1]);
-                direction = Vector3.Normalize(nextNodeWorldSpacePos - currentNodeWorldSpacePos);
-                _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
-            }
+            // if (currentAssignedPathCreator == null)
+            // {
             if (_targetTile != null && _targetTile.isStandable == true)
-            {
                 Move();
-            }
-            //if (Input.GetKeyUp(KeyCode.T))
-            //{
-            //    if (_currentGridEntity.isControllable)
-            //    {
-            //        _currentGridEntity.isControllable = false;
-            //    }
-            //    else
-            //        _currentGridEntity.isControllable = true;
-            //}
+            // }
+            // else
+            // {
+            //     if (_isMoving == false)
+            //     {
+            //         currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
+            //         nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode + 1]);
+            //         direction = Vector3.Normalize(nextNodeWorldSpacePos - currentNodeWorldSpacePos);
+            //         _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
+            //     }
+            //
+            //     if (_targetTile != null && _targetTile.isStandable == true)
+            //     {
+            //         Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
+            //         Vector3Int stepPosGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currentGridEntity.pivotOffset.y);
+            //         Vector3Int nextNodeGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(nextNodeWorldSpacePos, currentGridEntity.pivotOffset.y);
+            //         Debug.Log(stepPosGridData);
+            //         Debug.Log(nextNodeGridData);
+            //         if (stepPosGridData == nextNodeGridData)
+            //         {
+            //             _step = 1;
+            //             _currentNode = _currentNode + 1;
+            //         }
+            //         else
+            //         {
+            //             _step = _step + 1;
+            //         }
+            //         Move();
+            //     }
+            // }
+            // if (_isMoving == false && currentAssignedPathCreator != null)
+            // {
+            //     currentNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode]);
+            //     nextNodeWorldSpacePos = currentAssignedPathCreator.transform.TransformPoint(currentAssignedPathCreator.nodes[_currentNode + 1]);
+            //     direction = Vector3.Normalize(nextNodeWorldSpacePos - currentNodeWorldSpacePos);
+            //     _stepPos = CalculateStepPosition(currentNodeWorldSpacePos, nextNodeWorldSpacePos, _step);
+            // }
+            // if (_targetTile != null && _targetTile.isStandable == true)
+            // {
+            //     Turn(_currentMovementDirection, GameplayManager.Instance.globalFrontDirection);
+            //     Vector3Int stepPosGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(_stepPos, currentGridEntity.pivotOffset.y);
+            //     Vector3Int nextNodeGridData = GridManager.Instance.ConvertWorldPositionToGridPosition(nextNodeWorldSpacePos, currentGridEntity.pivotOffset.y);
+            //     Debug.Log(stepPosGridData);
+            //     Debug.Log(nextNodeGridData);
+            //     if (stepPosGridData == nextNodeGridData)
+            //     {
+            //         _step = 1;
+            //         _currentNode = _currentNode + 1;
+            //     }
+            //     else
+            //     {
+            //         _step = _step + 1;
+            //     }
+            //     Move();
+            //     
+            // }
         }
 
         public override void AbilityOnEnable()
