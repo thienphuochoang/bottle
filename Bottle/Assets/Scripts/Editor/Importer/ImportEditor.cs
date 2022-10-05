@@ -14,6 +14,7 @@ public class ImportEditor : EditorWindow
     private const string _USS_FILE_PATH = "Assets/Scripts/Editor/Importer/ImporterUSSFile.uss";
     private const string _PATH_SETTINGS = "Assets/Scripts/Editor/Importer/ImporterPathSettings.json";
     private Dictionary<string, string> _textFieldDatas;
+    private const string _MODEL_IMPORT_PATH = "C:/Temp_Exporter/temp_unity";
     
     [MenuItem("Bottle/Importer Editor")]
     private static void Init()
@@ -75,16 +76,20 @@ public class ImportEditor : EditorWindow
             rootVisualElement.Query(name: "Save_New_Settings");
         var saveSettingButton = (Button)saveSettingButtonElement;
         saveSettingButton.clickable.clicked += SetPathSettingsToJsonFile;
-        GetPathSettingFromTextField();
+        
+        UQueryBuilder<VisualElement> importModelButtonElement =
+            rootVisualElement.Query(name: "Import_FBX");
+        var importModelButton = (Button)importModelButtonElement;
+        importModelButton.clickable.clicked += ImportModel;
     }
 
     private void GetPathSettingFromTextField()
     {
+        _textFieldDatas.Clear();
         UQueryBuilder<VisualElement> allTextFields =
             rootVisualElement.Query(classes: new string[] { "generalTextField" });
         
         var _textFieldsList = allTextFields.ToList();
-        _textFieldDatas.Clear();
         foreach (var eachTextField in _textFieldsList)
         {
             var data = eachTextField as TextField;
@@ -107,6 +112,7 @@ public class ImportEditor : EditorWindow
 
     private void SetPathSettingsToJsonFile()
     {
+        GetPathSettingFromTextField();
         string json = string.Empty;
         using (StreamReader strReader = new StreamReader(_PATH_SETTINGS))
         {
@@ -130,5 +136,11 @@ public class ImportEditor : EditorWindow
         TextField currentTextField = textField as TextField;
         textField.RegisterCallback<DragUpdatedEvent>(OnDragUpdatedEvent);
         textField.RegisterCallback<DragPerformEvent, TextField>(OnDragPerformed, currentTextField);
+    }
+
+    private void ImportModel()
+    {
+        //File.Replace(_MODEL_IMPORT_PATH + ".fbx", );
+        //AssetDatabase.ImportAsset(ImportAssetOptions.Default);
     }
 }
