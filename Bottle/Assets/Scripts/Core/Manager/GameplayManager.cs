@@ -82,7 +82,7 @@ namespace Bottle.Core.Manager
         {
             if (turn >= 0)
             {
-                var currentSceneStateDatabase = DatabaseHelper.GetDatabase(DatabaseHelper.sceneStateDatabaseFileName);
+                var currentSceneStateDatabase = DatabaseHelper.GetLevelDatabase(DatabaseHelper.sceneStateDatabaseFileName);
                 var chosenCurrentTurnSceneStateDatabase = currentSceneStateDatabase[turn];
                 for (int i = 0; i < _allGridEntities.Length; i++)
                 {

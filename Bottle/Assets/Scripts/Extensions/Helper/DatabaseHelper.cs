@@ -13,7 +13,22 @@ namespace Bottle.Extensions.Helper
 
         // Methods 
         // ----------------------------------------------------------------------------------------------------------------------
-        public static Dictionary<int, GridObjectSaveData> GetDatabase(string inputFileName)
+        
+        /**
+        * Get all data in a json file.
+        */
+        public static JObject GetDatabase(string jsonDatabaseFilePath)
+        {
+            string json = string.Empty;
+            using (StreamReader strReader = new StreamReader(jsonDatabaseFilePath))
+            {
+                json = strReader.ReadToEnd();
+            }
+            JObject jObject = JsonConvert.DeserializeObject(json) as JObject;
+            return jObject;
+        }
+
+        public static Dictionary<int, GridObjectSaveData> GetLevelDatabase(string inputFileName)
         {
             StreamReader strReader = new StreamReader(inputFileName);
             string json = strReader.ReadToEnd();
@@ -30,30 +45,34 @@ namespace Bottle.Extensions.Helper
             return database;
         }
 
-        public static void UpdateDatabase(Dictionary<string, string> dataAndNewValueDict, string inputFileName)
+        /*
+         * Update the value of specific dictionary and save to an existing json database file
+         */
+        public static void UpdateDatabase<F, T>(Dictionary<F, T> dataAndNewValueDict, string inputFileName)
         {
-            // Read file to string
-            string json = string.Empty;
-            using (StreamReader strReader = new StreamReader(inputFileName))
+            // Get database first
+            JObject jObject = GetDatabase(inputFileName);
+            foreach (KeyValuePair<F, T> dataAndValue in dataAndNewValueDict)
             {
-                json = strReader.ReadToEnd();
+                JToken jToken = jObject.SelectToken(dataAndValue.Key as string);
+                jToken.Replace(dataAndValue.Value as string);
             }
-            JObject jObject = JsonConvert.DeserializeObject(json) as JObject;
-            foreach (KeyValuePair<string, string> dataAndValue in dataAndNewValueDict)
-            {
-                JToken jToken = jObject.SelectToken(dataAndValue.Key);
-                jToken.Replace(dataAndValue.Value);
-            }
-            string output = JsonConvert.SerializeObject(jObject, Formatting.Indented);
-            using (StreamWriter strWriter = new StreamWriter(inputFileName))
-            {
-                strWriter.WriteLine(output);
-            }
+            AddNewDatabase(inputFileName, jObject);
         }
         public static void AddNewDatabase<F, T>(string inputFileName, Dictionary<F, T> inputNewDatabase)
         {
-            //var newDatabase = JsonConvert.SerializeObject(inputNewDatabase, Formatting.Indented);
             string newDatabase = JsonConvert.SerializeObject(inputNewDatabase, Formatting.Indented, new JsonSerializerSettings
+            {
+                TypeNameHandling = TypeNameHandling.Auto
+            });
+            using (StreamWriter strWriter = new StreamWriter(inputFileName))
+            {
+                strWriter.WriteLine(newDatabase);
+            }
+        }
+        public static void AddNewDatabase(string inputFileName, JObject jObject)
+        {
+            string newDatabase = JsonConvert.SerializeObject(jObject, Formatting.Indented, new JsonSerializerSettings
             {
                 TypeNameHandling = TypeNameHandling.Auto
             });

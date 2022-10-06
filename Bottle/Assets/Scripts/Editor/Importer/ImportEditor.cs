@@ -5,6 +5,7 @@ using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
+using Bottle.Extensions.Helper;
 using Sirenix.Utilities;
 
 public class ImportEditor : EditorWindow
@@ -51,7 +52,7 @@ public class ImportEditor : EditorWindow
         StyleSheet loadedStyleSheet =
             AssetDatabase.LoadAssetAtPath<StyleSheet>(_USS_FILE_PATH);
         rootVisualElement.styleSheets.Add(loadedStyleSheet);
-        
+        ImportModel();
     }
 
     private void CreateGUI()
@@ -98,10 +99,7 @@ public class ImportEditor : EditorWindow
     }
     private string GetPathSettingFromJsonFile(string jsonTextFieldKey)
     {
-        StreamReader strReader = new StreamReader(_PATH_SETTINGS);
-        string json = strReader.ReadToEnd();
-        strReader.Close();
-        JObject jObject = JsonConvert.DeserializeObject(json) as JObject;
+        JObject jObject = DatabaseHelper.GetDatabase(_PATH_SETTINGS);
         string jTokenString = jObject.SelectToken(jsonTextFieldKey).ToObject<string>();
         if (jTokenString != null)
         {
@@ -113,22 +111,7 @@ public class ImportEditor : EditorWindow
     private void SetPathSettingsToJsonFile()
     {
         GetPathSettingFromTextField();
-        string json = string.Empty;
-        using (StreamReader strReader = new StreamReader(_PATH_SETTINGS))
-        {
-            json = strReader.ReadToEnd();
-        }
-        JObject jObject = JsonConvert.DeserializeObject(json) as JObject;
-        foreach (KeyValuePair<string, string> dataAndValue in _textFieldDatas)
-        {
-            JToken jToken = jObject.SelectToken(dataAndValue.Key);
-            jToken.Replace(dataAndValue.Value);
-        }
-        string output = JsonConvert.SerializeObject(jObject, Formatting.Indented);
-        using (StreamWriter strWriter = new StreamWriter(_PATH_SETTINGS))
-        {
-            strWriter.WriteLine(output);
-        }
+        DatabaseHelper.UpdateDatabase<string, string>(_textFieldDatas, _PATH_SETTINGS);
     }
     
     private void AddCallBack(VisualElement textField)
@@ -140,7 +123,28 @@ public class ImportEditor : EditorWindow
 
     private void ImportModel()
     {
-        //File.Replace(_MODEL_IMPORT_PATH + ".fbx", );
-        //AssetDatabase.ImportAsset(ImportAssetOptions.Default);
+        var watcher = new FileSystemWatcher("Assets/Art/Isometric Pack 3d/Props/Models/Materials/Models");
+        watcher.NotifyFilter = NotifyFilters.Attributes
+                               | NotifyFilters.CreationTime
+                               | NotifyFilters.DirectoryName
+                               | NotifyFilters.FileName
+                               | NotifyFilters.LastAccess
+                               | NotifyFilters.LastWrite
+                               | NotifyFilters.Security
+                               | NotifyFilters.Size;
+        
+        watcher.Changed += OnChanged;
+        watcher.Filter = "*.fbx";
+        watcher.IncludeSubdirectories = true;
+        watcher.EnableRaisingEvents = true;
+    }
+    private static void OnChanged(object sender, FileSystemEventArgs e)
+    {
+        Debug.Log(e.ChangeType);
+        if (e.ChangeType != WatcherChangeTypes.Changed)
+        {
+            return;
+        }
+        Debug.Log($"Changed: {e.FullPath}");
     }
 }
