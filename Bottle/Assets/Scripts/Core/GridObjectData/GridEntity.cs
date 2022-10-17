@@ -49,6 +49,10 @@ namespace Bottle.Core.GridObjectData
         protected override void Awake()
         {
             base.Awake();
+        }
+
+        protected override void OnEnable()
+        {
             currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
         }
         private void OnCurrentStandingGridTileChangedHandler(Vector2Int newGridPosition, int newGridHeight)

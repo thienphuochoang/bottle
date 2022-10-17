@@ -5,13 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Diagnostics;
 
-/**
- *	An editor utility for easily creating symlinks in your project.
- *
- *	Adds a Menu item under `Assets/Create/Folder (Symlink)`, and 
- *	draws a small indicator in the Project view for folders that are
- *	symlinks.
- */
 [InitializeOnLoad]
 public static class SymlinkCreationEditor
 {

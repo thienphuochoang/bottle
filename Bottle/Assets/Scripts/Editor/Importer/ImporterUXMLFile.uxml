@@ -7,26 +7,26 @@
 >
     <engine:VisualElement>
         <engine:Label text="Importer General Settings" class="headerLabel"/>
-        <engine:Label text="___________________________________________________________________________________"/>
+        <engine:Label text="_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________"/>
     </engine:VisualElement>
     <engine:VisualElement class="row">
-        <engine:Label text="Model Path (FBX)"/>
+        <engine:Label text="Model Path (FBX)" class="labelStyle"/>
         <engine:TextField class="generalTextField" name="Models_Path"/>
     </engine:VisualElement>
     <engine:VisualElement class="row">
-        <engine:Label text="Materials Path"/>
+        <engine:Label text="Materials Path" class="labelStyle"/>
         <engine:TextField class="generalTextField" name="Materials_Path"/>
     </engine:VisualElement>
     <engine:VisualElement class="row">
-        <engine:Label text="Textures Path"/>
+        <engine:Label text="Textures Path" class="labelStyle"/>
         <engine:TextField class="generalTextField" name="Textures_Path"/>
     </engine:VisualElement>
     <engine:VisualElement class="row">
-        <engine:Label text="Entity Prefab Path"/>
+        <engine:Label text="Entity Prefab Path" class="labelStyle"/>
         <engine:TextField class="generalTextField" name="Entity_Prefabs_Path"/>
     </engine:VisualElement>
     <engine:VisualElement class="row">
-        <engine:Label text="Tile Prefab Path"/>
+        <engine:Label text="Tile Prefab Path" class="labelStyle"/>
         <engine:TextField class="generalTextField" name="Tile_Prefabs_Path"/>
     </engine:VisualElement>
     <engine:VisualElement class="middleRow">
