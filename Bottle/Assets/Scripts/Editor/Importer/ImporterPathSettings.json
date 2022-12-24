@@ -1,7 +1,0 @@
-{
-  "Models_Path": "Assets/Art/Isometric Pack 3d/Props/Models",
-  "Materials_Path": "Assets/Art/Isometric Pack 3d/Props/Models/Materials",
-  "Textures_Path": "Assets/Art/Isometric Pack 3d/Props/Textures",
-  "Entity_Prefabs_Path": "Assets/Resources/Prefabs/GridEntity",
-  "Tile_Prefabs_Path": "Assets/Resources/Prefabs/GridTile"
-}

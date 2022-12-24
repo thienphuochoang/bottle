@@ -1,10 +1,12 @@
+using System;
 using System.IO;
 using System.Collections.Generic;
-
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Bottle.Core.GridObjectData;
+using System.Text.RegularExpressions;
 namespace Bottle.Extensions.Helper
 {
     public class DatabaseHelper
@@ -28,6 +30,66 @@ namespace Bottle.Extensions.Helper
             return jObject;
         }
 
+        /**
+         * Get data in ".meta" file
+         */
+        public static (string, string) GetDataInMetaFile(string metaFilePath, string keyData)
+        {
+            string metaData = string.Empty;
+            string lowerkeyData = keyData.ToLower();
+            using (StreamReader strReader = new StreamReader(metaFilePath))
+            {
+                while (!strReader.EndOfStream)
+                {
+                    metaData = strReader.ReadLine().ToLower();
+                    if (metaData.Contains(lowerkeyData))
+                        break;
+                }
+            }
+
+            if (metaData != string.Empty)
+            {
+                var keyAndValueData = metaData.Split(':');
+                return (keyAndValueData[0], keyAndValueData[1]);
+            }
+            return (null, null);
+        }
+
+        public static void EditDataInMetaFile(string metaFilePath, string keyData, string newValueData)
+        {
+            string metaData = string.Empty;
+            using (StreamReader strReader = new StreamReader(metaFilePath))
+            {
+                while (!strReader.EndOfStream)
+                {
+                    string line = strReader.ReadLine();
+                    if (line.Contains(keyData))
+                    {
+                        string output = String.Empty;
+                        // To preserve white-space at the beginning of the string
+                        for (int i = 0; i < line.IndexOf(keyData); i++)
+                        {
+                            output += line[i];
+                        }
+
+                        output += keyData;
+                        string newMetaData = line.Replace(line, output + ": " + newValueData);
+                        metaData += newMetaData + "\n";
+                    }
+                    else
+                    {
+                        metaData += line + "\n";
+                    }
+                }
+            }
+            Debug.Log(metaData);
+
+            if (File.Exists(metaFilePath))
+            {
+                File.Delete(metaFilePath);
+            }
+
+        }
         public static Dictionary<int, GridObjectSaveData> GetLevelDatabase(string inputFileName)
         {
             StreamReader strReader = new StreamReader(inputFileName);

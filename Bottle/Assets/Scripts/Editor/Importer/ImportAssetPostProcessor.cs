@@ -1,16 +1,25 @@
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
-
-public class ImportAssetPostProcessor : AssetPostprocessor
+using System.IO;
+using Bottle.Extensions.Helper;
+namespace Bottle.Editor.Importer
 {
-    void OnPostprocessModel (GameObject g)
+    public class ImportAssetPostProcessor : AssetPostprocessor
     {
-        Debug.Log(assetPath);
-        // Only operate on FBX files
-        if (assetPath.IndexOf(".fbx") == -1)
+        void OnPostprocessModel (GameObject g)
         {
-            Debug.Log(assetPath);
+            // TO DO: Need to implement this feature, it is inconvenient
+            // Need to open the tool to use auto import function
+            //if (ImportEditor.Instance == null) return;
+            //if (assetPath.EndsWith(".fbx") == false) return;
+            /*
+            string metaFilePath = assetPath.Replace(".fbx", ".fbx.meta");
+            var (keyData, valueData) = DatabaseHelper.GetDataInMetaFile(metaFilePath, "importAnimation");
+            DatabaseHelper.EditDataInMetaFile(metaFilePath, "importAnimation", "0");
+            */
+            
         }
     }
 }
+
