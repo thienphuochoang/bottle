@@ -1,7 +1,24 @@
 {
-  "Models_Path": "Assets/Art/Isometric Pack 3d/Props/Models/Materials/Models",
-  "Materials_Path": "Assets/Art/Isometric Pack 3d/Props/Models/Materials",
-  "Textures_Path": "Assets/Art/Isometric Pack 3d/Props/Textures",
-  "Entity_Prefabs_Path": "Assets/Resources/Prefabs/GridEntity",
-  "Tile_Prefabs_Path": "Assets/Resources/Prefabs/GridTile"
+  "properties": [
+    {
+      "name": "Models_Path",
+      "path": "Assets/Models"
+    },
+    {
+      "name": "Materials_Path",
+      "path": "Assets/Models/Materials"
+    },
+    {
+      "name": "Textures_Path",
+      "path": "Assets/Art_Fixed/Isometric Pack 3d/Props/Textures"
+    },
+    {
+      "name": "Entity_Prefabs_Path",
+      "path": "Assets/Resources/Prefabs/GridEntity"
+    },
+    {
+      "name": "Tile_Prefabs_Path",
+      "path": "Assets/Resources/Prefabs/GridTile"
+    }
+  ]
 }

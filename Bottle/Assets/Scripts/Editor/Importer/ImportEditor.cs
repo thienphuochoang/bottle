@@ -5,6 +5,7 @@ using System.IO;
 using Newtonsoft.Json.Linq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Bottle.Extensions.Helper;
 using Sirenix.OdinInspector.Editor;
 using Sirenix.OdinInspector;
@@ -17,11 +18,11 @@ namespace Bottle.Editor.Importer
         {
             GetWindow<ImportEditor>().Show();
         }
-
-        private string[] jsonKeyValues = new string[]
-        {
-            "Models_Path", "Materials_Path", "Textures_Path", "Entity_Prefabs_Path", "Tile_Prefabs_Path"
-        };
+        //private const string _VISUAL_TREE_PATH = "Assets/Scripts/Editor/Importer/ImporterUXMLFile.uxml";
+        //private const string _USS_FILE_PATH = "Assets/Scripts/Editor/Importer/ImporterUSSFile.uss";
+        private const string _PATH_SETTINGS = "Assets/Resources/ImporterDatabase/ImporterPathSettings.json";
+        private Dictionary<string, string> _textFieldDatas;
+        public static ImportEditor Instance { get; private set; }
         [FolderPath(RequireExistingPath = true), BoxGroup("Importer Settings")]
         public string Models_Path;
         [FolderPath(RequireExistingPath = true), BoxGroup("Importer Settings")]
@@ -42,130 +43,97 @@ namespace Bottle.Editor.Importer
         [Button("Save New Settings", ButtonSizes.Small)]
         private void SaveNewSettings()
         {
-            
+            SetPathSettingsToJsonFile();
         }
         
         protected virtual void OnEnable()
         {
             base.OnEnable();
             Instance = this;
+            _textFieldDatas = new Dictionary<string, string>();
             
-            List<string> allTextFields = new List<string>();
-            allTextFields.Add(Models_Path);
-            allTextFields.Add(Materials_Path);
-            allTextFields.Add(Textures_Path);
-            allTextFields.Add(Entity_Prefabs_Path);
-            allTextFields.Add(Tile_Prefabs_Path);
             // Load current settings path from Json File
-            foreach (var eachTextField in jsonKeyValues)
+            JToken[] allTextFieldDatas = GetPathSettingFromJsonFile();
+            foreach (var textFieldData in allTextFieldDatas)
             {
-                var path = GetPathSettingFromJsonFile(eachTextField);
-                switch (eachTextField)
+                var textFieldName = textFieldData.SelectToken("name").ToString();
+                var textFieldPath = textFieldData.SelectToken("path").ToString();
+                switch (textFieldName)
                 {
                     case "Models_Path":
-                        Models_Path = path;
+                    {
+                        Models_Path = textFieldPath;
                         break;
+                    }
                     case "Materials_Path":
-                        Materials_Path = path;
+                    {
+                        Materials_Path = textFieldPath;
                         break;
+                    }
                     case "Textures_Path":
-                        Textures_Path = path;
+                    {
+                        Textures_Path = textFieldPath;
                         break;
+                    }
                     case "Entity_Prefabs_Path":
-                        Entity_Prefabs_Path = path;
+                    {
+                        Entity_Prefabs_Path = textFieldPath;
                         break;
+                    }
                     case "Tile_Prefabs_Path":
-                        Tile_Prefabs_Path = path;
+                    {
+                        Tile_Prefabs_Path = textFieldPath;
                         break;
+                    }
                 }
             }
-            
-        }
-        
-        private VisualTreeAsset _visualTree;
-        //private const string _VISUAL_TREE_PATH = "Assets/Scripts/Editor/Importer/ImporterUXMLFile.uxml";
-        //private const string _USS_FILE_PATH = "Assets/Scripts/Editor/Importer/ImporterUSSFile.uss";
-        private const string _PATH_SETTINGS = "Assets/Resources/ImporterDatabase/ImporterPathSettings.json";
-        private Dictionary<string, string> _textFieldDatas;
-        public static ImportEditor Instance { get; private set; }
-        /*
-        [MenuItem("Bottle/Importer Editor")]
-        private static void Init()
-        {
-            // Get existing open window or if none, make a new one:
-            ImportEditor window = (ImportEditor)GetWindow(typeof(ImportEditor));
-            window.titleContent = new GUIContent("Importer Tool");
-            window.minSize = new Vector2(400, 200);
-        }
-        */
-        void OnDragUpdatedEvent(DragUpdatedEvent evt)
-        {
-            if (DragAndDrop.objectReferences.Length == 1)
-            {
-                DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
-                return;
-            }
-            DragAndDrop.visualMode = DragAndDropVisualMode.Rejected;
         }
 
-        void OnDragPerformed(DragPerformEvent evt, TextField inputTextField)
-        {
-            if (DragAndDrop.objectReferences.Length == 1)
-            {
-                inputTextField.value = AssetDatabase.GetAssetPath(DragAndDrop.objectReferences[0]);
-                DragAndDrop.AcceptDrag();
-            }
-        }
-        /*
-        private void OnEnable()
-        {
-            Instance = this;
-            _textFieldDatas = new Dictionary<string, string>();
-            _visualTree = AssetDatabase.LoadAssetAtPath<VisualTreeAsset>(_VISUAL_TREE_PATH);
-            StyleSheet loadedStyleSheet =
-                AssetDatabase.LoadAssetAtPath<StyleSheet>(_USS_FILE_PATH);
-            rootVisualElement.styleSheets.Add(loadedStyleSheet);
-            //ImportModel();
-        }
-        */
-        protected virtual void OnGUI()
-        {
-            base.OnGUI();
-            /*
-            rootVisualElement.Clear();
-            _visualTree.CloneTree(rootVisualElement);
-            UQueryBuilder<VisualElement> allTextFields =
-                rootVisualElement.Query(classes: new string[] { "generalTextField" });
-            */
-        }
+        
+        
 
         private void GetPathSettingFromTextField()
         {
             _textFieldDatas.Clear();
-            UQueryBuilder<VisualElement> allTextFields =
-                rootVisualElement.Query(classes: new string[] { "generalTextField" });
-            
-            var _textFieldsList = allTextFields.ToList();
-            foreach (var eachTextField in _textFieldsList)
+            JToken[] allTextFieldDatas = GetPathSettingFromJsonFile();
+            for (int i = 0; i < allTextFieldDatas.Length; i++)
             {
-                var data = eachTextField as TextField;
-                _textFieldDatas.Add(data.name, data.value);
+                var textFieldName = allTextFieldDatas[i].SelectToken("name").ToString();
+                switch (textFieldName)
+                {
+                    case "Models_Path":
+                    {
+                        _textFieldDatas.Add("properties[" + i + "].path", Models_Path);
+                        break;
+                    }
+                    case "Textures_Path":
+                    {
+                        _textFieldDatas.Add("properties[" + i + "].path", Textures_Path);
+                        break;
+                    }
+                    case "Materials_Path":
+                    {
+                        _textFieldDatas.Add("properties[" + i + "].path", Materials_Path);
+                        break;
+                    }
+                    case "Entity_Prefabs_Path":
+                    {
+                        _textFieldDatas.Add("properties[" + i + "].path", Entity_Prefabs_Path);
+                        break;
+                    }
+                    case "Tile_Prefabs_Path":
+                    {
+                        _textFieldDatas.Add("properties[" + i + "].path", Tile_Prefabs_Path);
+                        break;
+                    }
+                }
             }
         }
-        private string GetPathSettingFromJsonFile(string jsonTextFieldKey)
+        private JToken[] GetPathSettingFromJsonFile()
         {
             JObject jObject = DatabaseHelper.GetDatabase(_PATH_SETTINGS);
-            string jTokenString = jObject.SelectToken(jsonTextFieldKey).ToObject<string>();
-            if (jTokenString != null)
-            {
-                return jTokenString;
-            }
-            return null;
-        }
-
-        private void GetAllKeysInJsonFile()
-        {
-            JObject jObject = DatabaseHelper.GetDatabase(_PATH_SETTINGS);
+            JToken[] jTokenString = jObject.SelectToken("properties").ToArray();
+            return jTokenString;
         }
 
         private void SetPathSettingsToJsonFile()
@@ -173,42 +141,5 @@ namespace Bottle.Editor.Importer
             GetPathSettingFromTextField();
             DatabaseHelper.UpdateDatabase<string, string>(_textFieldDatas, _PATH_SETTINGS);
         }
-        
-        private void AddCallBack(VisualElement textField)
-        {
-            TextField currentTextField = textField as TextField;
-            textField.RegisterCallback<DragUpdatedEvent>(OnDragUpdatedEvent);
-            textField.RegisterCallback<DragPerformEvent, TextField>(OnDragPerformed, currentTextField);
-        }
-        
-        /*
-        private void ImportModel()
-        {
-            var watcher = new FileSystemWatcher("Assets/Art/Isometric Pack 3d/Props/Models/Materials/Models");
-            watcher.NotifyFilter = NotifyFilters.Attributes
-                                   | NotifyFilters.CreationTime
-                                   | NotifyFilters.DirectoryName
-                                   | NotifyFilters.FileName
-                                   | NotifyFilters.LastAccess
-                                   | NotifyFilters.LastWrite
-                                   | NotifyFilters.Security
-                                   | NotifyFilters.Size;
-            
-            watcher.Changed += OnChanged;
-            watcher.Filter = "*.fbx";
-            watcher.IncludeSubdirectories = true;
-            watcher.EnableRaisingEvents = true;
-        }
-        */
-        private static void OnChanged(object sender, FileSystemEventArgs e)
-        {
-            Debug.Log(e.ChangeType);
-            if (e.ChangeType != WatcherChangeTypes.Changed)
-            {
-                return;
-            }
-            Debug.Log($"Changed: {e.FullPath}");
-        }
-        
     }
 }

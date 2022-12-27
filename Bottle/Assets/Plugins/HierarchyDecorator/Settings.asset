@@ -493,84 +493,6 @@ MonoBehaviour:
       shown: 0
     - name: WindZone
       shown: 0
-    - name: ConsoleProRemoteServer
-      shown: 0
-    - name: Antialiasing
-      shown: 0
-    - name: Bloom
-      shown: 0
-    - name: BloomAndFlares
-      shown: 0
-    - name: BloomOptimized
-      shown: 0
-    - name: Blur
-      shown: 0
-    - name: BlurOptimized
-      shown: 0
-    - name: CameraMotionBlur
-      shown: 0
-    - name: ColorCorrectionCurves
-      shown: 0
-    - name: ColorCorrectionLookup
-      shown: 0
-    - name: ColorCorrectionRamp
-      shown: 0
-    - name: ContrastEnhance
-      shown: 0
-    - name: ContrastStretch
-      shown: 0
-    - name: CreaseShading
-      shown: 0
-    - name: DepthOfField
-      shown: 0
-    - name: DepthOfFieldDeprecated
-      shown: 0
-    - name: EdgeDetection
-      shown: 0
-    - name: Fisheye
-      shown: 0
-    - name: GlobalFog
-      shown: 0
-    - name: Grayscale
-      shown: 0
-    - name: ImageEffectBase
-      shown: 0
-    - name: MotionBlur
-      shown: 0
-    - name: NoiseAndGrain
-      shown: 0
-    - name: NoiseAndScratches
-      shown: 0
-    - name: PostEffectsBase
-      shown: 0
-    - name: PostEffectsHelper
-      shown: 0
-    - name: ScreenOverlay
-      shown: 0
-    - name: ScreenSpaceAmbientObscurance
-      shown: 0
-    - name: ScreenSpaceAmbientOcclusion
-      shown: 0
-    - name: SepiaTone
-      shown: 0
-    - name: SunShafts
-      shown: 0
-    - name: TiltShift
-      shown: 0
-    - name: Tonemapping
-      shown: 0
-    - name: Twirl
-      shown: 0
-    - name: VignetteAndChromaticAberration
-      shown: 0
-    - name: Vortex
-      shown: 0
-    - name: ExampleScript
-      shown: 0
-    - name: ExampleScript2
-      shown: 0
-    - name: ExampleScriptWithIcon
-      shown: 0
     - name: PlaymodeTestsController
       shown: 0
     - name: PlayModeRunnerCallback
@@ -691,15 +613,11 @@ MonoBehaviour:
       shown: 0
     - name: DropdownItem
       shown: 0
-    - name: EmittedMonoBehaviour
+    - name: ExampleScript
       shown: 0
-    - name: EmittedMonoBehaviour`1
+    - name: ExampleScript2
       shown: 0
-    - name: SerializedBehaviour
-      shown: 0
-    - name: SerializedComponent
-      shown: 0
-    - name: SerializedMonoBehaviour
+    - name: ExampleScriptWithIcon
       shown: 0
     customComponents: []
     unityVersion: 2020.3.19f1
