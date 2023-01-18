@@ -4,6 +4,8 @@ using UnityEditor;
 using UnityEditor.Tilemaps;
 using Bottle.Extensions.Helper;
 using Bottle.Core.GridObjectData;
+using Bottle.Core.Manager;
+
 namespace Bottle.Editor.GridSystem
 {
     [CustomEditor(typeof(GridObjectBrushEditor))]
@@ -15,13 +17,48 @@ namespace Bottle.Editor.GridSystem
         private GridObjectBrushDatabaseList _gridObjectDatabaseList;
         public int selectedDatabaseIndex = 0;
         private string _newDatabaseName;
+        private BrushCell _previewCell;
         public GridObjectBrushEditor TargetBrush { get { return target as GridObjectBrushEditor; } }
 
         private void OnEnable()
         {
             ReloadDatabases();
         }
+        
+        public override void OnPaintSceneGUI(GridLayout gridLayout, GameObject brushTarget, BoundsInt position, GridBrushBase.Tool tool, bool executing)
+        {
+            base.OnPaintSceneGUI(gridLayout, brushTarget, position, tool, executing);
+            if (TargetBrush == false) return;
+            if (tool != GridBrushBase.Tool.Erase)
+            {
+                Vector3Int min = position.min - TargetBrush.pivot;
+                Vector3Int max = min + TargetBrush.size;
+                BoundsInt bounds = new BoundsInt(min, max - min);
 
+                if (brushTarget != null && gridLayout != null)
+                {
+                    Vector2Int gridPosition = new Vector2Int(position.x, position.y);
+                    foreach (Vector3Int location in bounds.allPositionsWithin)
+                    {
+                        Vector3Int brushPosition = location - min;
+                        BrushCell cell = TargetBrush.cells[TargetBrush.GetCellIndex(brushPosition)];
+                        if (cell.Tile)
+                        {
+                            var previewGridTile = GridManager.Instance.CreateGridObject<GridTile>(cell.Tile, gridPosition, position.z, cell.Scale, cell.Rotation);
+                            GridManager.Instance.CreatePreviewGridObject(previewGridTile.transform);
+                        }
+                            
+                        else if (cell.Entity)
+                        {
+                            
+                        }
+                            //GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
+                    }
+                }
+                //PaintPreview(gridLayout, brushTarget, position.min);
+            }
+            
+        }
         public override void OnPaintInspectorGUI()
         {
             EditorGUILayout.BeginHorizontal();
