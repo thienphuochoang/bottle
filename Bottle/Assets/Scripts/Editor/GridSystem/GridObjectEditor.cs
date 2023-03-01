@@ -23,6 +23,7 @@ namespace Bottle.Editor.GridSystem
         private void OnEnable()
         {
             ReloadDatabases();
+            _previewCell = new BrushCell();
         }
         
         public override void OnPaintSceneGUI(GridLayout gridLayout, GameObject brushTarget, BoundsInt position, GridBrushBase.Tool tool, bool executing)
@@ -38,24 +39,40 @@ namespace Bottle.Editor.GridSystem
                 if (brushTarget != null && gridLayout != null)
                 {
                     Vector2Int gridPosition = new Vector2Int(position.x, position.y);
+                    float gridHeight = position.z;
                     foreach (Vector3Int location in bounds.allPositionsWithin)
                     {
                         Vector3Int brushPosition = location - min;
+                        Debug.Log(TargetBrush.cells[TargetBrush.GetCellIndex(brushPosition)]);
                         BrushCell cell = TargetBrush.cells[TargetBrush.GetCellIndex(brushPosition)];
+                        {
+                            _previewCell.Tile = cell.Tile;
+                            
+                        }
+                        /*
                         if (cell.Tile)
                         {
-                            var previewGridTile = GridManager.Instance.CreateGridObject<GridTile>(cell.Tile, gridPosition, position.z, cell.Scale, cell.Rotation);
-                            GridManager.Instance.CreatePreviewGridObject(previewGridTile.transform);
+                            if (_previewCell.Tile == null)
+                            {
+                                var previewGridTile = GridManager.Instance.CreateGridObject<GridTile>(cell.Tile,
+                                    gridPosition, position.z, cell.Scale, cell.Rotation);
+                                //GridManager.Instance.CreatePreviewGridObject(previewGridTile.transform);
+                                GridManager.Instance.CreatePreviewGridObject(previewGridTile.transform);
+                                _previewCell.Tile = previewGridTile;
+                            }
+                            else
+                            {
+                                _previewCell.Tile.gridPosition = gridPosition;
+                                _previewCell.Tile.gridHeight = gridHeight;
+                            }
                         }
-                            
                         else if (cell.Entity)
                         {
                             
                         }
-                            //GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
+                        */
                     }
                 }
-                //PaintPreview(gridLayout, brushTarget, position.min);
             }
             
         }

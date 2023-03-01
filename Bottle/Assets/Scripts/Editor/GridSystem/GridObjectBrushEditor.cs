@@ -194,6 +194,7 @@ namespace Bottle.Editor.GridSystem
         #endregion
 
         #region PaintCell
+        
         private void PaintCell(GridLayout grid, Vector3Int position, BrushCell cell)
         {
             if (cell.Tile != null)
@@ -226,6 +227,11 @@ namespace Bottle.Editor.GridSystem
                 //else
                 //    Debug.LogError("There is already a grid entity available at this position");
             }
+        }
+
+        public void PaintPreview(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
+        {
+            
         }
 
         public override void Paint(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
