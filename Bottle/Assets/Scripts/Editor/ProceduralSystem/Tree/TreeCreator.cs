@@ -32,7 +32,7 @@ namespace Bottle.Editor.ProceduralTree
         public float leafSize = 3f;
         private float _currentLeafSize;
 
-        [MenuItem("Window/Tree Creator")]
+        [MenuItem("Bottle/Tree Creator")]
         public static void ShowWindow()
         {
             EditorWindow editorWindow = EditorWindow.GetWindow(typeof(TreeCreator));
@@ -59,7 +59,7 @@ namespace Bottle.Editor.ProceduralTree
 
         private void OnGUI()
         {
-            Editor e = Editor.CreateEditor(this);
+            UnityEditor.Editor e = UnityEditor.Editor.CreateEditor(this);
             EditorGUILayout.BeginVertical();
             e.DrawDefaultInspector();
             GUILayout.FlexibleSpace();
@@ -78,10 +78,10 @@ namespace Bottle.Editor.ProceduralTree
             #region Setup Initial Properties
             // Load material for the tree
             if (!_treeMat)
-                _treeMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/treeMat.mat");
+                _treeMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Art_Fixed/Isometric Pack 3d/Props/Models/Materials/Trunk.mat");
             // Load material for the leaf
             if (!_leafMat)
-                _leafMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Materials/leafMat.mat");
+                _leafMat = AssetDatabase.LoadAssetAtPath<Material>("Assets/Art_Fixed/Isometric Pack 3d/Props/Models/Materials/Leaf.mat");
             // If the tree game object is available, delete it and then re-create it again to refresh the data
             _treeGameObj = GameObject.Find("Tree");
             _leafObjects = new List<GameObject>();
@@ -269,7 +269,7 @@ namespace Bottle.Editor.ProceduralTree
                     pos *= newTrunkRadius;
                     // Make the ring smaller
                     pos /= 2;
-                    pos = VectorUtilities.RotateAPointAroundAnAxis(pos, Vector3.up, growDirection);
+                    pos = VectorHelper.RotateAPointAroundAnAxis(pos, Vector3.up, growDirection);
                     pos += pivot;
                     triangles[6 * ((i - 1) * polygon + j)]     = (i - 1) * polygon + j;
                     triangles[6 * ((i - 1) * polygon + j) + 1] = i * polygon + j;
@@ -286,7 +286,7 @@ namespace Bottle.Editor.ProceduralTree
                     }
                 }
                 // Update the grow direction for the next trunk ring
-                growDirection = VectorUtilities.GenerateRandomVectorInDirection(bendLevel, growDirection);
+                growDirection = VectorHelper.GenerateRandomVectorInDirection(bendLevel, growDirection);
             }
             #endregion
             #region Branch Split Condition And Branch Setup
@@ -296,7 +296,7 @@ namespace Bottle.Editor.ProceduralTree
                 // The number of polygon of the first split branch
                 int firstSubRingPolygon = Random.Range(4, polygon - 1);
                 // Get a random grow direction
-                Vector3 firstSubRingGrowDirection = VectorUtilities.GenerateRandomVectorInDirection(bendLevel, growDirection);
+                Vector3 firstSubRingGrowDirection = VectorHelper.GenerateRandomVectorInDirection(bendLevel, growDirection);
                 // Setup the ring data of the first branch
                 TrunkRingData firstSubTrunkRingData = SetupNextTrunkRingData(lastRingVertices.ToArray(), firstSubRingPolygon, firstSubRingGrowDirection);
                 resultTrunkRingData[0] = firstSubTrunkRingData;
@@ -312,7 +312,7 @@ namespace Bottle.Editor.ProceduralTree
                 // The remaining number of polygon of the second split branch
                 int secondSubRingPolygon = polygon - firstSubRingPolygon + 2;
                 // Get a random grow direction
-                Vector3 secondSubRingGrowDirection = VectorUtilities.GenerateRandomVectorInDirection(bendLevel, growDirection);
+                Vector3 secondSubRingGrowDirection = VectorHelper.GenerateRandomVectorInDirection(bendLevel, growDirection);
                 Vector3 axis = Vector3.Cross(firstSubRingGrowDirection, growDirection);
                 secondSubRingGrowDirection = Quaternion.AngleAxis(Random.Range(10, 30), axis) * secondSubRingGrowDirection;
                 // Setup the ring data of the second branch
@@ -346,7 +346,7 @@ namespace Bottle.Editor.ProceduralTree
                     foreach (Vector3 eachLeaf in leafPos)
                     {
                         GameObject leaf = new GameObject();
-                        var leafData = leaf.AddComponent<ProceduralSphere>();
+                        var leafData = leaf.AddComponent<PMSphere>();
                         leafData.segment = 1;
                         leafData.meshMaterial = _leafMat;
                         leafData.size = Random.Range(leafSize - 0.5f, leafSize + 0.5f);
@@ -360,7 +360,7 @@ namespace Bottle.Editor.ProceduralTree
                     foreach (Vector3 eachLeaf in leafPos)
                     {
                         GameObject leaf = new GameObject();
-                        var leafData = leaf.AddComponent<ProceduralSphere>();
+                        var leafData = leaf.AddComponent<PMSphere>();
                         leafData.segment = 0;
                         leafData.meshMaterial = _leafMat;
                         leafData.size = Random.Range(leafSize - 0.5f, leafSize + 0.5f);
