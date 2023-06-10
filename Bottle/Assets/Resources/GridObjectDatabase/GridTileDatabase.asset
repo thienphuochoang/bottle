@@ -12,13 +12,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18a6427a87a7a564a94ccb077adf9577, type: 3}
   m_Name: GridTileDatabase
   m_EditorClassIdentifier: 
-  selectedGridBrushIndex: 0
+  selectedGridBrushIndex: 1
   _gridBrushDatas:
-  - gridTile: {fileID: 4035306422573112887, guid: 037230ab9a4e7b74daef468539f7652e, type: 3}
+  - gridTile: {fileID: 8346431039828462037, guid: e31f507e47eaa694493bc996d8a08bef, type: 3}
     gridEntity: {fileID: 0}
     scale: 1
     rotation: {x: 0, y: 0, z: 0}
-  - gridTile: {fileID: 3980794118029237015, guid: 830955856e7007a40a3a12e41ca3702d, type: 3}
+  - gridTile: {fileID: 6879485025562869689, guid: bec3d5224835e6145addd602936deeff, type: 3}
     gridEntity: {fileID: 0}
     scale: 1
     rotation: {x: 0, y: 0, z: 0}

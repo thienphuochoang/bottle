@@ -46,6 +46,7 @@ namespace Bottle.Editor.ProceduralTree
 
         private void OnValidate()
         {
+            if (_leafObjects.Count == 0) return;
             if (leafSize != _currentLeafSize && _leafObjects.Count > 0)
             {
                 foreach (GameObject leaf in _leafObjects)

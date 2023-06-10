@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
@@ -18,6 +19,12 @@ namespace Bottle.Editor.GridSystem
         public int selectedDatabaseIndex = 0;
         private string _newDatabaseName;
         private BrushCell _previewCell;
+        private GridTile _previewGridTile;
+        private GridEntity _previewGridEntity;
+        private GridTile _previousPreviewGridTile;
+        private GridEntity _previousPreviewGridEntity;
+        private int _previousBoxSize;
+        public bool isLoaded = false;
         public GridObjectBrushEditor TargetBrush { get { return target as GridObjectBrushEditor; } }
 
         private void OnEnable()
@@ -25,12 +32,59 @@ namespace Bottle.Editor.GridSystem
             ReloadDatabases();
             _previewCell = new BrushCell();
         }
-        
+
         public override void OnPaintSceneGUI(GridLayout gridLayout, GameObject brushTarget, BoundsInt position, GridBrushBase.Tool tool, bool executing)
         {
             base.OnPaintSceneGUI(gridLayout, brushTarget, position, tool, executing);
             if (TargetBrush == false) return;
-            if (tool != GridBrushBase.Tool.Erase)
+            if (tool == GridBrushBase.Tool.Box && executing)
+            {
+                // Remove unnecessary preview grid objects when change the box fill size
+                if (_previousBoxSize != (position.size.x * position.size.y))
+                {
+                    GridManager.Instance.RemovePreviewGridObjects<GridTile>();
+                    GridManager.Instance.RemovePreviewGridObjects<GridEntity>();
+                }
+                foreach (Vector3Int location in position.allPositionsWithin)
+                {
+                    Vector3Int local = location - position.min;
+                    _previewCell = TargetBrush.cells[TargetBrush.GetCellIndexWrapAround(local.x, local.y, local.z)];
+                    Vector2Int gridPosition = new Vector2Int(location.x, location.y);
+                    float gridHeight = position.z;
+                    if (_previewCell != null)
+                    {
+                        if (_previewCell.Tile != null)
+                        {
+                            List<GridTile> previewObjs = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, gridHeight);
+                            if (previewObjs.Count == 0)
+                            {
+                                _previewGridTile = GridManager.Instance.CreateGridObject<GridTile>(_previewCell.Tile,
+                                    gridPosition, gridHeight, _previewCell.Scale, _previewCell.Rotation);
+                                _previewGridTile.IsPreviewObject = true;
+                                GridManager.Instance.SetupPreviewGridObject(_previewGridTile.transform);
+                            }
+                        }
+                        if (_previewCell.Entity != null)
+                        {
+                            List<GridEntity> previewObjs = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(gridPosition, gridHeight);
+                            if (previewObjs.Count == 0)
+                            {
+                                _previewGridEntity = GridManager.Instance.CreateGridObject<GridEntity>(_previewCell.Entity,
+                                    gridPosition, gridHeight, _previewCell.Scale, _previewCell.Rotation);
+                                _previewGridEntity.IsPreviewObject = true;
+                                GridManager.Instance.SetupPreviewGridObject(_previewGridEntity.transform);
+                            }
+                        }
+                    }
+                }
+                _previousBoxSize = position.size.x * position.size.y;
+            }
+            else if (tool == GridBrushBase.Tool.Box && executing == false)
+            {
+                GridManager.Instance.RemovePreviewGridObjects<GridTile>();
+                GridManager.Instance.RemovePreviewGridObjects<GridEntity>();
+            }
+            else if (tool == GridBrushBase.Tool.Paint)
             {
                 Vector3Int min = position.min - TargetBrush.pivot;
                 Vector3Int max = min + TargetBrush.size;
@@ -43,38 +97,56 @@ namespace Bottle.Editor.GridSystem
                     foreach (Vector3Int location in bounds.allPositionsWithin)
                     {
                         Vector3Int brushPosition = location - min;
-                        Debug.Log(TargetBrush.cells[TargetBrush.GetCellIndex(brushPosition)]);
-                        BrushCell cell = TargetBrush.cells[TargetBrush.GetCellIndex(brushPosition)];
+                        _previewCell = TargetBrush.cells[TargetBrush.GetCellIndex(brushPosition)];
+                        if (_previewGridTile)
                         {
-                            _previewCell.Tile = cell.Tile;
-                            
-                        }
-                        /*
-                        if (cell.Tile)
-                        {
-                            if (_previewCell.Tile == null)
+                            if (isLoaded == false)
                             {
-                                var previewGridTile = GridManager.Instance.CreateGridObject<GridTile>(cell.Tile,
-                                    gridPosition, position.z, cell.Scale, cell.Rotation);
-                                //GridManager.Instance.CreatePreviewGridObject(previewGridTile.transform);
-                                GridManager.Instance.CreatePreviewGridObject(previewGridTile.transform);
-                                _previewCell.Tile = previewGridTile;
+                                if (_previousPreviewGridTile != _previewGridTile)
+                                {
+                                    GridManager.Instance.RemovePreviewGridObjects<GridTile>();
+                                }
+                                _previewGridTile = GridManager.Instance.CreateGridObject<GridTile>(_previewCell.Tile,
+                                    gridPosition, position.z, _previewCell.Scale, _previewCell.Rotation);
+                                _previewGridTile.IsPreviewObject = true;
+                                GridManager.Instance.SetupPreviewGridObject(_previewGridTile.transform);
+                                isLoaded = true;
+                                _previousPreviewGridTile = _previewGridTile;
+                                Selection.activeGameObject = _previewGridTile.gameObject;
                             }
                             else
                             {
-                                _previewCell.Tile.gridPosition = gridPosition;
-                                _previewCell.Tile.gridHeight = gridHeight;
+                                _previewGridTile.gridPosition = gridPosition;
+                                _previewGridTile.gridHeight = gridHeight;
                             }
                         }
-                        else if (cell.Entity)
+                        if (_previewGridEntity)
                         {
-                            
+                            if (isLoaded == false)
+                            {
+                                if (_previousPreviewGridEntity != _previewGridEntity)
+                                {
+                                    GridManager.Instance.RemovePreviewGridObjects<GridEntity>();
+                                }
+                                _previewGridEntity = GridManager.Instance.CreateGridObject<GridEntity>(_previewCell.Entity,
+                                    gridPosition, position.z, _previewCell.Scale, _previewCell.Rotation);
+                                _previewGridEntity.IsPreviewObject = true;
+                                GridManager.Instance.SetupPreviewGridObject(_previewGridEntity.transform);
+                                isLoaded = true;
+                                _previousPreviewGridEntity = _previewGridEntity;
+                                Selection.activeGameObject = _previewGridEntity.gameObject;
+                            }
+                            else
+                            {
+                                _previewGridEntity.gridPosition = gridPosition;
+                                _previewGridEntity.gridHeight = gridHeight;
+                                Debug.Log(_previewGridEntity.gridPosition);
+                            }
                         }
-                        */
+                        
                     }
                 }
             }
-            
         }
         public override void OnPaintInspectorGUI()
         {
@@ -97,7 +169,7 @@ namespace Bottle.Editor.GridSystem
                     selectedDatabaseIndex = EditorGUILayout.Popup(selectedDatabaseIndex, _gridObjectDatabaseList.GetNameList());
                     currentBrushDatabase = _gridObjectDatabaseList.brushDatabases[selectedDatabaseIndex];
                     TargetBrush.ClearBrushCellData();
-                    var tileBrush = currentBrushDatabase.SelectedGridBrush;
+                    GridObjectBrushData tileBrush = currentBrushDatabase.SelectedGridBrush;
                     if (tileBrush != null && tileBrush.gridTile != null)
                     {
                         TargetBrush.SetBrushCellData(
@@ -222,10 +294,14 @@ namespace Bottle.Editor.GridSystem
                     if (currentBrushDatabase.SelectedGridBrush != brushData)
                     {
                         currentBrushDatabase.selectedGridBrushIndex = currentBrushDatabase.GridBrushDatas.IndexOf(brushData);
+                        _previewGridTile = currentBrushDatabase.SelectedGridBrush.gridTile;
+                        _previewGridEntity = currentBrushDatabase.SelectedGridBrush.gridEntity;
+                        isLoaded = false;
                     }
                     else
                     {
                         currentBrushDatabase.selectedGridBrushIndex = -1;
+                        isLoaded = false;
                         TargetBrush.ClearBrushCellData();
                     }
                 }

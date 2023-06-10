@@ -33,17 +33,10 @@ namespace Bottle.Core.GridObjectData
         [ShowInInspector]
         public GridTile currentStandingGridTile;
 
-
-        protected override void Update()
-        {
-            base.Update();
-        }
-
         protected override void Start()
         {
             base.Start();
             //currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
-            OnPositionChanged += OnCurrentStandingGridTileChangedHandler;
         }
 
         protected override void Awake()
@@ -53,6 +46,7 @@ namespace Bottle.Core.GridObjectData
 
         protected override void OnEnable()
         {
+            OnPositionChanged += OnCurrentStandingGridTileChangedHandler;
             var gridObjectList = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1);
             if (gridObjectList.Count > 0)
                 currentStandingGridTile = GridManager.Instance.GetGridObjectAtPosition<GridTile>(this.gridPosition, this.gridHeight - 1)[0];
@@ -70,7 +64,6 @@ namespace Bottle.Core.GridObjectData
                 currentStandingGridTile = currentStandingGridTileList[0];
                 currentStandingGridTile.currentStandingGridEntity = new List<GridEntity> { this };
             }
-                
         }
     }
 }

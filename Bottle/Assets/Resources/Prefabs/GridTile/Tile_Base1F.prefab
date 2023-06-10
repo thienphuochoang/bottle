@@ -107,7 +107,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5188239624526853107}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -0.036, z: 0}
+  m_LocalPosition: {x: 0, y: 0.957, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 5188239624526549425}
@@ -207,9 +207,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _uID: 
-  _gridPosition: {x: 2147483647, y: 2147483647}
-  _gridHeight: 3.4028235e+38
+  _uID: 67602
+  _gridPosition: {x: 0, y: 0}
+  _gridHeight: 0
   pivotOffset: {x: 0, y: -0.5, z: 0}
+  isBlockable: 1
   isStandable: 1
-  _currentStandingGridEntity: {fileID: 0}
+  currentStandingGridEntity: []
+  isARamp: 0
+  gCost: 2147483647
+  hCost: 0
+  cameFromGridTile: {fileID: 0}

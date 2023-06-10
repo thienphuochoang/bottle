@@ -39,10 +39,5 @@ namespace Bottle.Core.GridObjectData
             currentStandingGridEntity = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(this.gridPosition, this.gridHeight + 1);
             PathFinding.ResetDistanceCost(this);
         }
-
-        protected override void Start()
-        {
-            base.Start();
-        }
     }
 }

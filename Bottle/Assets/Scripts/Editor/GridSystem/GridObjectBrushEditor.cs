@@ -37,52 +37,34 @@ namespace Bottle.Editor.GridSystem
     {
         public GridTile Tile
         {
-            get
-            {
-                return _tile;
-            }
-            set
-            {
-                _tile = value;
-            }
+            get { return _tile; }
+            set { _tile = value; }
         }
         public GridEntity Entity
+        { 
+            get { return _entity; }
+            set { _entity = value; }
+        }
+        public GridPreview Preview
         {
-            get
-            {
-                return _entity;
-            }
-            set
-            {
-                _entity = value;
-            }
+            get { return _preview; }
+            set { _preview = value; }
         }
         public float Scale
         {
-            get
-            {
-                return _scale;
-            }
-            set
-            {
-                _scale = value;
-            }
+            get { return _scale; }
+            set { _scale = value; }
         }
         public Quaternion Rotation
         {
-            get
-            {
-                return _rotation;
-            }
-            set
-            {
-                _rotation = value;
-            }
+            get { return _rotation; }
+            set { _rotation = value; }
         }
 
         
         [SerializeField] private GridTile _tile;
         [SerializeField] private GridEntity _entity;
+        [SerializeField] private GridPreview _preview;
         [SerializeField] private float _scale = 1;
         [SerializeField] Quaternion _rotation = Quaternion.identity;
 
@@ -203,35 +185,52 @@ namespace Bottle.Editor.GridSystem
                 List<GridTile> checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridTile>(gridPosition, position.z);
                 if (checkedAlreadyPlacedGridObject.Count > 0)
                 {
-                    Debug.LogError("There is already a grid tile available at this position");
+                    bool isAnyNonPreviewObjFlag = false;
+                    foreach (GridTile placedGridTile in checkedAlreadyPlacedGridObject)
+                    {
+                        if (placedGridTile.IsPreviewObject == false)
+                        {
+                            isAnyNonPreviewObjFlag = true;
+                            break;
+                        }
+                    }
+
+                    if (isAnyNonPreviewObjFlag)
+                        Debug.LogWarning("There is already a grid tile available at this position");
+                    else
+                        GridManager.Instance.CreateGridObject<GridTile>(cell.Tile, gridPosition, position.z, cell.Scale, cell.Rotation);
                 }
                 else
                 {
                     GridManager.Instance.CreateGridObject<GridTile>(cell.Tile, gridPosition, position.z, cell.Scale, cell.Rotation);
                 }
             }
-            else if (cell.Entity != null)
+            if (cell.Entity != null)
             {
                 Vector2Int gridPosition = new Vector2Int(position.x, position.y);
                 List<GridEntity> checkedAlreadyPlacedGridObject = GridManager.Instance.GetGridObjectAtPosition<GridEntity>(gridPosition, position.z);
                 if (checkedAlreadyPlacedGridObject.Count > 0)
                 {
-                    Debug.LogError("There is already a grid entity available at this position");
+                    bool isAnyNonPreviewObjFlag = false;
+                    foreach (GridEntity placedGridEntity in checkedAlreadyPlacedGridObject)
+                    {
+                        if (placedGridEntity.IsPreviewObject == false)
+                        {
+                            isAnyNonPreviewObjFlag = true;
+                            break;
+                        }
+                    }
+
+                    if (isAnyNonPreviewObjFlag)
+                        Debug.LogWarning("There is already a grid entity available at this position");
+                    else
+                        GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
                 }
                 else
                 {
                     GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
                 }
-                //if (checkedAlreadyPlacedGridObject == default(GridEntity))
-                //    GridManager.Instance.CreateGridObject<GridEntity>(cell.Entity, gridPosition, position.z, cell.Scale, cell.Rotation);
-                //else
-                //    Debug.LogError("There is already a grid entity available at this position");
             }
-        }
-
-        public void PaintPreview(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
-        {
-            
         }
 
         public override void Paint(GridLayout gridLayout, GameObject brushTarget, Vector3Int position)
@@ -254,7 +253,10 @@ namespace Bottle.Editor.GridSystem
                 Vector3Int local = location - position.min;
                 BrushCell tile = cells[GetCellIndexWrapAround(local.x, local.y, local.z)];
                 if (tile != null)
+                {
                     PaintCell(gridLayout, location, tile);
+                }
+                    
             }
         }
         #endregion
@@ -269,7 +271,7 @@ namespace Bottle.Editor.GridSystem
             {
                 PickCell(gridLayout, location, brushTarget.transform);
             }
-
+            
             UpdateBrushCellSelection();
         }
         private void PickCell(GridLayout grid, Vector3Int position, Transform parent)

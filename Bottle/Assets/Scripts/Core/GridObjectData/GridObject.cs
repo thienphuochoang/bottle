@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -19,7 +20,25 @@ namespace Bottle.Core.GridObjectData
         [SerializeField]
         private string _uID;
         public string uID => _uID;
+        [BoxGroup("Grid Object General Settings", true, true)]
+        [Tooltip("The ability to turn this grid object into preview grid object.")]
+        [SerializeField]
+        private bool _isPreviewObject = false;
 
+        public bool IsPreviewObject
+        {
+            get => _isPreviewObject;
+            set
+            {
+                if (_isPreviewObject == value) return;
+                _isPreviewObject = value;
+                if (OnPreviewObjectChanged != null && _isPreviewObject)
+                {
+                    OnPreviewObjectChanged(_isPreviewObject);
+                }
+            }
+        }
+        
         [JsonProperty]
         [ReadOnly]
         [BoxGroup("Grid Object General Settings", true, true)]
@@ -87,6 +106,8 @@ namespace Bottle.Core.GridObjectData
 
         public delegate void OnPositionChangedDelegate(Vector2Int newGridPosition, int newGridHeight);
         public event OnPositionChangedDelegate OnPositionChanged;
+        public delegate void OnPreviewObjectChangedDelegate(bool isPreviewObj);
+        public event OnPreviewObjectChangedDelegate OnPreviewObjectChanged;
 
         protected virtual void Update()
         {
@@ -97,11 +118,12 @@ namespace Bottle.Core.GridObjectData
                 gridPosition = new Vector2Int(gridPosAndGridHeight.x, gridPosAndGridHeight.z);
                 gridHeight = gridPosAndGridHeight.y;
             }
-
         }
         protected virtual void OnEnable()
         {
-            
+            this.OnPositionChanged += PositionChangedHandler;
+            this.OnPreviewObjectChanged += PreviewObjectChangedHandler;
+            _uID = this.GetInstanceID().ToString();
         }
 
         protected virtual void Awake()
@@ -113,8 +135,6 @@ namespace Bottle.Core.GridObjectData
 
         protected virtual void Start()
         {
-            this.OnPositionChanged += PositionChangedHandler;
-            _uID = this.GetInstanceID().ToString();
         }
 
         private void PositionChangedHandler(Vector2Int newGridPosition, int newGridHeight)
@@ -123,6 +143,49 @@ namespace Bottle.Core.GridObjectData
             Vector3 newWorldPos = GridManager.Instance.grid.GetCellCenterWorld(newCellPos);
             newWorldPos.y = newGridHeight;
             this.transform.position = newWorldPos;
+        }
+        
+        private void PreviewObjectChangedHandler(bool isPreviewObj)
+        {
+            SetupPreviewGridObject(this.transform);
+        }
+        
+        private Transform SetupPreviewGridObject(Transform transform)
+        {
+            // Attempt to get reference to GameObject Renderer
+            Renderer meshRenderer = transform.gameObject.GetComponent<Renderer>();
+
+            // If a Renderer was found
+            if (meshRenderer != null)
+            {
+                // Define temporary Material used to create transparent copy of GameObject Material
+                Material tempMat = new Material(Shader.Find("Bottle/Preview_Tiles_PBL"));
+                Material[] tempMats = new Material[meshRenderer.sharedMaterials.Length];
+                
+                // Loop through each material in GameObject
+                for (int i = 0; i < meshRenderer.sharedMaterials.Length; i++)
+                {
+                    // Get material from GameObject
+                    tempMat = new Material(meshRenderer.sharedMaterials[i]);
+
+                    // Change Shader to "Standard"
+                    tempMat.shader = Shader.Find("Bottle/Preview_Tiles_PBL");
+                    
+
+                    // Replace GameObject Material with transparent one
+                    tempMats[i] = tempMat;
+                }
+                
+                meshRenderer.sharedMaterials = tempMats;
+            }
+
+            // Recursively run this method for each child transform
+            foreach (Transform child in transform)
+            {
+                SetupPreviewGridObject(child);
+            }
+
+            return transform;
         }
     }
 }

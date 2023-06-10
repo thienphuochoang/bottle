@@ -26,7 +26,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3980794118029214324}
   m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071067}
-  m_LocalPosition: {x: 0, y: -0.02, z: 0}
+  m_LocalPosition: {x: 0, y: 0.98, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 3980794118029572448}
@@ -140,7 +140,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: c88dc8a461c2ce64facd636febb36502, type: 2}
+  - {fileID: 2100000, guid: 3c1560d144a9d424cb0e6c4460806f22, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -171,7 +171,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3980794118029572448}
-  - component: {fileID: 3980794118029237015}
   m_Layer: 0
   m_Name: Tile_Base1B
   m_TagString: '[Bottle]Tile'
@@ -195,21 +194,3 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &3980794118029237015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3980794118029237014}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6a064b006874e2d4ba49fe1e8e33af98, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _uID: 
-  _gridPosition: {x: 2147483647, y: 2147483647}
-  _gridHeight: 3.4028235e+38
-  pivotOffset: {x: 0, y: -0.5, z: 0}
-  isStandable: 1
-  _currentStandingGridEntity: {fileID: 0}

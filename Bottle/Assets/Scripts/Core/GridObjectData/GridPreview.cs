@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,20 +6,27 @@ using Sirenix.OdinInspector;
 using Bottle.Core.Manager;
 namespace Bottle.Core.GridObjectData
 {
-    public class GridPreview : GridTile
+    public class GridPreview : GridObject
     {
-
+        public GridTile gridTile;
+        public GridEntity gridEntity;
         protected override void OnEnable()
         {
             base.OnEnable();
-            GridManager.Instance.CreatePreviewGridObject(this.transform);
+            if (gridTile)
+                SetupPreviewGridObject(this.transform);
+        }
+
+        private void OnValidate()
+        {
+            //SetupPreviewGridObject(this.transform);
         }
 
         protected override void Start()
         {
             base.Start();
         }
-        public Transform CreatePreviewGridObject(Transform transform)
+        private Transform SetupPreviewGridObject(Transform transform)
         {
             // Attempt to get reference to GameObject Renderer
             Renderer meshRenderer = transform.gameObject.GetComponent<Renderer>();
@@ -50,7 +58,7 @@ namespace Bottle.Core.GridObjectData
             // Recursively run this method for each child transform
             foreach (Transform child in transform)
             {
-                CreatePreviewGridObject(child);
+                SetupPreviewGridObject(child);
             }
 
             return transform;
